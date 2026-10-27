@@ -269,7 +269,7 @@ dialog .pe .bt:first-child{margin-right:auto}
 
  <!-- PESSOAS -->
  <section class="pagina" id="p-pessoas">
-  <div class="hero" style="--foto:url(img/u-meninos-barco.webp)"><div class="hi"><small>Diretoria de Pessoas e Cultura · Gabrielly</small><h1>Equipe</h1><p>Quem faz parte, em que diretoria, presença em cada expediente e quantas tarefas cada um tem.</p>
+  <div class="hero" style="--foto:url(img/u-floresta-sol.webp)"><div class="hi"><small>Diretoria de Pessoas e Cultura · Gabrielly</small><h1>Equipe</h1><p>Quem faz parte, em que diretoria, presença em cada expediente e quantas tarefas cada um tem.</p>
    <div class="mini"><button class="bt lima" data-novo="membros">+ Pessoa</button></div></div><div class="canto" id="pCanto"></div></div>
   <div class="g entra" id="pKpi"></div>
   <div class="g">
@@ -529,7 +529,7 @@ const INTRO={
  comercial:()=>{const pr=L.lista("prospectos");return ["Funil","Quantos possíveis clientes em cada etapa.",anelIntro(OPC.etapa.map(e=>[e,pr.filter(p=>p.etapa===e).length]),[pr.length+"","contatos"]),"u-barco-rio.webp"]},
  projetos:()=>{const tf=L.lista("tarefas");return ["Tarefas","Como estão as tarefas de todos os projetos.",anelIntro(OPC.status_t.map(e=>[e,tf.filter(t=>t.status===e).length]),[tf.length+"","tarefas"]),"u-sumauma.webp"]},
  marketing:()=>{const ps=L.lista("posts");return ["Conteúdo","Os posts por situação, da ideia ao publicado.",anelIntro(OPC.status_p.map(e=>[e,ps.filter(p=>p.status===e).length]),[ps.length+"","posts"]),"u-garca.webp"]},
- pessoas:()=>{const mb=L.lista("membros");return ["Equipe","Quem está em cada diretoria.",anelIntro(OPC.diretoria.map(d=>[d,mb.filter(m=>m.diretoria===d).length,mb.filter(m=>m.diretoria===d).map(m=>m.nome).join(", ")]),[mb.length+"","pessoas"]),"u-meninos-barco.webp"]}};
+ pessoas:()=>{const mb=L.lista("membros");return ["Equipe","Quem está em cada diretoria.",anelIntro(OPC.diretoria.map(d=>[d,mb.filter(m=>m.diretoria===d).length,mb.filter(m=>m.diretoria===d).map(m=>m.nome).join(", ")]),[mb.length+"","pessoas"]),"u-floresta-sol.webp"]}};
 function intro(pag){const f=INTRO[pag];if(!f)return;let visto={};try{visto=JSON.parse(sessionStorage.getItem("mare_intro")||"{}")}catch(e){}if(visto[pag])return;visto[pag]=1;try{sessionStorage.setItem("mare_intro",JSON.stringify(visto))}catch(e){}
  const [t,fr,svg,foto]=f(),el=$("intro");el.style.setProperty("--foto",`url(img/${foto})`);el.innerHTML=`<div class="ib"><div><div class="pal">${t}</div><div class="fr">${fr}</div></div>${svg}</div><small>toque para pular</small>`;
  el.hidden=false;el.classList.remove("sai");const fecha=()=>{el.classList.add("sai");setTimeout(()=>{el.hidden=true},700);document.querySelector(".pagina.on .g.entra")?.classList.remove("entra");void document.body.offsetWidth;document.querySelectorAll(".pagina.on .g").forEach(g=>{g.classList.add("entra")})};el.onclick=fecha;setTimeout(fecha,1900)}
