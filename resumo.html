@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MARÉ · Resumo</title>
+<link rel="icon" href="img/icone-onda-64.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* Resumo que o "Exportar" abre: uma página só com o que importa de cada diretoria, pronta para imprimir ou salvar em PDF
+   e mandar no grupo. Lê os mesmos dados do painel (loja.js, no navegador de quem abriu). */
+:root{--tinta:#18201c;--mut:#5f6b64;--linha:#e2e6e1;--fundo:#f3f5f1;--card:#fff;--verde:#2f7d5b;--menta:#5fd9df;--broto:#a6d15f;--alerta:#b4471f}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--tinta);font:15px/1.5 Manrope,system-ui,sans-serif}
+.folha{max-width:1000px;margin:0 auto;padding:28px 22px 60px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;border-bottom:2px solid var(--tinta);padding-bottom:14px;margin-bottom:22px}
+header h1{margin:0;font-size:30px;font-weight:800;letter-spacing:-.01em}
+header p{margin:2px 0 0;color:var(--mut)}
+.acoes{display:flex;gap:8px;flex-wrap:wrap}
+.acoes button,.acoes a{font:600 14px Manrope,sans-serif;padding:9px 16px;border-radius:999px;border:1px solid var(--tinta);background:var(--tinta);color:#fff;cursor:pointer;text-decoration:none}
+.acoes .claro{background:transparent;color:var(--tinta)}
+.kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.kpi{background:var(--card);border-radius:14px;padding:14px 16px;border:1px solid var(--linha)}
+.kpi b{display:block;font-size:24px;font-weight:800}
+.kpi span{color:var(--mut);font-size:13px}
+.kpi.mal b{color:var(--alerta)}
+.grade{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+section{background:var(--card);border-radius:14px;padding:16px 18px;border:1px solid var(--linha);break-inside:avoid}
+section.larga{grid-column:1/-1}
+h2{margin:0 0 4px;font-size:17px;font-weight:800}
+h2 small{font-weight:500;color:var(--mut);font-size:13px;margin-left:6px}
+.sub{margin:0 0 10px;color:var(--mut);font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--mut);font-weight:600;padding:6px 6px 6px 0;border-bottom:1px solid var(--linha)}
+td{padding:7px 6px 7px 0;border-bottom:1px solid var(--linha);vertical-align:top}
+tr:last-child td{border-bottom:0}
+.dir{text-align:right}
+.atras{color:var(--alerta);font-weight:700}
+.barra{height:8px;border-radius:99px;background:#eceee9;overflow:hidden;margin-top:4px}
+.barra i{display:block;height:100%;background:var(--verde)}
+.barra i.mal{background:var(--alerta)}
+.vazio{color:var(--mut);font-style:italic}
+footer{margin-top:22px;color:var(--mut);font-size:12px}
+@media(max-width:760px){.kpis{grid-template-columns:1fr 1fr}.grade{grid-template-columns:1fr}}
+@media print{body{background:#fff}.acoes{display:none}.folha{padding:0}section,.kpi{border-color:#ccc}@page{margin:14mm}}
+</style></head><body>
+<div class="folha">
+ <header>
+  <div><h1>MARÉ · Resumo da semana</h1><p id="quando"></p></div>
+  <div class="acoes"><button onclick="print()">Imprimir ou salvar PDF</button><button class="claro" id="bJson">Cópia de segurança (.json)</button><a class="claro" href="painel.html">Voltar ao painel</a></div>
+ </header>
+ <div class="kpis" id="kpis"></div>
+ <div class="grade">
+  <section><h2>Caixa <small>Financeiro · Letícia</small></h2><p class="sub">Próximas contas a pagar e a receber.</p><table id="tContas"></table></section>
+  <section><h2>Orçamento</h2><p class="sub">Quanto de cada categoria já foi gasto.</p><table id="tOrc"></table></section>
+  <section><h2>Comercial <small>Elias</small></h2><p class="sub">Propostas por etapa e o próximo passo de cada uma.</p><table id="tFunil"></table><table id="tProx" style="margin-top:10px"></table></section>
+  <section><h2>Projetos <small>João</small></h2><p class="sub">Etapa e prazo de cada projeto.</p><table id="tProj"></table></section>
+  <section class="larga"><h2>Tarefas</h2><p class="sub">Atrasadas primeiro, depois as dos próximos 14 dias.</p><table id="tTar"></table></section>
+  <section><h2>Marketing <small>Anaelson</small></h2><p class="sub">Publicados, próximos posts e imprensa.</p><table id="tMkt"></table></section>
+  <section><h2>Pessoas <small>Gabrielly</small></h2><p class="sub">Quem faz o quê e as horas da semana.</p><table id="tPes"></table></section>
+ </div>
+ <footer id="rod"></footer>
+</div>
+<script src="loja.js"></script>
+<script>
+const L=window.LOJA,$=id=>document.getElementById(id);
+const brl=v=>"R$ "+Math.round(v).toLocaleString("pt-BR");
+const dia=s=>s?s.slice(8,10)+"/"+s.slice(5,7):"—";
+const hoje=L.hoje,hojeISO=hoje.toISOString().slice(0,10);
+const em=(dias)=>new Date(hoje.getTime()+dias*864e5).toISOString().slice(0,10);
+const linhas=(tab,cab,rows,vazio)=>{$(tab).innerHTML=rows.length?`<thead><tr>${cab.map(c=>`<th${c[1]?' class="dir"':""}>${c[0]}</th>`).join("")}</tr></thead><tbody>${rows.map(r=>`<tr>${r.map((v,i)=>`<td${cab[i]&&cab[i][1]?' class="dir"':""}>${v}</td>`).join("")}</tr>`).join("")}</tbody>`:`<tr><td class="vazio">${vazio}</td></tr>`};
+
+$("quando").textContent="Gerado em "+new Date().toLocaleDateString("pt-BR",{weekday:"long",day:"2-digit",month:"long",year:"numeric"});
+
+// caixa (mesma conta do painel: fôlego = saldo ÷ média de saídas pagas dos últimos 3 meses)
+const lc=L.lista("lancamentos"),pago=lc.filter(x=>x.status==="pago"),pend=lc.filter(x=>x.status!=="pago");
+const soma=(a,t)=>a.filter(x=>x.tipo===t).reduce((s,x)=>s+(+x.valor||0),0);
+const saldo=soma(pago,"entrada")-soma(pago,"saida");
+const saidas3=[0,1,2].map(k=>{const d=new Date(hoje.getFullYear(),hoje.getMonth()-k,1).toISOString().slice(0,7);return soma(pago.filter(x=>x.data?.slice(0,7)===d),"saida")});
+const medio=Math.max(1,saidas3.reduce((a,b)=>a+b,0)/3),folego=saldo/medio,aPagar=soma(pend,"saida"),aReceber=soma(pend,"entrada");
+const tarefas=L.lista("tarefas"),atras=tarefas.filter(t=>t.status!=="Feito"&&t.prazo&&t.prazo<hojeISO);
+const prosp=L.lista("prospectos"),abertas=prosp.filter(p=>p.etapa!=="Fechado"&&p.etapa!=="Perdido");
+$("kpis").innerHTML=[[brl(saldo),"em caixa",saldo<0],[brl(aPagar),"a pagar",aPagar>saldo],[folego.toFixed(1).replace(".",",")+" meses","de fôlego",folego<2],[atras.length,"tarefas atrasadas",atras.length>0]]
+ .map(([v,r,mal])=>`<div class="kpi${mal?" mal":""}"><b>${v}</b><span>${r}</span></div>`).join("");
+
+linhas("tContas",[["Data"],["O quê"],["Valor",1]],pend.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(0,7)
+ .map(x=>[dia(x.data),x.descricao+` <span style="color:var(--mut)">· ${x.tipo==="entrada"?"receber":"pagar"}</span>`,(x.tipo==="entrada"?"+ ":"− ")+brl(x.valor)]),"Nada pendente.");
+
+linhas("tOrc",[["Categoria"],["Gasto",1],["Plano",1]],L.lista("orcamento").map(o=>{const g=soma(pago.filter(x=>x.categoria===o.categoria),"saida"),p=o.planejado?g/o.planejado:0;
+ return [o.categoria+`<div class="barra"><i class="${p>1?"mal":""}" style="width:${Math.min(100,p*100).toFixed(0)}%"></i></div>`,brl(g),brl(o.planejado)]}),"Sem orçamento lançado.");
+
+const etapas=["Contato","Reunião","Proposta","Fechado"];
+linhas("tFunil",[["Etapa"],["Quantas",1],["Valor",1]],etapas.map(e=>{const a=prosp.filter(p=>p.etapa===e);return [e,a.length,brl(a.reduce((s,p)=>s+(+p.valor||0),0))]}),"Sem propostas.");
+const prevista=abertas.reduce((s,p)=>s+(+p.valor||0)*(+p.chance||0)/100,0);
+linhas("tProx",[["Quando"],["Cliente · próximo passo"]],abertas.slice().sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(0,5)
+ .map(p=>[dia(p.data),`<b>${p.nome}</b> · ${p.proximo||"—"}`]).concat([["",`Receita prevista (valor × chance): <b>${brl(prevista)}</b>`]]),"");
+
+linhas("tProj",[["Projeto"],["Etapa"],["Fim"]],L.lista("projetos").map(p=>[`<b>${p.nome}</b><br><span style="color:var(--mut);font-size:13px">${p.tema} · ${p.resp}</span>`,p.estado==="Em andamento"?p.etapa:p.estado,dia(p.fim)]),"Sem projetos.");
+
+const prox=tarefas.filter(t=>t.status!=="Feito"&&t.prazo&&t.prazo>=hojeISO&&t.prazo<=em(14));
+linhas("tTar",[["Prazo"],["Tarefa"],["Projeto"],["Quem"],["Situação"]],atras.concat(prox).sort((a,b)=>a.prazo.localeCompare(b.prazo)).map(t=>[`<span class="${t.prazo<hojeISO?"atras":""}">${dia(t.prazo)}</span>`,t.titulo,t.projeto,t.resp,t.prazo<hojeISO?'<span class="atras">Atrasada</span>':t.status]),"Nenhuma tarefa atrasada ou para os próximos 14 dias.");
+
+const posts=L.lista("posts"),pub=posts.filter(p=>p.status==="Publicado"),seg=L.lista("seguidores");
+const alc=pub.reduce((s,p)=>s+(+p.alcance||0),0),segUlt=seg.at(-1)?.valor||0,segAnt=seg.at(-2)?.valor||segUlt;
+const proxPosts=posts.filter(p=>p.status!=="Publicado").sort((a,b)=>(a.data||"").localeCompare(b.data||"")).slice(0,4);
+const imp=L.lista("imprensa"),procurados=imp.filter(i=>i.status!=="Não procurado").length;
+linhas("tMkt",[["Item"],["Valor",1]],[["Posts publicados",pub.length],["Alcance somado",alc.toLocaleString("pt-BR")],["Seguidores",segUlt+(segUlt>=segAnt?` (+${segUlt-segAnt})`:` (${segUlt-segAnt})`)],["Imprensa procurada",procurados+" de "+imp.length]]
+ .concat(proxPosts.map(p=>[`${dia(p.data)} · ${p.tema} <span style="color:var(--mut)">(${p.formato}, ${p.status})</span>`,""])),"");
+
+const mem=L.lista("membros");
+linhas("tPes",[["Pessoa"],["Diretoria"],["h/sem",1]],mem.map(m=>[m.nome,m.diretoria,m.horas]).concat([["<b>Total</b>","",`<b>${mem.reduce((s,m)=>s+(+m.horas||0),0)}</b>`]]),"Sem equipe cadastrada.");
+
+$("rod").textContent="Dados do painel salvos neste navegador. Enquanto o painel estiver com dados de exemplo, os números acima também são de exemplo.";
+$("bJson").onclick=()=>L.exporta();
+</script>
+</body></html>

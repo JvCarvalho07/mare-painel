@@ -180,7 +180,7 @@ dialog .pe .bt:first-child{margin-right:auto}
  <a href="#pessoas" data-p="pessoas" title="Pessoas"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 2 6 5"/></svg>Pessoas</a>
  <a href="#mapa" data-p="mapa" title="Mapa"><svg viewBox="0 0 24 24"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</a>
  <div class="esp"></div>
- <button class="arq" id="bExp" title="Salvar arquivo com os dados para mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar</button>
+ <button class="arq" id="bExp" title="Abrir o resumo da semana para imprimir, salvar em PDF ou mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar</button>
  <button class="arq" id="bImp" title="Abrir arquivo de dados"><svg viewBox="0 0 24 24"><path d="M12 20V9M7 14l5-5 5 5M5 4h14"/></svg>Importar</button>
  <input type="file" id="fImp" accept="application/json" hidden>
 </nav>
@@ -525,7 +525,8 @@ const PAGS={inicio:["Início",inicio],financeiro:["Financeiro",financeiro],comer
 function render(){try{PAGS[pag][1]()}catch(e){console.error(e)}}
 function ir(){pag=location.hash.slice(1)||"inicio";if(!PAGS[pag])pag="inicio";$("titulo").textContent=PAGS[pag][0];document.querySelectorAll(".pagina").forEach(p=>p.classList.toggle("on",p.id==="p-"+pag));document.querySelectorAll(".barra a[data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===pag));scrollTo(0,0);setTimeout(()=>{render();intro(pag)},0)}
 L.aoMudar(render);addEventListener("hashchange",ir);addEventListener("resize",()=>{clearTimeout(window.__r);window.__r=setTimeout(render,150)});
-$("bExp").onclick=()=>L.exporta();$("bImp").onclick=()=>$("fImp").click();$("fImp").onchange=async()=>{try{await L.importa($("fImp").files[0]);alert("Dados importados.")}catch(e){alert("Não deu para abrir esse arquivo: "+e.message)}};
+// Exportar abre o resumo (uma página com o que importa de cada diretoria, para imprimir ou salvar em PDF); a cópia .json fica lá
+$("bExp").onclick=()=>open("resumo.html","_blank");$("bImp").onclick=()=>$("fImp").click();$("fImp").onchange=async()=>{try{await L.importa($("fImp").files[0]);alert("Dados importados.")}catch(e){alert("Não deu para abrir esse arquivo: "+e.message)}};
 ir();carregaMapa();
 </script>
 </body>
