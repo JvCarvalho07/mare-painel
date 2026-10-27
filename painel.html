@@ -1,0 +1,532 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Painel interno</title>
+<link rel="icon" href="img/icone-onda-64.png" sizes="64x64">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap">
+<style>
+/* Painel de trabalho: cada diretoria preenche os seus dados (lançamentos, contatos, tarefas, posts, presença).
+   Visual de referência: o "Intelligent Eco System" (fundo cinza-verde, barra escura, faixa de destaque com foto,
+   cartões brancos, gráficos de haste e de blocos). Sem vidro e sem degradê decorativo. */
+:root{--fundo:#e7eae4;--cartao:#fff;--tinta:#18201c;--mut:#66726b;--fraco:#a2aca6;--linha:#e6e9e3;--barra:#1b231f;
+ --lima:#a9d84e;--lima2:#d9efb0;--escuro:#1f2a24;--agua:#1f8a86;--coral:#e2735a;--alerta:#d98a1d;--ok:#3f8f4a;
+ --pess:#c0703f;--prov:#1f8a86;--otim:#8c992a;--r:22px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--fundo);color:var(--tinta);font:14.5px/1.5 Manrope,system-ui,sans-serif}
+button,input,select,textarea{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
+
+/* barra lateral escura */
+.barra{position:fixed;left:12px;top:12px;bottom:12px;width:76px;z-index:20;background:var(--barra);border-radius:26px;display:flex;flex-direction:column;align-items:center;padding:14px 0;gap:4px}
+.barra img{width:42px;height:42px;border-radius:50%;background:#fff;object-fit:contain;margin-bottom:14px}
+.barra a,.barra button{width:56px;height:52px;border:0;background:none;border-radius:16px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#8c9a92;text-decoration:none;font-size:10.5px;cursor:pointer}
+.barra svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8}
+.barra a:hover,.barra button:hover{color:#e8efe9}
+.barra a.on{background:#2c3a33;color:#fff}.barra a.on svg{stroke:var(--lima)}
+.barra .esp{flex:1}
+.conteudo{margin-left:100px;padding:12px 18px 40px 0;min-width:0}
+
+/* topo */
+.topo{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin:6px 0 14px}
+.topo .migalha{font-size:13px;color:var(--mut);margin-right:auto}
+.topo .migalha b{color:var(--tinta);font-weight:600}
+.pilula{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:var(--mut)}
+.pilula b{color:var(--tinta);font-weight:600}
+.eu{width:38px;height:38px;border-radius:50%;background:var(--escuro);color:var(--lima);display:grid;place-items:center;font-weight:700}
+
+/* faixa de destaque de cada área (com foto) */
+.hero{position:relative;border-radius:var(--r);overflow:hidden;min-height:220px;background:#d9e3d6 var(--foto) right center/cover;display:flex;align-items:stretch;margin-bottom:14px}
+.hero::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,#eef2ea 0%,#eef2eaf2 36%,#eef2ea8c 62%,#eef2ea00 85%)}
+.hero .hi{position:relative;padding:26px 28px;display:flex;flex-direction:column;gap:6px;max-width:640px}
+.hero small{font-size:12px;color:var(--mut);display:flex;align-items:center;gap:6px}
+.hero h1{margin:0;font-size:clamp(28px,3.4vw,42px);line-height:1.02;font-weight:800;letter-spacing:-.02em;text-transform:uppercase}
+.hero p{margin:0;color:var(--mut);max-width:44ch}
+.hero .mini{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.hero .mini div{background:#ffffffd9;border-radius:16px;padding:10px 14px;min-width:150px}
+.hero .mini span{display:block;font-size:12px;color:var(--mut)}.hero .mini b{font-size:22px;font-weight:700}
+.hero .canto{position:absolute;right:18px;bottom:18px;display:flex;gap:10px}
+.hero .canto div{background:#ffffffe6;border-radius:16px;padding:10px 14px;text-align:left}
+.hero .canto b{display:block;font-size:20px;font-weight:700}.hero .canto span{font-size:11.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.04em}
+
+/* grade e cartões */
+.g{display:grid;gap:14px;grid-template-columns:repeat(12,minmax(0,1fr));margin-bottom:14px}
+.c{background:var(--cartao);border-radius:var(--r);padding:18px 20px;min-width:0}
+.c.escuro{background:var(--escuro);color:#e8efe9}
+.c.lima{background:var(--lima2)}
+.c h2{margin:0 0 4px;font-size:15.5px;font-weight:700;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.c h2 .acoes{margin-left:auto;display:flex;gap:6px}
+.c .sub{font-size:12.5px;color:var(--mut);margin-bottom:10px}
+.c.escuro .sub{color:#a7b8ad}
+.s2{grid-column:span 2}.s3{grid-column:span 3}.s4{grid-column:span 4}.s5{grid-column:span 5}.s6{grid-column:span 6}.s7{grid-column:span 7}.s8{grid-column:span 8}.s12{grid-column:span 12}
+.kpi{display:flex;align-items:center;gap:12px}
+.kpi .ic{width:42px;height:42px;border-radius:50%;background:var(--fundo);display:grid;place-items:center;flex:none}
+.kpi .ic svg{width:19px;height:19px;stroke:var(--tinta);fill:none;stroke-width:1.8}
+.kpi b{display:block;font-size:22px;font-weight:700;line-height:1.1}.kpi span{font-size:12.5px;color:var(--mut)}
+.kpi em{font-style:normal;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:999px;margin-left:6px;background:#e5f3d4;color:#3d7a1f}
+.kpi em.mal{background:#fbe2dc;color:#b13b26}
+
+.bt{border:0;cursor:pointer;border-radius:999px;padding:7px 13px;font-size:13px;font-weight:600;background:var(--escuro);color:#fff;display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.bt.claro{background:var(--fundo);color:var(--tinta)}
+.bt.lima{background:var(--lima);color:var(--escuro)}
+.bt.mini{padding:4px 10px;font-size:12px}
+.seg{display:inline-flex;background:var(--fundo);border-radius:999px;padding:3px}
+.seg button{border:0;background:none;cursor:pointer;padding:5px 11px;border-radius:999px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.seg button[aria-pressed=true]{background:#fff;color:var(--tinta);box-shadow:0 1px 3px #0000001a}
+
+table.t{width:100%;border-collapse:collapse;font-size:13.5px}
+.t th{text-align:left;font-weight:600;font-size:12px;color:var(--mut);padding:8px 8px;border-bottom:1px solid var(--linha);white-space:nowrap}
+.t td{padding:9px 8px;border-bottom:1px solid var(--linha);vertical-align:middle}
+.t tr:last-child td{border-bottom:0}
+.t tbody tr{cursor:pointer}.t tbody tr:hover td{background:#f6f8f4}
+.t .dir{text-align:right}
+.rolar{overflow-x:auto}
+.etq{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap}
+.etq.ok{background:#e5f3d4;color:#3d7a1f}.etq.at{background:#fbecd2;color:#94570e}.etq.mal{background:#fbe2dc;color:#b13b26}.etq.cz{background:var(--fundo);color:var(--mut)}.etq.az{background:#d7eeec;color:#17625f}
+.vazio{color:var(--mut);font-size:13px;padding:10px 0}
+
+/* listas */
+.li{list-style:none;margin:0;padding:0}
+.li li{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--linha)}
+.li li:last-child{border-bottom:0}
+.li .tx{flex:1;min-width:0}.li .tx b{display:block;font-weight:600;font-size:13.5px}.li .tx span{font-size:12px;color:var(--mut)}
+.li .dt{font-size:12px;color:var(--mut);white-space:nowrap}
+.li .dt.atr{color:#b13b26;font-weight:700}
+.chk{width:20px;height:20px;border-radius:6px;border:2px solid #b9c2bc;background:none;cursor:pointer;flex:none;display:grid;place-items:center;padding:0}
+.chk.feito{background:var(--lima);border-color:var(--lima)}
+.chk.feito::after{content:"";width:8px;height:4px;border:2px solid var(--escuro);border-top:0;border-right:0;transform:rotate(-45deg) translate(1px,-1px)}
+
+/* quadro (kanban) */
+.quadro{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:10px}
+.coluna{background:var(--fundo);border-radius:18px;padding:10px;min-height:120px}
+.coluna>b{display:flex;justify-content:space-between;font-size:12.5px;color:var(--mut);margin:2px 4px 8px}
+.cartao{background:#fff;border-radius:14px;padding:10px 12px;margin-bottom:8px;cursor:pointer;font-size:13px}
+.cartao b{display:block;font-weight:600}.cartao span{color:var(--mut);font-size:12px}
+.cartao .pe{display:flex;align-items:center;justify-content:space-between;margin-top:6px;font-size:12px;gap:6px}
+.cartao .mv{display:flex;gap:4px}.cartao .mv button{border:0;background:var(--fundo);border-radius:8px;width:24px;height:22px;cursor:pointer;font-size:12px}
+
+/* gráficos */
+svg{display:block}
+.graf{width:100%;height:220px}
+.leg{display:flex;gap:14px;flex-wrap:wrap;font-size:12px;color:var(--mut)}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px;vertical-align:-1px}
+.barras-h .linha{display:grid;grid-template-columns:150px 1fr 70px;gap:10px;align-items:center;margin:8px 0;font-size:13px}
+.barras-h .tr{height:12px;border-radius:6px;background:var(--fundo);overflow:hidden;display:flex}
+.barras-h .tr i{display:block;height:100%}
+.barras-h .vl{text-align:right;font-weight:600}
+
+/* calendário editorial */
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}
+.cal .d{min-height:88px;border-radius:12px;background:var(--fundo);padding:6px;font-size:11.5px;display:flex;flex-direction:column;gap:4px}
+.cal .d.fora{opacity:.45}.cal .d.hoje{box-shadow:inset 0 0 0 2px var(--escuro)}
+.cal .d>b{font-size:11.5px;color:var(--mut)}
+.cal .hd{text-align:center;font-size:11.5px;font-weight:700;color:var(--mut)}
+.cal .post{border-radius:8px;padding:3px 6px;font-size:11px;line-height:1.25;cursor:pointer;color:#fff}
+
+/* mapa */
+.mapaC{position:relative;padding:0;overflow:hidden;background:#0d1b1f;min-height:560px}
+#mMapa{width:100%;height:100%;min-height:560px;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none}
+#mMapa.arrasta{cursor:grabbing}
+#mMapa path.br{stroke:#5fd9df;stroke-width:1;stroke-opacity:.7;vector-effect:non-scaling-stroke}
+#mMapa path.br:hover{stroke:#fff;stroke-opacity:1;stroke-width:2}
+.mapaC .flut{position:absolute;left:14px;top:14px;z-index:2;display:flex;flex-direction:column;gap:8px}
+.mapaC .seg{background:#0d1b1fcc}.mapaC .seg button{color:#a9c2c3}.mapaC .seg button[aria-pressed=true]{background:#5fd9df;color:#0d1b1f}
+.mapaC .leg{background:#0d1b1fcc;color:#cfe3e2;border-radius:12px;padding:8px 10px}
+.zoom{position:absolute;right:14px;bottom:14px;z-index:2;display:flex;flex-direction:column;gap:6px}
+.zoom button{width:36px;height:36px;border:0;border-radius:10px;background:#0d1b1fd9;color:#cfe3e2;font-size:18px;cursor:pointer;box-shadow:inset 0 0 0 1px #5fd9df55}
+
+/* formulário */
+dialog{border:0;border-radius:22px;padding:22px;width:min(460px,92vw);box-shadow:0 30px 80px #0005}
+dialog::backdrop{background:#18201c80}
+dialog h3{margin:0 0 14px;font-size:18px}
+dialog label{display:block;font-size:12.5px;font-weight:600;color:var(--mut);margin:10px 0 4px}
+dialog input,dialog select,dialog textarea{width:100%;border:1px solid #d6dcd5;border-radius:12px;padding:9px 11px;background:#fbfcfa}
+dialog .pe{display:flex;gap:8px;margin-top:18px}
+dialog .pe .bt:first-child{margin-right:auto}
+.dica{position:fixed;z-index:50;padding:9px 11px;border-radius:12px;background:#18201cf2;color:#fff;font-size:12.5px;line-height:1.45;pointer-events:none;opacity:0;transition:opacity .12s;max-width:260px}
+.dica i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:6px}
+
+/* abertura de cada área: o dado principal anotado sobre a foto, que depois se desfaz no painel */
+.intro{position:fixed;inset:0;z-index:40;background:#0d1714 var(--foto) center/cover;display:grid;place-items:center;cursor:pointer;transition:opacity .55s ease,transform .7s cubic-bezier(.6,0,.3,1)}
+.intro::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 60% at 50% 50%,#0d171466,#0d1714e6)}
+.intro .ib{position:relative;width:min(1000px,94vw);display:grid;grid-template-columns:1fr 1.2fr;gap:20px;align-items:center;color:#eef4ef}
+.intro .pal{font:800 clamp(56px,10vw,140px)/.85 Manrope;letter-spacing:-.05em;text-transform:uppercase;background:var(--foto) center/cover;-webkit-background-clip:text;background-clip:text;color:transparent;filter:brightness(1.6)}
+.intro .fr{font-size:16px;color:#cfe0d6;margin-top:12px;max-width:30ch}
+.intro svg{width:100%;height:auto;overflow:visible}
+.intro small{position:absolute;bottom:22px;left:0;right:0;text-align:center;color:#a7b8ad;font-size:12px}
+.intro[hidden]{display:none}.intro.sai{opacity:0;transform:scale(.94) translateY(-30px);pointer-events:none}
+.entra>*{animation:entra .55s cubic-bezier(.2,.7,.2,1) both}
+.entra>*:nth-child(2){animation-delay:.06s}.entra>*:nth-child(3){animation-delay:.12s}.entra>*:nth-child(4){animation-delay:.18s}.entra>*:nth-child(5){animation-delay:.24s}.entra>*:nth-child(6){animation-delay:.3s}
+@keyframes entra{from{opacity:0;transform:translateY(16px)}}
+
+.pagina{display:none}.pagina.on{display:block}
+@media(max-width:1180px){.s3{grid-column:span 6}.s4,.s5{grid-column:span 6}.s7,.s8{grid-column:span 12}}
+@media(max-width:820px){.s2,.s3,.s4,.s5,.s6{grid-column:span 12}.hero .canto{position:static;margin:0 20px 20px}.hero{flex-direction:column}.intro .ib{grid-template-columns:1fr}.intro svg{max-height:46vh}}
+@media(max-width:640px){.barra{left:0;right:0;top:auto;bottom:0;width:auto;height:64px;border-radius:18px 18px 0 0;flex-direction:row;justify-content:space-around;padding:0 4px;overflow-x:auto}.barra img,.barra .esp,.barra .arq{display:none}.barra a{width:auto;min-width:52px;flex:1}
+ .conteudo{margin-left:0;padding:10px 10px 90px}.cal .d{min-height:64px}.quadro{grid-template-columns:1fr}.barras-h .linha{grid-template-columns:100px 1fr 60px}.hero::before{background:#eef2eae6}}
+</style>
+</head>
+<body>
+<nav class="barra" aria-label="Áreas">
+ <img src="img/icone-onda-192.png" alt="">
+ <a href="#inicio" data-p="inicio" title="Início"><svg viewBox="0 0 24 24"><path d="M4 11l8-7 8 7v9H4z"/></svg>Início</a>
+ <a href="#financeiro" data-p="financeiro" title="Financeiro"><svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/></svg>Financeiro</a>
+ <a href="#comercial" data-p="comercial" title="Comercial"><svg viewBox="0 0 24 24"><path d="M4 6h16l-6 7v6l-4 2v-8z"/></svg>Comercial</a>
+ <a href="#projetos" data-p="projetos" title="Projetos"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="10" rx="2"/></svg>Projetos</a>
+ <a href="#marketing" data-p="marketing" title="Marketing"><svg viewBox="0 0 24 24"><path d="M4 10v4l12 5V5z"/><path d="M16 9a3 3 0 010 6"/></svg>Marketing</a>
+ <a href="#pessoas" data-p="pessoas" title="Pessoas"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 2 6 5"/></svg>Pessoas</a>
+ <a href="#mapa" data-p="mapa" title="Mapa"><svg viewBox="0 0 24 24"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</a>
+ <div class="esp"></div>
+ <button class="arq" id="bExp" title="Salvar arquivo com os dados para mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar</button>
+ <button class="arq" id="bImp" title="Abrir arquivo de dados"><svg viewBox="0 0 24 24"><path d="M12 20V9M7 14l5-5 5 5M5 4h14"/></svg>Importar</button>
+ <input type="file" id="fImp" accept="application/json" hidden>
+</nav>
+
+<div class="conteudo">
+ <div class="topo"><div class="migalha">Painel / <b id="titulo">Início</b></div><div class="pilula">Expediente: <b>sábado, 4 h</b></div><div class="pilula" id="pHoje"></div><div class="eu" title="João">J</div></div>
+
+ <!-- INÍCIO -->
+ <section class="pagina" id="p-inicio">
+  <div class="hero" style="--foto:linear-gradient(115deg,#dcebd6 0%,#b4dccd 55%,#78bdb2 100%)"><div class="hi"><small>Visão geral</small><h1>Bom dia,<br>equipe</h1><p>O que precisa de atenção neste expediente, juntando o que cada diretoria preencheu.</p>
+   <div class="mini" id="iMini"></div></div></div>
+  <div class="g entra" id="iKpi"></div>
+  <div class="g">
+   <div class="c s5"><h2>Tarefas da semana<span class="acoes"><button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">Marque quando terminar.</div><ul class="li" id="iTarefas"></ul></div>
+   <div class="c s4"><h2>Agenda</h2><div class="sub">Prazos, posts e retornos a clientes.</div><ul class="li" id="iAgenda"></ul></div>
+   <div class="c s3 escuro"><h2>Atenção</h2><div class="sub">O que está atrasado ou vence logo.</div><ul class="li" id="iAlertas" style="color:#e8efe9"></ul></div>
+  </div>
+  <div class="g">
+   <div class="c s8"><h2>Dinheiro: entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span></div><svg class="graf" id="iGraf"></svg></div>
+   <div class="c s4"><h2>Onde divulgar primeiro</h2><div class="sub">Alagamento nas notícias e nenhum relato.</div><ul class="li" id="iAlvos"></ul></div>
+  </div>
+ </section>
+
+ <!-- FINANCEIRO -->
+ <section class="pagina" id="p-financeiro">
+  <div class="hero" style="--foto:url(img/u-rio-aereo.webp)"><div class="hi"><small>Diretoria Financeira · Letícia</small><h1>Caixa da<br>empresa</h1><p>Lance cada entrada e saída. O saldo, o fôlego e o orçamento se atualizam sozinhos.</p>
+   <div class="mini"><button class="bt lima" data-novo="lancamentos">+ Lançamento</button></div></div><div class="canto" id="fCanto"></div></div>
+  <div class="g entra" id="fKpi"></div>
+  <div class="g">
+   <div class="c s8"><h2>Entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span><span><i style="background:#cfd6cf"></i>previsto (pendente)</span></div><svg class="graf" id="fGraf"></svg></div>
+   <div class="c s4"><h2>Gastos por categoria</h2><div class="sub">Pagos e pendentes.</div><div class="barras-h" id="fCat"></div></div>
+  </div>
+  <div class="g">
+   <div class="c s8"><h2>Lançamentos<span class="acoes"><span class="seg" id="fFiltro"><button data-v="todos" aria-pressed="true">Todos</button><button data-v="entrada" aria-pressed="false">Entradas</button><button data-v="saida" aria-pressed="false">Saídas</button><button data-v="pendente" aria-pressed="false">Pendentes</button></span><button class="bt mini" data-novo="lancamentos">+ Novo</button></span></h2><div class="sub">Clique numa linha para editar.</div><div class="rolar"><table class="t" id="fTab"></table></div></div>
+   <div class="c s4"><h2>Orçamento do ano<span class="acoes"><button class="bt mini claro" data-novo="orcamento">+ Categoria</button></span></h2><div class="sub">Planejado × gasto. Clique para mudar o planejado.</div><div id="fOrc"></div></div>
+  </div>
+  <div class="g">
+   <div class="c s8"><h2>Simulação de 24 meses<span class="acoes"><span class="seg" id="fCen"></span></span></h2><div class="sub">Começa do saldo real de hoje. Ligue as situações ruins para testar.</div><svg class="graf" id="fSim" style="height:240px"></svg></div>
+   <div class="c s4 escuro"><h2>E se der errado?</h2><div class="sub">Tempestades ligadas mudam a simulação.</div><div id="fTemp" style="display:flex;flex-wrap:wrap;gap:6px"></div><div style="margin-top:14px"><b id="fRes" style="font-size:20px"></b><div class="sub" id="fResF"></div></div></div>
+  </div>
+ </section>
+
+ <!-- COMERCIAL -->
+ <section class="pagina" id="p-comercial">
+  <div class="hero" style="--foto:url(img/u-barco-rio.webp)"><div class="hi"><small>Diretoria Comercial · Elias</small><h1>Clientes e<br>propostas</h1><p>Cada possível cliente anda pelas etapas até fechar. Mova os cartões e anote o próximo passo.</p>
+   <div class="mini"><button class="bt lima" data-novo="prospectos">+ Contato</button></div></div><div class="canto" id="cCanto"></div></div>
+  <div class="g entra" id="cKpi"></div>
+  <div class="c" style="margin-bottom:14px"><h2>Funil</h2><div class="sub">Use as setas para mudar a etapa; clique no cartão para editar.</div><div class="quadro" id="cQuadro" style="--n:5"></div></div>
+  <div class="g">
+   <div class="c s6"><h2>Próximos passos</h2><div class="sub">Em ordem de data. Vermelho = atrasado.</div><ul class="li" id="cPassos"></ul></div>
+   <div class="c s6"><h2>Por segmento</h2><div class="sub">Onde estão os contatos e quanto valem.</div><div class="barras-h" id="cSeg"></div></div>
+  </div>
+  <div class="c"><h2>Serviços e preços<span class="acoes"><button class="bt mini" data-novo="servicos">+ Serviço</button></span></h2><div class="sub">Tabela que o Comercial usa nas propostas. Clique para editar.</div><div class="rolar"><table class="t" id="cServ"></table></div></div>
+ </section>
+
+ <!-- PROJETOS -->
+ <section class="pagina" id="p-projetos">
+  <div class="hero" style="--foto:url(img/u-sumauma.webp)"><div class="hi"><small>Diretoria de Projetos · João</small><h1>Projetos e<br>tarefas</h1><p>Cada projeto anda do pedido até a ação. As tarefas mostram quem está fazendo o quê e até quando.</p>
+   <div class="mini"><button class="bt lima" data-novo="tarefas">+ Tarefa</button><button class="bt claro" data-novo="projetos">+ Projeto</button></div></div><div class="canto" id="jCanto"></div></div>
+  <div class="g entra" id="jKpi"></div>
+  <div class="c" style="margin-bottom:14px"><h2>Projetos</h2><div class="sub">Clique para mudar a etapa, o responsável ou as datas.</div><div class="rolar"><table class="t" id="jProj"></table></div></div>
+  <div class="c" style="margin-bottom:14px"><h2>Quadro de tarefas<span class="acoes"><button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">A fazer → Fazendo → Feito.</div><div class="quadro" id="jQuadro" style="--n:3"></div></div>
+  <div class="g">
+   <div class="c s6"><h2>Horas do mês</h2><div class="sub">6 pessoas × 4 h por semana. Cada tarefa aberta conta 2 h (estimativa).</div><div class="barras-h" id="jHoras"></div></div>
+   <div class="c s6"><h2>Calendário dos projetos</h2><div class="sub">Do início ao fim previsto.</div><svg class="graf" id="jGantt" style="height:200px"></svg></div>
+  </div>
+ </section>
+
+ <!-- MARKETING -->
+ <section class="pagina" id="p-marketing">
+  <div class="hero" style="--foto:url(img/u-garca.webp)"><div class="hi"><small>Diretoria de Marketing · Anaelson</small><h1>Conteúdo e<br>divulgação</h1><p>Planeje os posts, anote os resultados de cada um e veja o que funciona. A imprensa e os bairros-alvo ficam aqui.</p>
+   <div class="mini"><button class="bt lima" data-novo="posts">+ Post</button><button class="bt claro" id="bSeg">Registrar seguidores</button></div></div><div class="canto" id="kCanto"></div></div>
+  <div class="g entra" id="kKpi"></div>
+  <div class="g">
+   <div class="c s8"><h2>Calendário de posts<span class="acoes"><span class="seg" id="kMes"></span></span></h2><div class="leg" style="margin-bottom:8px"><span><i style="background:#a2aca6"></i>ideia</span><span><i style="background:#d98a1d"></i>produzindo</span><span><i style="background:#1f8a86"></i>agendado</span><span><i style="background:#3f8f4a"></i>publicado</span></div><div class="cal" id="kCal"></div></div>
+   <div class="c s4"><h2>Do alcance ao cliente</h2><div class="sub">Este mês. Clique num número para atualizar.</div><div class="barras-h" id="kFunil"></div><h2 style="margin-top:16px">Seguidores</h2><svg class="graf" id="kSeg" style="height:120px"></svg></div>
+  </div>
+  <div class="g">
+   <div class="c s8"><h2>Resultado dos posts publicados</h2><div class="sub">Ordenado pelo engajamento (curtidas + comentários + salvos ÷ alcance). Clique para lançar os números.</div><div class="rolar"><table class="t" id="kRes"></table></div></div>
+   <div class="c s4 escuro"><h2>Bairros-alvo</h2><div class="sub">Alagamento nas notícias, nenhum relato: panfleto e post marcando o bairro.</div><ul class="li" id="kAlvos" style="color:#e8efe9"></ul></div>
+  </div>
+  <div class="c"><h2>Imprensa<span class="acoes"><button class="bt mini" data-novo="imprensa">+ Veículo</button></span></h2><div class="sub">Quem procurar, com que pauta, e em que pé está.</div><div class="rolar"><table class="t" id="kImp"></table></div></div>
+ </section>
+
+ <!-- PESSOAS -->
+ <section class="pagina" id="p-pessoas">
+  <div class="hero" style="--foto:url(img/u-meninos-barco.webp)"><div class="hi"><small>Diretoria de Pessoas e Cultura · Gabrielly</small><h1>Equipe</h1><p>Quem faz parte, em que diretoria, presença em cada expediente e quantas tarefas cada um tem.</p>
+   <div class="mini"><button class="bt lima" data-novo="membros">+ Pessoa</button></div></div><div class="canto" id="pCanto"></div></div>
+  <div class="g entra" id="pKpi"></div>
+  <div class="g">
+   <div class="c s7"><h2>Organização</h2><div class="sub">Clique numa pessoa para editar.</div><div id="pOrg"></div></div>
+   <div class="c s5"><h2>Tarefas abertas por pessoa</h2><div class="sub">Do quadro de Projetos.</div><div class="barras-h" id="pCarga"></div></div>
+  </div>
+  <div class="c"><h2>Presença nos expedientes</h2><div class="sub">Marque quem veio em cada sábado.</div><div class="rolar"><table class="t" id="pPres"></table></div></div>
+ </section>
+
+ <!-- MAPA -->
+ <section class="pagina" id="p-mapa">
+  <div class="g">
+   <div class="c s8 mapaC"><div class="flut"><span class="seg" id="mModo"><button data-v="relatos" aria-pressed="true">Relatos</button><button data-v="noticias" aria-pressed="false">Notícias</button><button data-v="alvos" aria-pressed="false">Onde divulgar</button></span><div class="leg" id="mLeg"></div></div>
+    <svg id="mMapa" role="img" aria-label="Bairros de Belém e Ananindeua"></svg>
+    <div class="zoom"><button id="zMais" aria-label="Aproximar">+</button><button id="zMenos" aria-label="Afastar">−</button><button id="zIni" aria-label="Voltar ao começo" style="font-size:14px">⌂</button></div></div>
+   <div class="s4" style="display:flex;flex-direction:column;gap:14px">
+    <div class="c escuro"><div class="sub">Bairros sem nenhum relato</div><b id="mSem" style="font-size:40px;font-weight:800"></b><div class="sub">Relatos de exemplo até o formulário do site entrar.</div></div>
+    <div class="c"><h2>Onde divulgar primeiro</h2><ul class="li" id="mAlvos"></ul></div>
+    <div class="c"><h2>Mais relatos</h2><ul class="li" id="mTop"></ul></div>
+   </div>
+  </div>
+ </section>
+</div>
+
+<dialog id="form"><form method="dialog" id="formF"><h3 id="formT"></h3><div id="formC"></div><div class="pe"><button type="button" class="bt claro" id="formApaga">Apagar</button><button type="button" class="bt claro" id="formCancela">Cancelar</button><button class="bt" id="formSalva" value="ok">Salvar</button></div></form></dialog>
+<div class="intro" id="intro" hidden></div>
+<div class="dica" id="dica"></div>
+
+<script src="dados.js"></script>
+<script src="loja.js"></script>
+<script>
+const {CENARIOS,TEMPESTADES,simular,brl}=MARE,L=LOJA;
+const $=id=>document.getElementById(id),dica=$("dica");
+const mostra=(h,e)=>{dica.innerHTML=h;dica.style.opacity=1;let x=e.clientX+14;if(x>innerWidth-270)x=e.clientX-264;dica.style.left=x+"px";dica.style.top=(e.clientY+14)+"px"},esconde=()=>dica.style.opacity=0;
+const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+const dt=s=>s?s.slice(8,10)+"/"+s.slice(5,7):"—",dObj=s=>new Date(s+"T12:00"),hojeISO=L.hoje.toISOString().slice(0,10);
+const atrasado=s=>s&&s<hojeISO,dias=s=>Math.round((dObj(s)-L.hoje)/864e5);
+const tam=svg=>{const b=svg.getBoundingClientRect();return [Math.max(260,b.width),Math.max(110,b.height)]};
+$("pHoje").innerHTML=`Hoje: <b>26/10/2026</b>`;
+
+// ---------- formulário genérico ----------
+const OPC={etapa:["Contato","Reunião","Proposta","Fechado","Perdido"],status_t:["A fazer","Fazendo","Feito"],tipo:["entrada","saida"],status_l:["pago","pendente"],
+ status_p:["Ideia","Produzindo","Agendado","Publicado"],canal:["Instagram","WhatsApp","TikTok","Site","Panfleto"],formato:["Carrossel","Reels","Story","Post","Texto","Vídeo"],
+ status_i:["Não procurado","Pauta enviada","Respondeu","Saiu matéria","Sem interesse"],etapa_j:["Pedido","Triagem","Campo","Relatório","Ação"],estado_j:["Em andamento","Próximo","Ideia","Pausado","Concluído"],
+ diretoria:["Projetos","Comercial","Financeiro","Marketing","Pessoas e Cultura","A definir"]};
+const pessoas=()=>L.lista("membros").map(m=>m.nome);
+const CAMPOS={
+ lancamentos:[["data","Data","date"],["descricao","Descrição"],["tipo","Tipo","sel",OPC.tipo],["categoria","Categoria","lista",()=>[...new Set(L.lista("lancamentos").map(x=>x.categoria).concat(L.lista("orcamento").map(o=>o.categoria)))]],["valor","Valor (R$)","number"],["status","Situação","sel",OPC.status_l],["resp","Responsável","sel",pessoas]],
+ orcamento:[["categoria","Categoria"],["planejado","Planejado no ano (R$)","number"]],
+ prospectos:[["nome","Nome do cliente"],["segmento","Segmento"],["servico","Serviço","lista",()=>L.lista("servicos").map(s=>s.nome)],["valor","Valor da proposta (R$)","number"],["etapa","Etapa","sel",OPC.etapa],["chance","Chance de fechar (%)","number"],["proximo","Próximo passo"],["data","Data do próximo passo","date"],["resp","Responsável","sel",pessoas]],
+ servicos:[["nome","Serviço"],["para","Para quem"],["minimo","Preço mínimo (R$)","number"],["maximo","Preço máximo (R$)","number"],["horas","Horas da equipe","number"]],
+ projetos:[["nome","Nome"],["tema","Tema"],["etapa","Etapa","sel",OPC.etapa_j],["estado","Situação","sel",OPC.estado_j],["resp","Responsável","sel",()=>pessoas().concat(["a definir"])],["inicio","Início","date"],["fim","Fim previsto","date"],["horas","Horas previstas","number"]],
+ tarefas:[["titulo","Tarefa"],["projeto","Projeto","lista",()=>L.lista("projetos").map(p=>p.nome).concat(["Formalização","Equipe","Marketing"])],["resp","Responsável","sel",pessoas],["prazo","Prazo","date"],["status","Situação","sel",OPC.status_t]],
+ posts:[["data","Data","date"],["canal","Canal","sel",OPC.canal],["formato","Formato","sel",OPC.formato],["tema","Tema"],["status","Situação","sel",OPC.status_p],["alcance","Alcance","number"],["curtidas","Curtidas","number"],["comentarios","Comentários","number"],["salvos","Salvos","number"]],
+ imprensa:[["veiculo","Veículo"],["tipo","Tipo"],["contato","Como contatar"],["pauta","Pauta sugerida"],["status","Situação","sel",OPC.status_i]],
+ membros:[["nome","Nome"],["diretoria","Diretoria","sel",OPC.diretoria],["cargo","Cargo"],["horas","Horas por semana","number"]]};
+const NOMES={lancamentos:"lançamento",orcamento:"categoria do orçamento",prospectos:"contato",servicos:"serviço",projetos:"projeto",tarefas:"tarefa",posts:"post",imprensa:"veículo",membros:"pessoa"};
+const PADRAO={lancamentos:()=>({data:hojeISO,tipo:"saida",status:"pago",valor:0,resp:"Letícia"}),prospectos:()=>({etapa:"Contato",chance:20,valor:0,resp:"Elias",data:hojeISO}),tarefas:()=>({status:"A fazer",resp:"João",prazo:hojeISO}),
+ posts:()=>({data:hojeISO,canal:"Instagram",formato:"Carrossel",status:"Ideia",alcance:0,curtidas:0,comentarios:0,salvos:0}),projetos:()=>({etapa:"Pedido",estado:"Próximo",resp:"a definir",horas:20}),imprensa:()=>({status:"Não procurado"}),membros:()=>({diretoria:"A definir",horas:4}),orcamento:()=>({planejado:0}),servicos:()=>({horas:10})};
+let formAtual=null;
+function abre(col,item){const novo=!item;const v=item?{...item}:PADRAO[col]?.()||{};formAtual={col,id:item?.id};
+ $("formT").textContent=(novo?"Novo ":"Editar ")+NOMES[col];$("formApaga").hidden=novo;
+ $("formC").innerHTML=CAMPOS[col].map(([k,r,t,o])=>{const val=esc(v[k]??"");if(t==="sel"){const ops=typeof o==="function"?o():o;return `<label>${r}</label><select name="${k}">${ops.map(x=>`<option ${String(x)===String(v[k])?"selected":""}>${esc(x)}</option>`).join("")}</select>`}
+  if(t==="lista"){const ops=(typeof o==="function"?o():o).filter(Boolean);return `<label>${r}</label><input name="${k}" value="${val}" list="dl-${k}"><datalist id="dl-${k}">${ops.map(x=>`<option value="${esc(x)}">`).join("")}</datalist>`}
+  return `<label>${r}</label><input name="${k}" type="${t||"text"}" value="${val}" ${t==="number"?'step="any"':""}>`}).join("");$("form").showModal()}
+$("formF").addEventListener("submit",e=>{const f=new FormData($("formF")),o={};CAMPOS[formAtual.col].forEach(([k,,t])=>{o[k]=t==="number"?+(f.get(k)||0):f.get(k)});formAtual.id?L.altera(formAtual.col,formAtual.id,o):L.adiciona(formAtual.col,o)});
+$("formCancela").onclick=()=>$("form").close();$("formApaga").onclick=()=>{if(confirm("Apagar este item?")){L.apaga(formAtual.col,formAtual.id);$("form").close()}};
+document.addEventListener("click",e=>{const b=e.target.closest("[data-novo]");if(b)abre(b.dataset.novo)});
+const editar=(col,cont)=>cont.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("click",e=>{if(e.target.closest("button,input"))return;abre(col,L.lista(col).find(x=>x.id===el.dataset.id))}));
+
+// ---------- peças comuns ----------
+const IC={dinheiro:'<rect x="3" y="6" width="18" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/>',seta:'<path d="M7 17L17 7M9 7h8v8"/>',baixo:'<path d="M17 7L7 17M15 17H7V9"/>',relogio:'<circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/>',gota:'<path d="M12 3s6 7 6 11a6 6 0 01-12 0c0-4 6-11 6-11z"/>',gente:'<circle cx="9" cy="8" r="3"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6"/>',alvo:'<circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3"/>',check:'<path d="M5 12l4 4 10-10"/>',olho:'<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/>',cora:'<path d="M12 20s-7-4.5-7-10a4 4 0 017-2.5A4 4 0 0119 10c0 5.5-7 10-7 10z"/>'};
+const kpis=(cont,lista)=>{cont.innerHTML=lista.map(([ic,val,rot,tag,mal])=>`<div class="c s3 kpi"><div class="ic"><svg viewBox="0 0 24 24">${IC[ic]}</svg></div><div><b class="num">${val}${tag?`<em class="${mal?"mal":""}">${tag}</em>`:""}</b><span>${rot}</span></div></div>`).join("")};
+const canto=(cont,lista)=>cont.innerHTML=lista.map(([v,r])=>`<div><b class="num">${v}</b><span>${r}</span></div>`).join("");
+const barrasH=(cont,itens,fmt=v=>v)=>{const mx=Math.max(1,...itens.map(i=>i[1]+(i[2]||0)));cont.innerHTML=itens.length?itens.map(([n,v,v2,c1,c2])=>`<div class="linha"><span>${esc(n)}</span><div class="tr"><i style="width:${v/mx*100}%;background:${c1||"var(--lima)"}"></i>${v2?`<i style="width:${v2/mx*100}%;background:${c2||"#cfd6cf"}"></i>`:""}</div><span class="vl num">${fmt(v+(v2||0))}</span></div>`).join(""):`<div class="vazio">Nada ainda.</div>`};
+const etqStatus=s=>({"pago":"ok","pendente":"at","Feito":"ok","Fazendo":"az","A fazer":"cz","Publicado":"ok","Agendado":"az","Produzindo":"at","Ideia":"cz","Fechado":"ok","Perdido":"mal","Proposta":"at","Reunião":"az","Contato":"cz","Em andamento":"az","Próximo":"cz","Concluído":"ok","Pausado":"at","Saiu matéria":"ok","Respondeu":"az","Pauta enviada":"at","Não procurado":"cz","Sem interesse":"mal"})[s]||"cz";
+
+// gráfico de hastes (como o "Energy Production" da referência): entradas e saídas por mês
+function hastes(svg,meses,series,cores){const [W,H]=tam(svg),Lm=40,R=10,T=14,B=26,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+ const mx=Math.max(100,...series.flat())*1.15,n=meses.length,gx=pw/n,y=v=>T+ph-v/mx*ph;let s="";
+ for(let k=0;k<=3;k++){const v=mx/3*k;s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e6e9e3"/><text x="${Lm-6}" y="${y(v)+4}" font-size="10.5" fill="#a2aca6" text-anchor="end">${v>=1000?(v/1000).toFixed(1).replace(".",",")+"k":Math.round(v)}</text>`}
+ meses.forEach((m,i)=>{const cx=Lm+gx*i+gx/2;s+=`<text x="${cx}" y="${H-6}" font-size="11.5" fill="${m.atual?"#18201c":"#a2aca6"}" font-weight="${m.atual?700:400}" text-anchor="middle">${m.rot}</text>`;
+  series.forEach((ser,k)=>{const x=cx+(k-(series.length-1)/2)*Math.min(18,gx/4),v=ser[i];if(!v)return;const c=cores[k](i);s+=`<line x1="${x}" x2="${x}" y1="${y(0)}" y2="${y(v)}" stroke="${c}" stroke-width="3" stroke-linecap="round" opacity=".9"/><circle cx="${x}" cy="${y(v)}" r="5.5" fill="${c}" stroke="#fff" stroke-width="2"><title>${brl(v)}</title></circle>`})});
+ svg.innerHTML=s}
+
+// ---------- contas do financeiro a partir dos lançamentos ----------
+function contas(){const lc=L.lista("lancamentos"),pago=lc.filter(x=>x.status==="pago"),soma=(a,t)=>a.filter(x=>x.tipo===t).reduce((s,x)=>s+(+x.valor||0),0);
+ const saldo=soma(pago,"entrada")-soma(pago,"saida"),pend=lc.filter(x=>x.status==="pendente"),mesAtual=hojeISO.slice(0,7);
+ const doMes=lc.filter(x=>x.data?.slice(0,7)===mesAtual&&x.status==="pago");const gastoMes=soma(doMes,"saida")||1;
+ const saidas3=[0,1,2].map(k=>{const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()-k,1).toISOString().slice(0,7);return soma(pago.filter(x=>x.data?.slice(0,7)===d),"saida")});const medio=Math.max(1,saidas3.reduce((a,b)=>a+b,0)/3);
+ return {saldo,receber:soma(pend,"entrada"),pagar:soma(pend,"saida"),entMes:soma(doMes,"entrada"),saiMes:soma(doMes,"saida"),medio,folego:saldo/medio}}
+function porMes(ini=-5,n=8){const out=[];for(let k=ini;k<ini+n;k++){const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+k,1),c=d.toISOString().slice(0,7),lc=L.lista("lancamentos").filter(x=>x.data?.slice(0,7)===c);
+ const s=(t,st)=>lc.filter(x=>x.tipo===t&&(!st||x.status===st)).reduce((a,x)=>a+(+x.valor||0),0);out.push({rot:MES[d.getMonth()],atual:k===0,ent:s("entrada","pago"),sai:s("saida","pago"),entP:s("entrada","pendente"),saiP:s("saida","pendente")})}return out}
+
+// ---------- INÍCIO ----------
+function inicio(){const c=contas(),tf=L.lista("tarefas"),abertas=tf.filter(t=>t.status!=="Feito"),atr=abertas.filter(t=>atrasado(t.prazo)),pr=L.lista("prospectos");
+ $("iMini").innerHTML=`<div><span>Saldo em caixa</span><b class="num">${brl(c.saldo)}</b></div><div><span>Propostas abertas</span><b class="num">${pr.filter(p=>p.etapa==="Proposta").length}</b></div><div><span>Tarefas atrasadas</span><b class="num">${atr.length}</b></div>`;
+ kpis($("iKpi"),[["dinheiro",brl(c.saldo),"saldo em caixa"],["seta",brl(c.receber),"a receber"],["baixo",brl(c.pagar),"a pagar",c.pagar>c.saldo?"maior que o saldo":"",c.pagar>c.saldo],["relogio",c.folego.toFixed(1).replace(".",",")+" meses","de fôlego no ritmo de gastos"]]);
+ const sem=abertas.slice().sort((a,b)=>(a.prazo||"9").localeCompare(b.prazo||"9")).slice(0,6);
+ $("iTarefas").innerHTML=sem.map(t=>`<li data-id="${t.id}"><button class="chk" data-feito="${t.id}" aria-label="Concluir"></button><div class="tx"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)} · ${esc(t.resp)}</span></div><span class="dt ${atrasado(t.prazo)?"atr":""}">${dt(t.prazo)}</span></li>`).join("")||`<li class="vazio">Nenhuma tarefa aberta.</li>`;
+ $("iTarefas").querySelectorAll("[data-feito]").forEach(b=>b.onclick=()=>L.altera("tarefas",b.dataset.feito,{status:"Feito"}));editar("tarefas",$("iTarefas"));
+ const ag=[...abertas.map(t=>[t.prazo,t.titulo,"Tarefa · "+t.resp]),...L.lista("posts").filter(p=>p.status!=="Publicado").map(p=>[p.data,p.tema,p.canal+" · "+p.status]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)).map(p=>[p.data,p.proximo,p.nome])].filter(a=>a[0]&&a[0]>=hojeISO).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,6);
+ $("iAgenda").innerHTML=ag.map(a=>`<li><div class="tx"><b>${esc(a[1])}</b><span>${esc(a[2])}</span></div><span class="dt">${dt(a[0])}</span></li>`).join("")||`<li class="vazio">Nada marcado.</li>`;
+ const al=[...atr.map(t=>["Tarefa atrasada",t.titulo,t.prazo]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)&&atrasado(p.data)).map(p=>["Retorno atrasado",p.nome,p.data]),...L.lista("lancamentos").filter(l=>l.status==="pendente"&&l.tipo==="saida"&&dias(l.data)<=15).map(l=>["Conta a pagar",l.descricao+" · "+brl(l.valor),l.data])];
+ $("iAlertas").innerHTML=al.map(a=>`<li><div class="tx"><b>${esc(a[0])}</b><span style="color:#a7b8ad">${esc(a[1])}</span></div><span class="dt" style="color:#f2b4a6">${dt(a[2])}</span></li>`).join("")||`<li><div class="tx"><b>Tudo em dia</b></div></li>`;
+ const pm=porMes();hastes($("iGraf"),pm,[pm.map(m=>m.ent+m.entP),pm.map(m=>m.sai+m.saiP)],[i=>pm[i].entP&&!pm[i].ent?"#cfd6cf":"#a9d84e",i=>pm[i].saiP&&!pm[i].sai?"#cfd6cf":"#1f2a24"]);
+ $("iAlvos").innerHTML=(window.__alvos||[]).slice(0,5).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span>${a.municipio}</span></div></li>`).join("")||`<li class="vazio">Carregando o mapa…</li>`}
+
+// ---------- FINANCEIRO ----------
+let filtroF="todos",cen="prov";const lig=new Set();
+function financeiro(){const c=contas();
+ canto($("fCanto"),[[brl(c.saldo),"Saldo"],[c.folego.toFixed(1).replace(".",",")+" m","Fôlego"]]);
+ kpis($("fKpi"),[["seta",brl(c.entMes),"entradas em outubro"],["baixo",brl(c.saiMes),"saídas em outubro"],["relogio",brl(c.receber),"a receber (pendente)"],["dinheiro",brl(c.pagar),"a pagar (pendente)",c.pagar>c.saldo?"falta "+brl(c.pagar-c.saldo):"",c.pagar>c.saldo]]);
+ const pm=porMes();hastes($("fGraf"),pm,[pm.map(m=>m.ent+m.entP),pm.map(m=>m.sai+m.saiP)],[i=>pm[i].entP&&!pm[i].ent?"#cfd6cf":"#a9d84e",i=>pm[i].saiP&&!pm[i].sai?"#cfd6cf":"#1f2a24"]);
+ const cat={};L.lista("lancamentos").filter(l=>l.tipo==="saida").forEach(l=>{cat[l.categoria]=cat[l.categoria]||[0,0];cat[l.categoria][l.status==="pago"?0:1]+=+l.valor||0});
+ barrasH($("fCat"),Object.entries(cat).sort((a,b)=>b[1][0]+b[1][1]-a[1][0]-a[1][1]).map(([n,[p,q]])=>[n,p,q,"#1f2a24","#cfd6cf"]),brl);
+ const lc=L.lista("lancamentos").filter(l=>filtroF==="todos"||l.tipo===filtroF||l.status===filtroF).slice().sort((a,b)=>b.data.localeCompare(a.data));
+ $("fTab").innerHTML=`<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Responsável</th><th>Situação</th><th class="dir">Valor</th></tr></thead><tbody>`+lc.map(l=>`<tr data-id="${l.id}"><td>${dt(l.data)}</td><td>${esc(l.descricao)}</td><td>${esc(l.categoria)}</td><td>${esc(l.resp)}</td><td><span class="etq ${etqStatus(l.status)}">${l.status}</span>${l.status==="pendente"?` <button class="bt mini claro" data-paga="${l.id}">${l.tipo==="entrada"?"recebido":"pago"}</button>`:""}</td><td class="dir num" style="color:${l.tipo==="entrada"?"#3d7a1f":"#b13b26"}">${l.tipo==="entrada"?"+":"−"} ${brl(l.valor)}</td></tr>`).join("")+`</tbody>`;
+ $("fTab").querySelectorAll("[data-paga]").forEach(b=>b.onclick=()=>L.altera("lancamentos",b.dataset.paga,{status:"pago"}));editar("lancamentos",$("fTab"));
+ const gasto={};L.lista("lancamentos").filter(l=>l.tipo==="saida"&&l.status==="pago").forEach(l=>gasto[l.categoria]=(gasto[l.categoria]||0)+(+l.valor||0));
+ $("fOrc").innerHTML=L.lista("orcamento").map(o=>{const g=gasto[o.categoria]||0,p=+o.planejado||1,blocos=10,ch=Math.min(blocos,Math.round(g/p*blocos));return `<div data-id="${o.id}" style="cursor:pointer;margin:9px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(o.categoria)}</span><span class="num"><b>${brl(g)}</b> <span style="color:var(--mut)">de ${brl(o.planejado)}</span></span></div><div style="display:grid;grid-template-columns:repeat(${blocos},1fr);gap:3px;margin-top:5px">${Array.from({length:blocos},(_,i)=>`<i style="height:12px;border-radius:3px;background:${i<ch?(g>p?"#e2735a":"#a9d84e"):"#e7eae4"}"></i>`).join("")}</div></div>`}).join("");editar("orcamento",$("fOrc"));
+ // simulação a partir do saldo real
+ $("fCen").innerHTML=["pess","prov","otim"].map(k=>`<button data-c="${k}" aria-pressed="${k===cen}">${CENARIOS[k].nome}</button>`).join("");$("fCen").querySelectorAll("button").forEach(b=>b.onclick=()=>{cen=b.dataset.c;financeiro()});
+ $("fTemp").innerHTML=TEMPESTADES.map(t=>`<button class="bt mini" data-t="${t.id}" style="background:${lig.has(t.id)?"#e2735a":"#2c3a33"};color:#fff">${t.nome}</button>`).join("");$("fTemp").querySelectorAll("button").forEach(b=>b.onclick=()=>{lig.has(b.dataset.t)?lig.delete(b.dataset.t):lig.add(b.dataset.t);financeiro()});
+ const base=c.saldo,S={};for(const k in CENARIOS){const r=simular(k,lig);S[k]=r.serie.map(o=>Math.round(base+o.caixa-r.inicio))}
+ const svg=$("fSim"),[W,H]=tam(svg),Lm=50,R=86,T=10,B=24,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);const v=S[cen],lo=Math.min(-1000,...v),hi=Math.max(2000,...v)*1.1,x=i=>Lm+i/23*pw,y=q=>T+ph-(q-lo)/(hi-lo)*ph,cur=a=>a.map((q,i)=>(i?"L":"M")+x(i).toFixed(1)+","+y(q).toFixed(1)).join(" ");
+ let s=`<defs><clipPath id="clS"><rect x="${Lm}" y="${T}" width="${pw}" height="${ph}"/></clipPath></defs>`;const passo=hi-lo>40000?20000:hi-lo>15000?5000:hi-lo>6000?2000:1000;
+ for(let q=Math.ceil(lo/passo)*passo;q<=hi;q+=passo)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(q)}" y2="${y(q)}" stroke="${q?"#e6e9e3":"#18201c"}" ${q?"":'stroke-dasharray="4 4"'}/><text x="${Lm-6}" y="${y(q)+4}" font-size="10.5" fill="#a2aca6" text-anchor="end">${(q/1000).toLocaleString("pt-BR")}k</text>`;
+ if(lo<0)s+=`<rect x="${Lm}" y="${y(0)}" width="${pw}" height="${T+ph-y(0)}" fill="#e2735a" fill-opacity=".07"/>`;
+ for(let i=0;i<24;i+=3)s+=`<text x="${x(i)}" y="${H-6}" font-size="10.5" fill="#a2aca6" text-anchor="middle">${MARE.rotulo(i)}</text>`;
+ for(const k of ["pess","otim","prov"].filter(k=>k!==cen).concat(cen))s+=`<path clip-path="url(#clS)" d="${cur(S[k])}" fill="none" stroke="${CENARIOS[k].cor}" stroke-width="${k===cen?3:1.6}" ${k===cen?"":'stroke-dasharray="5 5" opacity=".7"'}/><text x="${W-R+8}" y="${Math.max(T+8,Math.min(T+ph,y(S[k][23])))+4}" font-size="11.5" fill="${k===cen?"#18201c":"#66726b"}" font-weight="${k===cen?700:400}">${CENARIOS[k].nome}</text>`;
+ svg.innerHTML=s;const zera=v.findIndex(q=>q<0);$("fRes").textContent=zera<0?"Aguenta os 24 meses":"Falta dinheiro em "+MARE.rotulo(zera);$("fResF").textContent=lig.size?"Cortar primeiro: contador por parceria, depois transporte.":"Nenhuma tempestade ligada."}
+$("fFiltro").querySelectorAll("button").forEach(b=>b.onclick=()=>{filtroF=b.dataset.v;$("fFiltro").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));financeiro()});
+
+// ---------- COMERCIAL ----------
+function comercial(){const pr=L.lista("prospectos"),ab=pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)),fech=pr.filter(p=>p.etapa==="Fechado"),prev=ab.reduce((a,p)=>a+(+p.valor||0)*(+p.chance||0)/100,0);
+ canto($("cCanto"),[[brl(prev),"Receita prevista"],[pr.length?Math.round(fech.length/pr.length*100)+"%":"—","Conversão"]]);
+ kpis($("cKpi"),[["gente",ab.length,"contatos ativos"],["alvo",pr.filter(p=>p.etapa==="Proposta").length,"propostas abertas"],["check",fech.length,"clientes fechados"],["dinheiro",brl(fech.reduce((a,p)=>a+(+p.valor||0),0)),"vendido"]]);
+ const E=OPC.etapa;$("cQuadro").innerHTML=E.map((e,i)=>{const l=pr.filter(p=>p.etapa===e);return `<div class="coluna"><b>${e}<span>${l.length} · ${brl(l.reduce((a,p)=>a+(+p.valor||0),0))}</span></b>`+l.map(p=>`<div class="cartao" data-id="${p.id}"><b>${esc(p.nome)}</b><span>${esc(p.servico)}</span><div class="pe"><span class="num">${brl(p.valor)} · ${p.chance}%</span><span class="mv">${i>0?`<button data-mv="${p.id}" data-d="-1" aria-label="Voltar etapa">←</button>`:""}${i<E.length-1?`<button data-mv="${p.id}" data-d="1" aria-label="Avançar etapa">→</button>`:""}</span></div></div>`).join("")+`</div>`}).join("");
+ $("cQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const p=pr.find(x=>x.id===b.dataset.mv),n=E[E.indexOf(p.etapa)+ +b.dataset.d];L.altera("prospectos",p.id,{etapa:n,chance:n==="Fechado"?100:n==="Perdido"?0:p.chance})});editar("prospectos",$("cQuadro"));
+ $("cPassos").innerHTML=ab.slice().sort((a,b)=>(a.data||"9").localeCompare(b.data||"9")).map(p=>`<li data-id="${p.id}" style="cursor:pointer"><span class="etq ${etqStatus(p.etapa)}">${p.etapa}</span><div class="tx"><b>${esc(p.proximo)}</b><span>${esc(p.nome)} · ${esc(p.resp)}</span></div><span class="dt ${atrasado(p.data)?"atr":""}">${dt(p.data)}</span></li>`).join("")||`<li class="vazio">Nenhum contato ativo.</li>`;editar("prospectos",$("cPassos"));
+ const sg={};pr.forEach(p=>{sg[p.segmento]=sg[p.segmento]||[0,0];sg[p.segmento][p.etapa==="Fechado"?0:1]+=+p.valor||0});barrasH($("cSeg"),Object.entries(sg).sort((a,b)=>b[1][0]+b[1][1]-a[1][0]-a[1][1]).map(([n,[f,o]])=>[n,f,o,"#a9d84e","#1f8a86"]),brl);
+ $("cServ").innerHTML=`<thead><tr><th>Serviço</th><th>Para quem</th><th>Horas</th><th class="dir">Preço</th></tr></thead><tbody>`+L.lista("servicos").map(s=>`<tr data-id="${s.id}"><td><b>${esc(s.nome)}</b></td><td>${esc(s.para)}</td><td>${s.horas} h</td><td class="dir num">${brl(s.minimo)} a ${brl(s.maximo)}</td></tr>`).join("")+`</tbody>`;editar("servicos",$("cServ"))}
+
+// ---------- PROJETOS ----------
+function projetos(){const pj=L.lista("projetos"),tf=L.lista("tarefas"),ab=tf.filter(t=>t.status!=="Feito"),atr=ab.filter(t=>atrasado(t.prazo)),cap=L.lista("membros").reduce((a,m)=>a+(+m.horas||0),0)*4,uso=ab.length*2;
+ canto($("jCanto"),[[pj.filter(p=>p.estado==="Em andamento").length,"Em andamento"],[cap+" h","Horas no mês"]]);
+ kpis($("jKpi"),[["alvo",pj.filter(p=>p.estado==="Em andamento").length,"projetos em andamento"],["check",ab.length,"tarefas abertas"],["relogio",atr.length,"tarefas atrasadas",atr.length?"atenção":"",atr.length>0],["gente",uso+" de "+cap+" h","horas pedidas no mês"]]);
+ const E=OPC.etapa_j;$("jProj").innerHTML=`<thead><tr><th>Projeto</th><th>Etapa</th><th>Responsável</th><th>Período</th><th>Tarefas</th><th>Situação</th></tr></thead><tbody>`+pj.map(p=>{const i=E.indexOf(p.etapa),t=tf.filter(x=>x.projeto===p.nome);return `<tr data-id="${p.id}"><td><b>${esc(p.nome)}</b><br><span style="color:var(--mut);font-size:12px">${esc(p.tema)}</span></td><td><div style="display:flex;gap:3px">${E.map((e,k)=>`<i title="${e}" style="width:22px;height:8px;border-radius:4px;background:${k<=i&&p.estado!=="Ideia"?"#a9d84e":"#e7eae4"}"></i>`).join("")}</div><span style="font-size:12px;color:var(--mut)">${p.etapa}</span></td><td>${esc(p.resp)}</td><td>${dt(p.inicio)} – ${dt(p.fim)}</td><td>${t.filter(x=>x.status==="Feito").length}/${t.length}</td><td><span class="etq ${etqStatus(p.estado)}">${p.estado}</span></td></tr>`}).join("")+`</tbody>`;editar("projetos",$("jProj"));
+ const S=OPC.status_t;$("jQuadro").innerHTML=S.map((s,i)=>{const l=tf.filter(t=>t.status===s).sort((a,b)=>(a.prazo||"").localeCompare(b.prazo||""));return `<div class="coluna"><b>${s}<span>${l.length}</span></b>`+l.map(t=>`<div class="cartao" data-id="${t.id}"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)}</span><div class="pe"><span>${esc(t.resp)} · <span style="color:${atrasado(t.prazo)&&s!=="Feito"?"#b13b26":"inherit"}">${dt(t.prazo)}</span></span><span class="mv">${i>0?`<button data-mv="${t.id}" data-d="-1" aria-label="Voltar">←</button>`:""}${i<2?`<button data-mv="${t.id}" data-d="1" aria-label="Avançar">→</button>`:""}</span></div></div>`).join("")+`</div>`}).join("");
+ $("jQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const t=tf.find(x=>x.id===b.dataset.mv);L.altera("tarefas",t.id,{status:S[S.indexOf(t.status)+ +b.dataset.d]})});editar("tarefas",$("jQuadro"));
+ barrasH($("jHoras"),[["Horas da equipe",cap,0,"#a9d84e"],["Pedidas pelas tarefas",uso,0,uso>cap?"#e2735a":"#1f2a24"]],v=>v+" h");
+ const com=pj.filter(p=>p.inicio&&p.fim),svg=$("jGantt"),[W,H]=tam(svg);svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+ if(!com.length){svg.innerHTML="";return}const ini=new Date(2026,8,1),nM=12,Lm=90,pw=W-Lm-10,xm=d=>Lm+((d.getFullYear()-ini.getFullYear())*12+d.getMonth()-ini.getMonth()+d.getDate()/31)/nM*pw;let s="";
+ for(let k=0;k<nM;k++){const d=new Date(2026,8+k,1),x=Lm+k/nM*pw;s+=`<line x1="${x}" x2="${x}" y1="0" y2="${H-18}" stroke="#eef0ec"/><text x="${x+4}" y="${H-4}" font-size="10.5" fill="#a2aca6">${MES[d.getMonth()]}</text>`}
+ const xh=xm(L.hoje);s+=`<line x1="${xh}" x2="${xh}" y1="0" y2="${H-18}" stroke="#e2735a" stroke-dasharray="3 3"/>`;
+ com.forEach((p,i)=>{const y=12+i*34,a=xm(dObj(p.inicio)),b=xm(dObj(p.fim));s+=`<text x="0" y="${y+14}" font-size="12.5" font-weight="600" fill="#18201c">${esc(p.nome)}</text><rect x="${a}" y="${y}" width="${Math.max(6,b-a)}" height="20" rx="10" fill="${p.estado==="Em andamento"?"#a9d84e":"#cfd6cf"}"/>`});svg.innerHTML=s}
+
+// ---------- MARKETING ----------
+let mesK=0;
+function marketing(){const ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publicado"),mes=hojeISO.slice(0,7),pubMes=pub.filter(p=>p.data.slice(0,7)===mes),alc=pubMes.reduce((a,p)=>a+(+p.alcance||0),0);
+ const eng=p=>(+p.alcance?((+p.curtidas||0)+(+p.comentarios||0)+(+p.salvos||0))/p.alcance*100:0),engM=pubMes.length?pubMes.reduce((a,p)=>a+eng(p),0)/pubMes.length:0;
+ const sg=L.lista("seguidores").slice().sort((a,b)=>a.data.localeCompare(b.data)),ult=sg.at(-1)?.valor||0,ant=sg.at(-2)?.valor||ult;
+ canto($("kCanto"),[[ult,"Seguidores"],[engM.toFixed(1).replace(".",",")+"%","Engajamento"]]);
+ kpis($("kKpi"),[["gente",ult,"seguidores no Instagram",ult>=ant?"+"+(ult-ant):String(ult-ant),ult<ant],["olho",alc.toLocaleString("pt-BR"),"alcance em outubro"],["cora",engM.toFixed(1).replace(".",",")+"%","engajamento médio"],["check",pubMes.length+" de "+ps.filter(p=>p.data.slice(0,7)===mes).length,"posts publicados no mês"]]);
+ const base=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+mesK,1);$("kMes").innerHTML=`<button data-k="-1" aria-pressed="false">←</button><button aria-pressed="true">${MES[base.getMonth()]} ${base.getFullYear()}</button><button data-k="1" aria-pressed="false">→</button>`;
+ $("kMes").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{mesK+= +b.dataset.k;marketing()});
+ const pri=new Date(base);pri.setDate(1-((base.getDay()+6)%7));const cor={"Ideia":"#a2aca6","Produzindo":"#d98a1d","Agendado":"#1f8a86","Publicado":"#3f8f4a"};let h=["seg","ter","qua","qui","sex","sáb","dom"].map(d=>`<div class="hd">${d}</div>`).join("");
+ for(let i=0;i<42;i++){const d=new Date(pri);d.setDate(pri.getDate()+i);if(i>=35&&d.getMonth()!==base.getMonth())break;const iso=new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10);
+  h+=`<div class="d ${d.getMonth()!==base.getMonth()?"fora":""} ${iso===hojeISO?"hoje":""}"><b>${d.getDate()}</b>${ps.filter(p=>p.data===iso).map(p=>`<span class="post" data-id="${p.id}" style="background:${cor[p.status]}" title="${esc(p.canal+" · "+p.formato)}">${esc(p.tema)}</span>`).join("")}</div>`}
+ $("kCal").innerHTML=h;editar("posts",$("kCal"));
+ const f=L.obj("funil");barrasH($("kFunil"),[["Alcance",alc||0],["Visitas ao site",f.visitas],["Pedidos pelo formulário",f.pedidos],["Viraram clientes",f.clientes]].map((x,i)=>[x[0],x[1],0,["#cfeae7","#9fd6d1","#1f8a86","#a9d84e"][i]]),v=>v.toLocaleString("pt-BR"));
+ $("kFunil").querySelectorAll(".linha").forEach((el,i)=>{if(!i)return;el.style.cursor="pointer";el.onclick=()=>{const k=["","visitas","pedidos","clientes"][i],v=prompt("Novo valor de "+el.firstChild.textContent+":",f[k]);if(v!==null&&!isNaN(+v)){f[k]=+v;L.poe("funil",f)}}});
+ const svg=$("kSeg"),[W,H]=tam(svg);svg.setAttribute("viewBox",`0 0 ${W} ${H}`);if(sg.length>1){const t0=dObj(sg[0].data),t1=dObj(sg.at(-1).data),mx=Math.max(...sg.map(s=>s.valor))*1.15,x=d=>12+(dObj(d)-t0)/Math.max(1,t1-t0)*(W-24),y=v=>H-18-v/mx*(H-30);
+  svg.innerHTML=`<path d="${sg.map((s,i)=>(i?"L":"M")+x(s.data)+","+y(s.valor)).join(" ")}" fill="none" stroke="#1f8a86" stroke-width="2.5"/>`+sg.map(s=>`<circle cx="${x(s.data)}" cy="${y(s.valor)}" r="4.5" fill="#1f8a86" stroke="#fff" stroke-width="2"><title>${dt(s.data)}: ${s.valor}</title></circle><text x="${x(s.data)}" y="${H-4}" font-size="10.5" fill="#a2aca6" text-anchor="middle">${dt(s.data)}</text>`).join("")}
+ $("kRes").innerHTML=`<thead><tr><th>Data</th><th>Tema</th><th>Formato</th><th class="dir">Alcance</th><th class="dir">Curtidas</th><th class="dir">Coment.</th><th class="dir">Salvos</th><th class="dir">Engaj.</th></tr></thead><tbody>`+pub.slice().sort((a,b)=>eng(b)-eng(a)).map(p=>`<tr data-id="${p.id}"><td>${dt(p.data)}</td><td><b>${esc(p.tema)}</b></td><td>${esc(p.formato)}</td><td class="dir num">${(+p.alcance||0).toLocaleString("pt-BR")}</td><td class="dir num">${p.curtidas}</td><td class="dir num">${p.comentarios}</td><td class="dir num">${p.salvos}</td><td class="dir num"><b>${eng(p).toFixed(1).replace(".",",")}%</b></td></tr>`).join("")+`</tbody>`;editar("posts",$("kRes"));
+ $("kAlvos").innerHTML=(window.__alvos||[]).slice(0,6).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span style="color:#a7b8ad">${a.noticias} alagamento${a.noticias>1?"s":""} nas notícias</span></div></li>`).join("")||`<li class="vazio">Carregando o mapa…</li>`;
+ $("kImp").innerHTML=`<thead><tr><th>Veículo</th><th>Tipo</th><th>Como contatar</th><th>Pauta</th><th>Situação</th></tr></thead><tbody>`+L.lista("imprensa").map(i=>`<tr data-id="${i.id}"><td><b>${esc(i.veiculo)}</b></td><td>${esc(i.tipo)}</td><td>${esc(i.contato)}</td><td>${esc(i.pauta)}</td><td><span class="etq ${etqStatus(i.status)}">${i.status}</span></td></tr>`).join("")+`</tbody>`;editar("imprensa",$("kImp"))}
+$("bSeg").onclick=()=>{const v=prompt("Quantos seguidores hoje?");if(v&&!isNaN(+v))L.adiciona("seguidores",{data:hojeISO,valor:+v})};
+
+// ---------- PESSOAS ----------
+function pessoasPg(){const mb=L.lista("membros"),tf=L.lista("tarefas").filter(t=>t.status!=="Feito"),pres=L.obj("presencas"),sabs=[];for(let k=7;k>=0;k--){const d=new Date(L.hoje);d.setDate(d.getDate()-((d.getDay()+1)%7)-7*k);sabs.push(new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10))}
+ const ultimo=sabs.at(-1),pUlt=(pres[ultimo]||[]).length;
+ canto($("pCanto"),[[mb.length,"Pessoas"],[mb.reduce((a,m)=>a+(+m.horas||0),0)+" h","Por semana"]]);
+ kpis($("pKpi"),[["gente",mb.length,"pessoas na equipe"],["relogio",mb.reduce((a,m)=>a+(+m.horas||0),0)+" h","de trabalho por semana"],["check",pUlt+" de "+mb.length,"no último expediente ("+dt(ultimo)+")"],["alvo",mb.filter(m=>m.diretoria==="A definir").length,"sem diretoria definida",mb.some(m=>m.diretoria==="A definir")?"decidir":"",true]]);
+ const geral=[]; // ninguém em destaque: todos no mesmo nível
+ const nomeCargo=c=>String(c||"").replace(/\s+e\s+diretor(a)? geral/i,"");
+ $("pOrg").innerHTML=`<div style="display:flex;justify-content:center;margin-bottom:10px">${geral.map(m=>`<div class="cartao" data-id="${m.id}" style="background:var(--escuro);color:#fff;min-width:200px;text-align:center"><b>${esc(m.nome)}</b><span style="color:#a7b8ad">Diretor geral</span></div>`).join("")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">`+OPC.diretoria.map(d=>{const l=mb.filter(m=>m.diretoria===d);return `<div class="coluna" style="min-height:0"><b>${d}</b>${l.map(m=>`<div class="cartao" data-id="${m.id}"><b>${esc(m.nome)}</b><span>${esc(nomeCargo(m.cargo))}</span></div>`).join("")||`<span class="vazio" style="padding:4px">ninguém</span>`}</div>`}).join("")+`</div>`;editar("membros",$("pOrg"));
+ barrasH($("pCarga"),mb.map(m=>[m.nome,tf.filter(t=>t.resp===m.nome).length,0,"#1f8a86"]),v=>v+(v===1?" tarefa":" tarefas"));
+ $("pPres").innerHTML=`<thead><tr><th>Pessoa</th>${sabs.map(s=>`<th style="text-align:center">${dt(s)}</th>`).join("")}<th class="dir">Presença</th></tr></thead><tbody>`+mb.map(m=>{const n=sabs.filter(s=>(pres[s]||[]).includes(m.id)).length;return `<tr><td><b>${esc(m.nome)}</b></td>${sabs.map(s=>`<td style="text-align:center"><button class="chk ${(pres[s]||[]).includes(m.id)?"feito":""}" data-pres="${s}|${m.id}" aria-label="Presença de ${esc(m.nome)} em ${dt(s)}"></button></td>`).join("")}<td class="dir num">${Math.round(n/sabs.length*100)}%</td></tr>`}).join("")+`</tbody>`;
+ $("pPres").querySelectorAll("[data-pres]").forEach(b=>b.onclick=()=>{const [s,i]=b.dataset.pres.split("|"),p=L.obj("presencas");p[s]=p[s]||[];p[s]=p[s].includes(i)?p[s].filter(x=>x!==i):p[s].concat(i);L.poe("presencas",p)})}
+
+// ---------- MAPA (estilo do mapa de jogo: terra escura, bairros com borda que brilha, nomes com contorno) ----------
+const RELATOS={"Umarizal":9,"Marco":7,"Nazaré":5,"Pedreira":4,"Batista Campos":3,"Telégrafo":2,"Sacramenta":2,"Fátima":2,"São Brás":1,"Marambaia":1,"Cidade Nova VI":3,"Coqueiro":1,"Centro":2}; // EXEMPLO
+let bairros=null,agua=null,modo="relatos",geo=null,cam=null,arr=null;
+const dentro=(p,a)=>{let c=false;for(let i=0,j=a.length-1;i<a.length;j=i++){const [xi,yi]=a[i],[xj,yj]=a[j];if((yi>p[1])!==(yj>p[1])&&p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi)c=!c}return c};
+const polis=f=>f.geometry.type==="Polygon"?[f.geometry.coordinates]:f.geometry.coordinates;
+const areaA=r=>Math.abs(r.reduce((s,p,i)=>{const q=r[(i+1)%r.length];return s+p[0]*q[1]-q[0]*p[1]},0)/2);
+async function carregaMapa(){const [g,pts,ag]=await Promise.all([fetch("dados/bairros.json").then(r=>r.json()),fetch("dados/pontos.json").then(r=>r.json()),fetch("dados/agua.json").then(r=>r.json()).catch(()=>null)]);
+ bairros=g.features.filter(f=>{const a=polis(f)[0][0],cy=a.reduce((s,p)=>s+p[1],0)/a.length,cx=a.reduce((s,p)=>s+p[0],0)/a.length;return !(cy>-1.235&&cx>-48.45)});
+ // só a água grande e perto (baía do Guajará, rio Guamá, rio Maguari): tira lagos e igarapés soltos longe
+ if(ag)agua=ag.features.filter(f=>{const r=f.geometry.coordinates[0],cx=r.reduce((s,p)=>s+p[0],0)/r.length,cy=r.reduce((s,p)=>s+p[1],0)/r.length;return areaA(r)>4e-5&&cx<-48.33&&cy<-1.25});
+ bairros.forEach(f=>{f.properties.relatos=RELATOS[f.properties.nome]||0;f.properties.noticias=pts.filter(p=>p.tipo==="alagamento"&&polis(f).some(pl=>dentro([p.lng,p.lat],pl[0]))).length});
+ window.__alvos=bairros.filter(f=>f.properties.noticias>0&&f.properties.relatos===0).map(f=>f.properties).sort((a,b)=>b.noticias-a.noticias);render()}
+function projeta(){let bb=[180,90,-180,-90];bairros.forEach(f=>polis(f).forEach(p=>p[0].forEach(([x,y])=>{bb=[Math.min(bb[0],x),Math.min(bb[1],y),Math.max(bb[2],x),Math.max(bb[3],y)]})));bb=[bb[0]-.05,bb[1]-.03,bb[2]+.03,bb[3]+.02];
+ const k=Math.cos(1.4*Math.PI/180),W=1000,e=W/((bb[2]-bb[0])*k);geo={W,px:([x,y])=>[+((x-bb[0])*k*e).toFixed(1),+((bb[3]-y)*e).toFixed(1)]}}
+const camIni=()=>{const a=geo.px([-48.515,-1.395]),b=geo.px([-48.425,-1.497]);return {x:a[0],y:a[1],w:b[0]-a[0],h:b[1]-a[1]}};
+function aplicaCam(){const svg=$("mMapa"),[W,H]=tam(svg),r=W/H;let {x,y,w,h}=cam;if(Math.abs(w/h-r)>.001){if(w/h>r){const nh=w/r;y-=(nh-h)/2;h=nh}else{const nw=h*r;x-=(nw-w)/2;w=nw}cam={x,y,w,h}}
+ svg.setAttribute("viewBox",`${x} ${y} ${w} ${h}`);const ppu=W/w;svg.querySelectorAll(".rt").forEach(t=>{t.setAttribute("font-size",(t.dataset.f/ppu).toFixed(2));t.setAttribute("stroke-width",(3/ppu).toFixed(2))});svg.querySelectorAll(".nb").forEach(t=>t.style.display=geo.W/w>1.4?"":"none")}
+function mapa(){if(!bairros)return;if(!geo)projeta();if(!cam)cam=camIni();const svg=$("mMapa"),px=geo.px,maxR=Math.max(...bairros.map(f=>f.properties.relatos));
+ const corR=v=>v===0?"#1d3135":["#2f5b3c","#3f7a43","#5f9a40","#86b43c","#a9d84e"][Math.min(4,Math.floor(v/maxR*4.99))],corN=v=>v===0?"#1d3135":["#17525a","#1a6d74","#1f8a86","#3fb3ad","#7fd9d3"][Math.min(4,v-1)];
+ let s=`<defs><filter id="brilho" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter><pattern id="hach" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#4a2a24"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e2735a" stroke-width="2.6"/></pattern></defs><rect x="-3000" y="-3000" width="8000" height="8000" fill="#16211f"/>`;
+ if(agua)s+=`<path d="${agua.map(f=>f.geometry.coordinates.map(r=>"M"+r.map(px).join("L")+"Z").join("")).join("")}" fill="#0e3a4a" fill-rule="evenodd"/>`;
+ const dTodos=bairros.map(f=>polis(f).map(pl=>pl.map(a=>"M"+a.map(px).join("L")+"Z").join("")).join(""));
+ s+=`<path d="${dTodos.join("")}" fill="none" stroke="#5fd9df" stroke-width="3" vector-effect="non-scaling-stroke" filter="url(#brilho)" opacity=".55" style="pointer-events:none"/>`;
+ bairros.forEach((f,i)=>{const p=f.properties,alvo=p.noticias>0&&p.relatos===0;s+=`<path class="br" data-i="${i}" d="${dTodos[i]}" fill="${modo==="relatos"?corR(p.relatos):modo==="noticias"?corN(p.noticias):alvo?"url(#hach)":p.relatos>0?"#2f5b3c":"#1d3135"}"/>`});
+ bairros.forEach(f=>{const a=polis(f)[0][0],c=a.reduce((m,q)=>[m[0]+q[0]/a.length,m[1]+q[1]/a.length],[0,0]),[x,y]=px(c);s+=`<text class="rt nb" data-f="11" x="${x}" y="${y}" text-anchor="middle" fill="#e6f4f2" stroke="#0d1b1f" paint-order="stroke" style="pointer-events:none;font-family:Manrope;font-weight:600">${esc(f.properties.nome)}</text>`});
+ [["Baía do Guajará",-48.525,-1.405,-70],["Rio Guamá",-48.455,-1.488,-12],["Rio Maguari",-48.41,-1.31,-30]].forEach(([n,lo,la,rot])=>{const [x,y]=px([lo,la]);s+=`<text class="rt" data-f="14" x="${x}" y="${y}" text-anchor="middle" transform="rotate(${rot} ${x} ${y})" fill="#7fc9d9" stroke="#0d1b1f" paint-order="stroke" font-style="italic" letter-spacing="1" style="pointer-events:none;font-family:Manrope">${n}</text>`});
+ svg.innerHTML=s;aplicaCam();
+ svg.querySelectorAll("path.br").forEach(el=>{const p=bairros[+el.dataset.i].properties;el.onpointermove=e=>{if(!arr)mostra(`<b>${esc(p.nome)}</b> · ${p.municipio}<br>Relatos de moradores: ${p.relatos}<br>Alagamentos nas notícias: ${p.noticias}${p.noticias>0&&p.relatos===0?"<br><b>Divulgar aqui</b>":""}`,e)};el.onpointerleave=esconde});
+ $("mLeg").innerHTML=(modo==="relatos"?`<span><i style="background:#1d3135"></i>nenhum relato</span><span><i style="background:#5f9a40"></i>alguns</span><span><i style="background:#a9d84e"></i>muitos</span>`:modo==="noticias"?`<span><i style="background:#1d3135"></i>nenhuma notícia</span><span><i style="background:#1f8a86"></i>1 a 3</span><span><i style="background:#7fd9d3"></i>5 ou mais</span>`:`<span><i style="background:repeating-linear-gradient(45deg,#e2735a 0 2px,#4a2a24 2px 6px)"></i>notícia sem relato</span><span><i style="background:#2f5b3c"></i>já tem relatos</span>`)+`<span><i style="background:#0e3a4a"></i>rios e baía</span>`;
+ $("mSem").textContent=bairros.filter(f=>f.properties.relatos===0).length+" de "+bairros.length;
+ $("mAlvos").innerHTML=window.__alvos.slice(0,6).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span>${a.municipio} · alagamento nas notícias</span></div></li>`).join("");
+ $("mTop").innerHTML=bairros.map(f=>f.properties).filter(p=>p.relatos>0).sort((a,b)=>b.relatos-a.relatos).slice(0,5).map(p=>`<li><span class="etq ok">${p.relatos}</span><div class="tx"><b>${p.nome}</b><span>${p.municipio}</span></div></li>`).join("")}
+// arrastar (um dedo ou o mouse) e zoom (roda, botões); o redesenho fica preso a um quadro por vez
+(()=>{const svg=$("mMapa");let pend=false;const agenda=()=>{if(pend)return;pend=true;requestAnimationFrame(()=>{pend=false;aplicaCam()})};
+ const pt=e=>{const r=svg.getBoundingClientRect();return [cam.x+(e.clientX-r.left)/r.width*cam.w,cam.y+(e.clientY-r.top)/r.height*cam.h]};
+ const zoom=(f,cx,cy)=>{const w=Math.max(80,Math.min(geo.W*1.4,cam.w*f)),h=cam.h*w/cam.w;cam={x:cx-(cx-cam.x)*w/cam.w,y:cy-(cy-cam.y)*h/cam.h,w,h};agenda()};
+ svg.addEventListener("pointerdown",e=>{if(!cam||e.button>0)return;arr={id:e.pointerId,x:e.clientX,y:e.clientY,c:{...cam}};svg.setPointerCapture(e.pointerId);svg.classList.add("arrasta");esconde();e.preventDefault()});
+ svg.addEventListener("pointermove",e=>{if(!arr||e.pointerId!==arr.id)return;const r=svg.getBoundingClientRect();cam={...arr.c,x:arr.c.x-(e.clientX-arr.x)/r.width*arr.c.w,y:arr.c.y-(e.clientY-arr.y)/r.height*arr.c.h};agenda()});
+ const solta=e=>{if(arr&&e.pointerId===arr.id){arr=null;svg.classList.remove("arrasta")}};svg.addEventListener("pointerup",solta);svg.addEventListener("pointercancel",solta);svg.addEventListener("lostpointercapture",solta);
+ svg.addEventListener("wheel",e=>{if(!cam)return;e.preventDefault();const [cx,cy]=pt(e);zoom(e.deltaY>0?1.15:1/1.15,cx,cy)},{passive:false});
+ const meio=()=>[cam.x+cam.w/2,cam.y+cam.h/2];$("zMais").onclick=()=>zoom(1/1.4,...meio());$("zMenos").onclick=()=>zoom(1.4,...meio());$("zIni").onclick=()=>{cam=camIni();agenda()}})();
+$("mModo").querySelectorAll("button").forEach(b=>b.onclick=()=>{modo=b.dataset.v;$("mModo").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));mapa()});
+
+// ---------- abertura de cada área (o dado principal anotado sobre a foto, uma vez por visita) ----------
+function anelIntro(partes,centro){const tot=partes.reduce((a,p)=>a+p[1],0)||1,R1=150,R0=110;let a0=-Math.PI/2,s="";const cores=["#a9d84e","#5fd9df","#e2735a","#d9efb0","#7fc9d9","#f0b46f"];
+ partes.forEach((p,i)=>{if(!p[1])return;const da=p[1]/tot*Math.PI*2-.04,a1=a0+da,P=(r,a)=>[r*Math.cos(a),r*Math.sin(a)],l=da>Math.PI?1:0,[x1,y1]=P(R1,a0),[x2,y2]=P(R1,a1),[x3,y3]=P(R0,a1),[x4,y4]=P(R0,a0);
+  s+=`<path d="M${x1},${y1}A${R1},${R1} 0 ${l} 1 ${x2},${y2}L${x3},${y3}A${R0},${R0} 0 ${l} 0 ${x4},${y4}Z" fill="${cores[i%6]}" fill-opacity=".9"/>`;
+  const am=a0+da/2,[ex,ey]=P(R1+8,am),[fx,fy]=P(R1+40,am),d=Math.cos(am)>=0?1:-1;s+=`<polyline points="${ex},${ey} ${fx},${fy} ${fx+d*30},${fy}" fill="none" stroke="#eef4ef" stroke-opacity=".6"/><text x="${fx+d*36}" y="${fy-3}" text-anchor="${d>0?"start":"end"}" fill="#eef4ef" font-size="20" font-weight="700" font-family="Manrope">${p[2]||p[1]}</text><text x="${fx+d*36}" y="${fy+14}" text-anchor="${d>0?"start":"end"}" fill="#b9cbc0" font-size="12.5" font-family="Manrope">${esc(p[0])}</text>`;a0=a1+.04});
+ return `<svg viewBox="-330 -200 660 400"><g>${s}</g><text y="-4" text-anchor="middle" fill="#fff" font-size="30" font-weight="800" font-family="Manrope">${centro[0]}</text><text y="20" text-anchor="middle" fill="#b9cbc0" font-size="13" font-family="Manrope">${centro[1]}</text></svg>`}
+const INTRO={
+ financeiro:()=>{const c=contas(),cat={};L.lista("lancamentos").filter(l=>l.tipo==="saida").forEach(l=>cat[l.categoria]=(cat[l.categoria]||0)+(+l.valor||0));return ["Caixa","Para onde vai o dinheiro, somando pagos e pendentes.",anelIntro(Object.entries(cat).map(([n,v])=>[n,v,brl(v)]),[brl(c.saldo),"em caixa hoje"]),"u-rio-aereo.webp"]},
+ comercial:()=>{const pr=L.lista("prospectos");return ["Funil","Quantos possíveis clientes em cada etapa.",anelIntro(OPC.etapa.map(e=>[e,pr.filter(p=>p.etapa===e).length]),[pr.length+"","contatos"]),"u-barco-rio.webp"]},
+ projetos:()=>{const tf=L.lista("tarefas");return ["Tarefas","Como estão as tarefas de todos os projetos.",anelIntro(OPC.status_t.map(e=>[e,tf.filter(t=>t.status===e).length]),[tf.length+"","tarefas"]),"u-sumauma.webp"]},
+ marketing:()=>{const ps=L.lista("posts");return ["Conteúdo","Os posts por situação, da ideia ao publicado.",anelIntro(OPC.status_p.map(e=>[e,ps.filter(p=>p.status===e).length]),[ps.length+"","posts"]),"u-garca.webp"]},
+ pessoas:()=>{const mb=L.lista("membros");return ["Equipe","Quem está em cada diretoria.",anelIntro(OPC.diretoria.map(d=>[d,mb.filter(m=>m.diretoria===d).length,mb.filter(m=>m.diretoria===d).map(m=>m.nome).join(", ")]),[mb.length+"","pessoas"]),"u-meninos-barco.webp"]}};
+function intro(pag){const f=INTRO[pag];if(!f)return;let visto={};try{visto=JSON.parse(sessionStorage.getItem("mare_intro")||"{}")}catch(e){}if(visto[pag])return;visto[pag]=1;try{sessionStorage.setItem("mare_intro",JSON.stringify(visto))}catch(e){}
+ const [t,fr,svg,foto]=f(),el=$("intro");el.style.setProperty("--foto",`url(img/${foto})`);el.innerHTML=`<div class="ib"><div><div class="pal">${t}</div><div class="fr">${fr}</div></div>${svg}</div><small>toque para pular</small>`;
+ el.hidden=false;el.classList.remove("sai");const fecha=()=>{el.classList.add("sai");setTimeout(()=>{el.hidden=true},700);document.querySelector(".pagina.on .g.entra")?.classList.remove("entra");void document.body.offsetWidth;document.querySelectorAll(".pagina.on .g").forEach(g=>{g.classList.add("entra")})};el.onclick=fecha;setTimeout(fecha,1900)}
+
+// ---------- navegação ----------
+const PAGS={inicio:["Início",inicio],financeiro:["Financeiro",financeiro],comercial:["Comercial",comercial],projetos:["Projetos",projetos],marketing:["Marketing",marketing],pessoas:["Pessoas",pessoasPg],mapa:["Mapa",mapa]};let pag="inicio";
+function render(){try{PAGS[pag][1]()}catch(e){console.error(e)}}
+function ir(){pag=location.hash.slice(1)||"inicio";if(!PAGS[pag])pag="inicio";$("titulo").textContent=PAGS[pag][0];document.querySelectorAll(".pagina").forEach(p=>p.classList.toggle("on",p.id==="p-"+pag));document.querySelectorAll(".barra a[data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===pag));scrollTo(0,0);setTimeout(()=>{render();intro(pag)},0)}
+L.aoMudar(render);addEventListener("hashchange",ir);addEventListener("resize",()=>{clearTimeout(window.__r);window.__r=setTimeout(render,150)});
+$("bExp").onclick=()=>L.exporta();$("bImp").onclick=()=>$("fImp").click();$("fImp").onchange=async()=>{try{await L.importa($("fImp").files[0]);alert("Dados importados.")}catch(e){alert("Não deu para abrir esse arquivo: "+e.message)}};
+ir();carregaMapa();
+</script>
+</body>
+</html>
