@@ -483,8 +483,8 @@ const areaA=r=>Math.abs(r.reduce((s,p,i)=>{const q=r[(i+1)%r.length];return s+p[
 async function carregaMapa(){const [g,pts,ag]=await Promise.all([fetch("dados/bairros.json").then(r=>r.json()),fetch("dados/pontos.json").then(r=>r.json()),fetch("dados/agua.json").then(r=>r.json()).catch(()=>null)]);
  bairros=g.features.filter(f=>{const a=polis(f)[0][0],cy=a.reduce((s,p)=>s+p[1],0)/a.length,cx=a.reduce((s,p)=>s+p[0],0)/a.length;return !(cy>-1.235&&cx>-48.45)});
  // só a água grande e perto (baía do Guajará, rio Guamá, rio Maguari): tira lagos e igarapés soltos longe
- // as peças de água vêm em quadrados (4×4); ficam só os 2×3 de Belém: tiram-se as 2 colunas da esquerda e a fileira de baixo
- if(ag)agua=ag.features.filter(f=>{const r=f.geometry.coordinates[0],xs=r.map(p=>p[0]),ys=r.map(p=>p[1]),mx=(Math.min(...xs)+Math.max(...xs))/2,my=(Math.min(...ys)+Math.max(...ys))/2;return areaA(r)>4e-5&&mx>-48.515&&my>-1.494});
+ // a água vem em quadrados: os 4×4 em volta de Belém e a fileira de cima; tira lagos e igarapés pequenos e o que fica longe à direita
+ if(ag)agua=ag.features.filter(f=>{const r=f.geometry.coordinates[0],cx=r.reduce((s,p)=>s+p[0],0)/r.length;return areaA(r)>4e-5&&cx<-48.33});
  bairros.forEach(f=>{f.properties.relatos=RELATOS[f.properties.nome]||0;f.properties.noticias=pts.filter(p=>p.tipo==="alagamento"&&polis(f).some(pl=>dentro([p.lng,p.lat],pl[0]))).length});
  window.__alvos=bairros.filter(f=>f.properties.noticias>0&&f.properties.relatos===0).map(f=>f.properties).sort((a,b)=>b.noticias-a.noticias);render()}
 function projeta(){let bb=[180,90,-180,-90];bairros.forEach(f=>polis(f).forEach(p=>p[0].forEach(([x,y])=>{bb=[Math.min(bb[0],x),Math.min(bb[1],y),Math.max(bb[2],x),Math.max(bb[3],y)]})));bb=[bb[0]-.05,bb[1]-.03,bb[2]+.03,bb[3]+.02];
