@@ -47,11 +47,11 @@
       { id: id(), nome: "Construtora", segmento: "Construtora", servico: "Relatório socioambiental", valor: 3000, etapa: "Contato", chance: 10, proximo: "Mandar apresentação", data: d(10, 11), resp: "Elias" },
     ],
     servicos: [
-      { id: id(), nome: "Diagnóstico de acessibilidade", para: "Comércio, clínica, escola", minimo: 600, maximo: 1500, horas: 12 },
-      { id: id(), nome: "Mapa de risco de alagamento", para: "Condomínio, empresa", minimo: 800, maximo: 2500, horas: 18 },
-      { id: id(), nome: "Relatório socioambiental do bairro", para: "Construtora, imobiliária", minimo: 2000, maximo: 5000, horas: 40 },
-      { id: id(), nome: "Oficina Bueiro Livre", para: "Escola, empresa", minimo: 300, maximo: 800, horas: 7 },
-      { id: id(), nome: "Projeto patrocinado", para: "Empresa com programa social", minimo: 2000, maximo: 8000, horas: 50 },
+      { id: id(), nome: "Diagnóstico de acessibilidade", pitch: "Mostramos o que impede um cadeirante, um idoso ou uma mãe com carrinho de entrar e usar o seu espaço, com soluções baratas em ordem de prioridade.", para: "Comércio, clínica, escola", minimo: 600, maximo: 1500, horas: 12 },
+      { id: id(), nome: "Mapa de risco de alagamento", pitch: "Mapeamos por onde a água entra e onde ela para no terreno e na rua, para agir antes da próxima chuva forte.", para: "Condomínio, empresa", minimo: 800, maximo: 2500, horas: 18 },
+      { id: id(), nome: "Relatório socioambiental do bairro", pitch: "Um retrato do bairro (água, calçadas, árvores e lixo) com dados e fotos, para projetos, licenças e prestação de contas.", para: "Construtora, imobiliária", minimo: 2000, maximo: 5000, horas: 40 },
+      { id: id(), nome: "Oficina Bueiro Livre", pitch: "Uma oficina prática para alunos ou funcionários entenderem por que a rua alaga e o que cada um pode fazer.", para: "Escola, empresa", minimo: 300, maximo: 800, horas: 7 },
+      { id: id(), nome: "Projeto patrocinado", pitch: "A empresa patrocina uma ação num bairro de Belém e recebe relatório, fotos e a marca no resultado.", para: "Empresa com programa social", minimo: 2000, maximo: 8000, horas: 50 },
     ],
     projetos: [
       { id: id(), nome: "Maré Cheia", tema: "Alagamentos, calçadas e acessibilidade", etapa: "Campo", resp: "João", inicio: d(1, 9), fim: d(15, 12), horas: 60, estado: "Em andamento" },
@@ -135,7 +135,7 @@
       captacao: s.captacao.map(c => ({ ...c, meta: 0 })),
       lancamentos: [], prospectos: [], tarefas: [], posts: [], seguidores: [], presencas: {},
       funil: { visitas: 0, pedidos: 0, clientes: 0 }, planejar: { piso: 0, mesesReserva: 3, checklist: {} },
-      metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], ausencias: [], conversas: [], editais: [],
+      metas: { comercialMes: 0, postsMes: 0, seguidores: 0, valorHora: 0 }, recorrentes: [], reservas: [], ausencias: [], conversas: [], editais: [], rotinas: {},
     };
   };
   // apaga só o que era exemplo: o que alguém lançou por conta própria fica
@@ -158,6 +158,8 @@
   if (!banco || banco.versao !== 2) banco = INICIAL();
   else if (banco.exemplo !== false) { banco = limpaExemplo(banco); try { localStorage.setItem(CHAVE, JSON.stringify(banco)) } catch (e) { } }
   { const r = INICIAL(); for (const k of Object.keys(r)) if (!(k in banco)) banco[k] = r[k] }
+  // serviços já salvos ganham a frase de venda padrão
+  { const sp = Object.fromEntries(SEMENTE().servicos.map(s => [s.nome, s.pitch])); (banco.servicos || []).forEach(s => { if (s.pitch == null && sp[s.nome]) s.pitch = sp[s.nome] }) }
   const ouvintes = [];
   const salva = () => { try { localStorage.setItem(CHAVE, JSON.stringify(banco)) } catch (e) { } ouvintes.forEach(f => f()) };
 
