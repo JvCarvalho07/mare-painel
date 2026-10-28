@@ -35,6 +35,7 @@ html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
 .topo .migalha{font-size:13px;color:var(--mut);margin-right:auto}
 .topo .migalha b{color:var(--tinta);font-weight:600}
 .pilula{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:var(--mut)}
+.pilula.exemplo{border:0;font:inherit;font-size:13px;cursor:pointer;background:#f3e3bf;color:#6e5212}.pilula.exemplo:hover{background:#ecd6a6}.pilula.exemplo[hidden]{display:none}
 .pilula b{color:var(--tinta);font-weight:600}
 .eu{width:38px;height:38px;border-radius:50%;background:var(--escuro);color:var(--lima);display:grid;place-items:center;font-weight:700}
 
@@ -167,7 +168,7 @@ dialog .pe .bt:first-child{margin-right:auto}
 .pagina{display:none}.pagina.on{display:block}
 @media(max-width:1180px){.s3{grid-column:span 6}.s4,.s5{grid-column:span 6}.s7,.s8{grid-column:span 12}}
 @media(max-width:820px){.s2,.s3,.s4,.s5,.s6{grid-column:span 12}.hero .canto{position:static;margin:0 20px 20px}.hero{flex-direction:column}.intro .ib{grid-template-columns:1fr}.intro svg{max-height:46vh}}
-@media(max-width:640px){.barra{left:0;right:0;top:auto;bottom:0;width:auto;height:64px;border-radius:18px 18px 0 0;flex-direction:row;justify-content:space-around;padding:0 4px;overflow-x:auto}.barra img,.barra .esp,.barra .arq{display:none}.barra a{width:auto;min-width:52px;flex:1}
+@media(max-width:640px){.barra{left:0;right:0;top:auto;bottom:0;width:auto;height:64px;border-radius:18px 18px 0 0;flex-direction:row;justify-content:space-around;padding:0 4px;overflow-x:auto}.barra img,.barra .esp{display:none}.barra .arq{display:flex;width:auto;min-width:52px;flex:1}.barra a{width:auto;min-width:52px;flex:1}
  .conteudo{margin-left:0;padding:10px 10px 90px}.cal .d{min-height:64px}.quadro{grid-template-columns:1fr}.barras-h .linha{grid-template-columns:100px 1fr 60px}.hero::before{background:#eef2eae6}}
 </style>
 </head>
@@ -188,7 +189,7 @@ dialog .pe .bt:first-child{margin-right:auto}
 </nav>
 
 <div class="conteudo">
- <div class="topo"><div class="migalha">Painel / <b id="titulo">Início</b></div><div class="pilula">Expediente: <b>sábado, 4 h</b></div><div class="pilula" id="pHoje"></div><div class="eu" title="João">J</div></div>
+ <div class="topo"><div class="migalha">Painel / <b id="titulo">Início</b></div><div class="pilula">Expediente: <b>sábado, 4 h</b></div><div class="pilula" id="pHoje"></div><button class="pilula exemplo" id="pExemplo" hidden title="Os números são de exemplo. Clique para apagar e começar com os dados reais.">Dados de exemplo</button><div class="eu" title="João">J</div></div>
 
  <!-- INÍCIO -->
  <section class="pagina" id="p-inicio">
@@ -309,7 +310,10 @@ const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","de
 const dt=s=>s?s.slice(8,10)+"/"+s.slice(5,7):"—",dObj=s=>new Date(s+"T12:00"),hojeISO=L.hoje.toISOString().slice(0,10);
 const atrasado=s=>s&&s<hojeISO,dias=s=>Math.round((dObj(s)-L.hoje)/864e5);
 const tam=svg=>{const b=svg.getBoundingClientRect();return [Math.max(260,b.width),Math.max(110,b.height)]};
-$("pHoje").innerHTML=`Hoje: <b>26/10/2026</b>`;
+$("pHoje").innerHTML=`Hoje: <b>${L.hoje.toLocaleDateString("pt-BR")}</b>`;
+// aviso fixo enquanto os números forem de exemplo; um clique apaga e começa do zero
+function avisoExemplo(){const b=$("pExemplo");b.hidden=!L.exemplo()}
+$("pExemplo").onclick=()=>{if(confirm("Os números do painel são de exemplo, só para apresentar.\n\nApagar os exemplos e começar com os dados reais da equipe?\n(A equipe, os serviços, a lista de imprensa e as categorias do orçamento ficam.)")){L.comecaReal();avisoExemplo()}};avisoExemplo();
 
 // ---------- formulário genérico ----------
 const OPC={etapa:["Contato","Reunião","Proposta","Fechado","Perdido"],status_t:["A fazer","Fazendo","Feito"],tipo:["entrada","saida"],status_l:["pago","pendente"],

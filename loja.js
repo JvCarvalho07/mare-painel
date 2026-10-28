@@ -3,13 +3,15 @@
 // Quando o painel virar sistema, este arquivo é o que troca por chamadas à API.
 (function () {
   const CHAVE = "mare_painel_v2";
-  const hoje = new Date(2026, 9, 26);
+  // dia de hoje de verdade (meio-dia, para não virar o dia por fuso)
+  const hoje = (() => { const x = new Date(); x.setHours(12, 0, 0, 0); return x })();
   const d = (dia, mes = 10, ano = 2026) => `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
   let seq = 1; const id = () => "i" + (seq++).toString(36) + Date.now().toString(36).slice(-3);
 
   // ponto de partida: equipe real e lançamentos/contatos de EXEMPLO para a apresentação
   const INICIAL = () => ({
     versao: 2,
+    exemplo: true, // dados de mentira para apresentar; some quando a equipe começa de verdade
     membros: [
       { id: id(), nome: "João", diretoria: "Projetos", cargo: "Diretor de Projetos", horas: 4 },
       { id: id(), nome: "Elias", diretoria: "Comercial", cargo: "Diretor Comercial", horas: 4 },
@@ -104,5 +106,15 @@
     exporta() { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(banco, null, 1)], { type: "application/json" })); a.download = "painel-mare-" + new Date().toISOString().slice(0, 10) + ".json"; a.click() },
     async importa(arquivo) { const j = JSON.parse(await arquivo.text()); if (j.versao !== 2) throw new Error("arquivo de outra versão"); banco = j; salva() },
     zera() { banco = INICIAL(); salva() },
+    // os dados guardados antes desta marcação também eram de exemplo
+    exemplo: () => banco.exemplo !== false,
+    // apaga os números de exemplo e guarda só o que é real: equipe, serviços, lista de imprensa e categorias do orçamento
+    comecaReal() {
+      const b = INICIAL();
+      banco = { versao: 2, exemplo: false, membros: banco.membros || b.membros, servicos: banco.servicos || b.servicos,
+        lancamentos: [], orcamento: (banco.orcamento || b.orcamento).map(o => ({ ...o, planejado: 0 })), prospectos: [], projetos: [], tarefas: [], posts: [],
+        imprensa: (banco.imprensa || b.imprensa).map(i => ({ ...i, status: "Não procurado" })), funil: { visitas: 0, pedidos: 0, clientes: 0 }, seguidores: [], presencas: {} };
+      salva()
+    },
   };
 })();
