@@ -35,3 +35,26 @@ O João pediu que eu decidisse tudo do painel em rodadas. As referências escolh
   - prazos de editais;
   - conversas e ausências;
   - gastos do ano.
+
+## Rodada 2: previsão, orçamento e editais
+
+- **Financeiro (ref 13).** Embaixo do gráfico do caixa entrou a lista "O que a previsão considera". Ela mostra:
+  - o saldo de partida e de onde ele vem;
+  - quanto entra e sai todo mês com o que se repete;
+  - os pendentes;
+  - os gastos do ano;
+  - os cenários "e se" ligados, em laranja.
+
+  Assim ninguém precisa adivinhar de onde sai o número.
+- **Orçamento (ref 16).** Cada categoria mostra o % gasto do planejado.
+- **Funil (ref 22).** Já mostrava a quantidade e o valor no topo de cada coluna; ficou como estava.
+- **Editais, área da Cris (ref 42).** O novo cartão "Etapas de cada edital" mostra um checklist de 7 etapas por edital em andamento, em ordem de prazo:
+  1. ler o edital;
+  2. conferir se a MARÉ pode participar;
+  3. justificativa;
+  4. proposta;
+  5. orçamento com a Letícia;
+  6. documentos;
+  7. enviar e guardar o comprovante.
+
+  Cada edital tem uma barra de % pronto e os dias que faltam. Só a Cris marca as etapas.
