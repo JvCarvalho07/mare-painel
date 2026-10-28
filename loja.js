@@ -9,8 +9,8 @@
   // id aleatório: as cópias de pessoas diferentes não colidem ao juntar
   const id = () => "i" + Math.random().toString(36).slice(2, 10);
 
-  // ponto de partida: equipe real e lançamentos/contatos de EXEMPLO para a apresentação
-  const INICIAL = () => ({
+  // os exemplos antigos (só servem para reconhecer e apagar o que era de mentira em quem já abriu o painel)
+  const SEMENTE = () => ({
     versao: 2,
     exemplo: true, // dados de mentira para apresentar; some quando a equipe começa de verdade
     membros: [
@@ -123,12 +123,41 @@
 
   let banco;
   try { banco = JSON.parse(localStorage.getItem(CHAVE) || "null") } catch (e) { banco = null }
+  // ponto de partida real: equipe, nomes dos projetos e serviços, imprensa e categorias; o resto começa vazio
+  const INICIAL = () => {
+    const s = SEMENTE();
+    return {
+      versao: 2, exemplo: false, membros: s.membros,
+      servicos: s.servicos.map(x => ({ ...x, minimo: 0, maximo: 0, horas: 0 })),
+      projetos: s.projetos.map(p => ({ ...p, inicio: "", fim: "", horas: 0 })),
+      imprensa: s.imprensa.map(x => ({ ...x, status: "Não procurado" })),
+      orcamento: s.orcamento.map(o => ({ ...o, planejado: 0 })),
+      captacao: s.captacao.map(c => ({ ...c, meta: 0 })),
+      lancamentos: [], prospectos: [], tarefas: [], posts: [], seguidores: [], presencas: {},
+      funil: { visitas: 0, pedidos: 0, clientes: 0 }, planejar: { piso: 0, mesesReserva: 3, checklist: {} },
+      metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], ausencias: [], conversas: [], editais: [],
+    };
+  };
+  // apaga só o que era exemplo: o que alguém lançou por conta própria fica
+  const ASSIN = { lancamentos: x => x.descricao + "|" + x.data, prospectos: x => x.nome, servicos: x => x.nome, projetos: x => x.nome, tarefas: x => x.titulo, posts: x => x.tema + "|" + x.data, imprensa: x => x.veiculo, seguidores: x => x.data + "|" + x.valor, membros: x => x.nome, orcamento: x => x.categoria, recorrentes: x => x.descricao, reservas: x => x.nome, captacao: x => x.fonte, ausencias: x => x.pessoa + "|" + x.data, conversas: x => x.pessoa + "|" + x.data, editais: x => x.nome };
+  const BASE = ["membros", "servicos", "projetos", "imprensa", "orcamento", "captacao"];
+  const limpaExemplo = b => {
+    const s = SEMENTE(), r = INICIAL(), out = { ...r };
+    for (const k of Object.keys(ASSIN)) {
+      const sem = new Set((s[k] || []).map(ASSIN[k])), meus = (b[k] || []).filter(x => !sem.has(ASSIN[k](x)));
+      out[k] = BASE.includes(k) ? r[k].concat(meus) : meus;
+    }
+    // lançamentos criados a partir de contatos de exemplo também saem
+    const contatosEx = new Set((s.prospectos || []).map(p => p.nome));
+    out.lancamentos = out.lancamentos.filter(l => !contatosEx.has(String(l.descricao || "").split(" · ")[0]));
+    if (b.caixa) out.caixa = b.caixa;
+    if (b.presencas) out.presencas = b.presencas;
+    if (b.presencaCel) out.presencaCel = b.presencaCel;
+    return out;
+  };
   if (!banco || banco.versao !== 2) banco = INICIAL();
-  // quem já tinha dados salvos ganha as coleções novas: com exemplo se ainda é exemplo, vazias se já é real
-  {
-    const b = INICIAL(), vazio = { planejar: { piso: 0, mesesReserva: 3, checklist: {} }, metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], captacao: b.captacao.map(x => ({ ...x, meta: 0 })), ausencias: [], conversas: [], editais: [] };
-    for (const k of Object.keys(vazio)) if (!(k in banco)) banco[k] = banco.exemplo !== false ? b[k] : vazio[k];
-  }
+  else if (banco.exemplo !== false) { banco = limpaExemplo(banco); try { localStorage.setItem(CHAVE, JSON.stringify(banco)) } catch (e) { } }
+  { const r = INICIAL(); for (const k of Object.keys(r)) if (!(k in banco)) banco[k] = r[k] }
   const ouvintes = [];
   const salva = () => { try { localStorage.setItem(CHAVE, JSON.stringify(banco)) } catch (e) { } ouvintes.forEach(f => f()) };
 
@@ -202,13 +231,6 @@
     // os dados guardados antes desta marcação também eram de exemplo
     exemplo: () => banco.exemplo !== false,
     // apaga os números de exemplo e guarda só o que é real: equipe, serviços, lista de imprensa e categorias do orçamento
-    comecaReal() {
-      const b = INICIAL();
-      banco = { versao: 2, exemplo: false, membros: banco.membros || b.membros, servicos: banco.servicos || b.servicos,
-        lancamentos: [], orcamento: (banco.orcamento || b.orcamento).map(o => ({ ...o, planejado: 0 })), prospectos: [], projetos: [], tarefas: [], posts: [],
-        imprensa: (banco.imprensa || b.imprensa).map(i => ({ ...i, status: "Não procurado" })), funil: { visitas: 0, pedidos: 0, clientes: 0 }, seguidores: [], presencas: {},
-        planejar: { piso: 0, mesesReserva: 3, checklist: {} }, metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], captacao: (banco.captacao || b.captacao).map(x => ({ ...x, meta: 0 })), ausencias: [], conversas: [], editais: [] };
-      salva()
-    },
+    comecaReal() { banco = limpaExemplo(banco); salva() },
   };
 })();

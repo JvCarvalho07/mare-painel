@@ -238,14 +238,10 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="c s8"><h2>Lançamentos<span class="acoes"><span class="seg" id="fFiltro"><button data-v="todos" aria-pressed="true">Todos</button><button data-v="entrada" aria-pressed="false">Entradas</button><button data-v="saida" aria-pressed="false">Saídas</button><button data-v="pendente" aria-pressed="false">Pendentes</button></span><button class="bt mini" data-novo="lancamentos">+ Novo</button></span></h2><div class="sub">Clique numa linha para editar.</div><div class="rolar"><table class="t" id="fTab"></table></div></div>
    <div class="c s4"><h2>Orçamento do ano<span class="acoes"><button class="bt mini claro" data-novo="orcamento">+ Categoria</button></span></h2><div class="sub">Planejado × gasto (pagos e pendentes). Clique para mudar o planejado.</div><div id="fOrc"></div></div>
   </div>
-  <div class="g">
-   <div class="c s8"><h2>Simulação de 24 meses<span class="acoes"><span class="seg" id="fCen"></span></span></h2><div class="sub">Começa do saldo real de hoje. Ligue as situações ruins para testar.</div><svg class="graf" id="fSim" style="height:240px"></svg></div>
-   <div class="c s4 escuro"><h2>E se der errado?</h2><div class="sub">Tempestades ligadas mudam a simulação.</div><div id="fTemp" style="display:flex;flex-wrap:wrap;gap:6px"></div><div style="margin-top:14px"><b id="fRes" style="font-size:20px"></b><div class="sub" id="fResF"></div></div></div>
-  </div>
   <div class="area" id="a-leticia">
    <div class="dono"><h2>Planejar <small>área da Letícia</small></h2><span class="quem"></span></div>
    <div class="g">
-    <div class="c s8"><h2>Caixa dos próximos 12 meses<span class="acoes so-dono"><button class="bt mini" data-novo="recorrentes">+ Repete todo mês</button><button class="bt mini claro" data-novo="planejar">Mínimo e reserva</button></span></h2><div class="sub">Parte do saldo de hoje e soma o que está pendente, o que se repete todo mês e os gastos do ano na data deles.</div><svg class="graf" id="lCaixa" style="height:230px"></svg><div id="lAperto" class="aviso-l"></div></div>
+    <div class="c s8"><h2>Caixa dos próximos 12 meses<span class="acoes so-dono"><button class="bt mini" data-novo="recorrentes">+ Repete todo mês</button><button class="bt mini claro" data-novo="planejar">Mínimo e reserva</button></span></h2><div class="sub">Parte do saldo de hoje e soma o que está pendente, o que se repete todo mês e os gastos do ano na data deles.</div><svg class="graf" id="lCaixa" style="height:230px"></svg><div class="sub" style="margin-top:8px">E se der errado? Ligue para comparar com o caminho normal:</div><div id="lCen" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px"></div><div id="lAperto" class="aviso-l"></div></div>
     <div class="c s4"><h2>Repete todo mês</h2><div class="sub">Entradas e saídas fixas. Clique para editar.</div><ul class="li" id="lRec"></ul></div>
    </div>
    <div class="g">
@@ -365,7 +361,7 @@ dialog .pe .bt:first-child{margin-right:auto}
     <svg id="mMapa" role="img" aria-label="Bairros de Belém e Ananindeua"></svg>
     <div class="zoom"><button id="zMais" aria-label="Aproximar">+</button><button id="zMenos" aria-label="Afastar">−</button><button id="zIni" aria-label="Voltar ao começo" style="font-size:14px">⌂</button></div></div>
    <div class="s4" style="display:flex;flex-direction:column;gap:14px">
-    <div class="c escuro"><div class="sub">Bairros sem nenhum relato</div><b id="mSem" style="font-size:40px;font-weight:800"></b><div class="sub">Relatos de exemplo até o formulário do site entrar.</div></div>
+    <div class="c escuro"><div class="sub">Bairros sem nenhum relato</div><b id="mSem" style="font-size:40px;font-weight:800"></b><div class="sub">Os relatos chegam pelo formulário do site quando ele for ligado.</div></div>
     <div class="c"><h2>Onde divulgar primeiro</h2><ul class="li" id="mAlvos"></ul></div>
     <div class="c"><h2>Mais relatos</h2><ul class="li" id="mTop"></ul></div>
    </div>
@@ -498,18 +494,7 @@ function financeiro(){const c=contas();
  $("fTab").innerHTML=`<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Responsável</th><th>Situação</th><th class="dir">Valor</th></tr></thead><tbody>`+lc.map(l=>`<tr data-id="${l.id}"><td>${dt(l.data)}</td><td>${esc(l.descricao)}</td><td>${esc(l.categoria)}</td><td>${esc(l.resp)}</td><td><span class="etq ${etqStatus(l.status)}">${({pago:"Pago",pendente:"Pendente"})[l.status]||l.status}</span>${l.status==="pendente"?` <button class="bt mini claro" data-paga="${l.id}">${l.tipo==="entrada"?"recebido":"pago"}</button>`:""}</td><td class="dir num" style="color:${l.tipo==="entrada"?"#3d7a1f":"#b13b26"}">${l.tipo==="entrada"?"+":"−"} ${brl(l.valor)}</td></tr>`).join("")+`</tbody>`;
  $("fTab").querySelectorAll("[data-paga]").forEach(b=>b.onclick=()=>L.altera("lancamentos",b.dataset.paga,{status:"pago"}));editar("lancamentos",$("fTab"));
  const gasto={};L.lista("lancamentos").filter(l=>l.tipo==="saida").forEach(l=>gasto[l.categoria]=(gasto[l.categoria]||0)+(+l.valor||0));
- $("fOrc").innerHTML=L.lista("orcamento").map(o=>{const g=gasto[o.categoria]||0,p=+o.planejado||1,blocos=10,ch=Math.min(blocos,Math.round(g/p*blocos));return `<div data-id="${o.id}" style="cursor:pointer;margin:9px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(o.categoria)}</span><span class="num"><b>${brl(g)}</b> <span style="color:var(--mut)">de ${brl(o.planejado)}</span></span></div><div style="display:grid;grid-template-columns:repeat(${blocos},1fr);gap:3px;margin-top:5px">${Array.from({length:blocos},(_,i)=>`<i style="height:12px;border-radius:3px;background:${i<ch?(g>p?"#e2735a":"#a9d84e"):"#e7eae4"}"></i>`).join("")}</div></div>`}).join("");editar("orcamento",$("fOrc"));
- // simulação a partir do saldo real
- $("fCen").innerHTML=["pess","prov","otim"].map(k=>`<button data-c="${k}" aria-pressed="${k===cen}">${CENARIOS[k].nome}</button>`).join("");$("fCen").querySelectorAll("button").forEach(b=>b.onclick=()=>{cen=b.dataset.c;financeiro()});
- $("fTemp").innerHTML=TEMPESTADES.map(t=>`<button class="bt mini" data-t="${t.id}" style="background:${lig.has(t.id)?"#e2735a":"#2c3a33"};color:#fff">${t.nome}</button>`).join("");$("fTemp").querySelectorAll("button").forEach(b=>b.onclick=()=>{lig.has(b.dataset.t)?lig.delete(b.dataset.t):lig.add(b.dataset.t);financeiro()});
- const base=c.saldo,S={};for(const k in CENARIOS){const r=simular(k,lig);S[k]=r.serie.map(o=>Math.round(base+o.caixa-r.inicio))}
- const svg=$("fSim"),[W,H]=tam(svg),Lm=50,R=86,T=10,B=24,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);const v=S[cen],lo=Math.min(-1000,...v),hi=Math.max(2000,...v)*1.1,x=i=>Lm+i/23*pw,y=q=>T+ph-(q-lo)/(hi-lo)*ph,cur=a=>a.map((q,i)=>(i?"L":"M")+x(i).toFixed(1)+","+y(q).toFixed(1)).join(" ");
- let s=`<defs><clipPath id="clS"><rect x="${Lm}" y="${T}" width="${pw}" height="${ph}"/></clipPath></defs>`;const passo=hi-lo>40000?20000:hi-lo>15000?5000:hi-lo>6000?2000:1000;
- for(let q=Math.ceil(lo/passo)*passo;q<=hi;q+=passo)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(q)}" y2="${y(q)}" stroke="${q?"#e6e9e3":"#18201c"}" ${q?"":'stroke-dasharray="4 4"'}/><text x="${Lm-6}" y="${y(q)+4}" font-size="10.5" fill="#a2aca6" text-anchor="end">${(q/1000).toLocaleString("pt-BR")}k</text>`;
- if(lo<0)s+=`<rect x="${Lm}" y="${y(0)}" width="${pw}" height="${T+ph-y(0)}" fill="#e2735a" fill-opacity=".07"/>`;
- for(let i=0;i<24;i+=3)s+=`<text x="${x(i)}" y="${H-6}" font-size="10.5" fill="#a2aca6" text-anchor="middle">${MARE.rotulo(i)}</text>`;
- for(const k of ["pess","otim","prov"].filter(k=>k!==cen).concat(cen))s+=`<path clip-path="url(#clS)" d="${cur(S[k])}" fill="none" stroke="${CENARIOS[k].cor}" stroke-width="${k===cen?3:1.6}" ${k===cen?"":'stroke-dasharray="5 5" opacity=".7"'}/><text x="${W-R+8}" y="${Math.max(T+8,Math.min(T+ph,y(S[k][23])))+4}" font-size="11.5" fill="${k===cen?"#18201c":"#66726b"}" font-weight="${k===cen?700:400}">${CENARIOS[k].nome}</text>`;
- svg.innerHTML=s;const zera=v.findIndex(q=>q<0);$("fRes").textContent=zera<0?"Aguenta os 24 meses":"Falta dinheiro em "+MARE.rotulo(zera);$("fResF").textContent=lig.size?"Cortar primeiro: contador por parceria, depois transporte.":"Nenhuma tempestade ligada."}
+ $("fOrc").innerHTML=L.lista("orcamento").map(o=>{const g=gasto[o.categoria]||0,p=+o.planejado||1,blocos=10,ch=Math.min(blocos,Math.round(g/p*blocos));return `<div data-id="${o.id}" style="cursor:pointer;margin:9px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(o.categoria)}</span><span class="num"><b>${brl(g)}</b> <span style="color:var(--mut)">de ${brl(o.planejado)}</span></span></div><div style="display:grid;grid-template-columns:repeat(${blocos},1fr);gap:3px;margin-top:5px">${Array.from({length:blocos},(_,i)=>`<i style="height:12px;border-radius:3px;background:${i<ch?(g>p?"#e2735a":"#a9d84e"):"#e7eae4"}"></i>`).join("")}</div></div>`}).join("");editar("orcamento",$("fOrc"));}
 $("fFiltro").querySelectorAll("button").forEach(b=>b.onclick=()=>{filtroF=b.dataset.v;$("fFiltro").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));financeiro()});
 
 function mudaEtapa(p,n,extra={}){
@@ -580,7 +565,8 @@ function pessoasPg(){const mb=L.lista("membros"),tf=L.lista("tarefas").filter(t=
  $("pPres").querySelectorAll("[data-pres]").forEach(b=>b.onclick=()=>{const [s,i]=b.dataset.pres.split("|");L.marcaPresenca(s,i)})}
 
 // ---------- MAPA (estilo do mapa de jogo: terra escura, bairros com borda que brilha, nomes com contorno) ----------
-const RELATOS={"Umarizal":9,"Marco":7,"Nazaré":5,"Pedreira":4,"Batista Campos":3,"Telégrafo":2,"Sacramenta":2,"Fátima":2,"São Brás":1,"Marambaia":1,"Cidade Nova VI":3,"Coqueiro":1,"Centro":2}; // EXEMPLO
+// relatos de moradores por bairro: chegam pelo formulário do site quando ele for ligado; por enquanto nenhum
+const RELATOS={}
 let bairros=null,agua=null,modo="relatos",geo=null,cam=null,arr=null;
 const dentro=(p,a)=>{let c=false;for(let i=0,j=a.length-1;i<a.length;j=i++){const [xi,yi]=a[i],[xj,yj]=a[j];if((yi>p[1])!==(yj>p[1])&&p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi)c=!c}return c};
 const polis=f=>f.geometry.type==="Polygon"?[f.geometry.coordinates]:f.geometry.coordinates;
@@ -651,27 +637,37 @@ const mesRot=d=>MES[d.getMonth()]+(d.getMonth()===0?"/"+String(d.getFullYear()).
 const diasAte=s=>Math.round((dObj(s)-dObj(hojeISO))/864e5);
 
 // caixa projetado: saldo de hoje + pendentes + o que se repete + gastos do ano
-function projecao(){const c=contas(),lc=L.lista("lancamentos"),rec=L.lista("recorrentes"),res=L.lista("reservas"),out=[];let s=c.saldo;const m0=hojeISO.slice(0,7);
+const CEN_L=[["cart","Cartório 2× mais caro"],["inad","30% dos clientes não pagam"],["semcli","6 meses sem cliente"],["contrib","Contribuições caem pela metade"],["fixo","Gasto fixo sobe 50%"]],cenL=new Set();
+// multiplica cada valor conforme os "e se" ligados (só mexe na previsão, nunca nos dados)
+const multL=(x,tipo,k,orig,cen)=>{let m=1;const txt=(x.descricao||x.nome||"")+" "+(x.categoria||"");
+ if(tipo==="saida"&&cen.has("cart")&&/formaliza|cart[oó]rio/i.test(txt))m*=2;
+ if(tipo==="entrada"&&x.categoria==="Serviços"){if(cen.has("inad"))m*=.7;if(cen.has("semcli")&&k<6)m=0}
+ if(tipo==="entrada"&&cen.has("contrib")&&x.categoria==="Contribuições")m*=.5;
+ if(tipo==="saida"&&cen.has("fixo")&&orig==="rec")m*=1.5;return m};
+function projecao(cen=new Set()){const c=contas(),lc=L.lista("lancamentos"),rec=L.lista("recorrentes"),res=L.lista("reservas"),out=[];let s=c.saldo;const m0=hojeISO.slice(0,7);
  for(let k=0;k<12;k++){const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+k,1),m=d.toISOString().slice(0,7);
   const pend=lc.filter(x=>x.status==="pendente"&&(k===0?(x.data||m0).slice(0,7)<=m:x.data?.slice(0,7)===m));
-  let ent=pend.filter(x=>x.tipo==="entrada").reduce((a,x)=>a+(+x.valor||0),0),sai=pend.filter(x=>x.tipo==="saida").reduce((a,x)=>a+(+x.valor||0),0);
+  let ent=pend.filter(x=>x.tipo==="entrada").reduce((a,x)=>a+(+x.valor||0)*multL(x,"entrada",k,"pend",cen),0),sai=pend.filter(x=>x.tipo==="saida").reduce((a,x)=>a+(+x.valor||0)*multL(x,"saida",k,"pend",cen),0);
   rec.forEach(r=>{if(r.inicio&&m<r.inicio.slice(0,7))return;if(r.fim&&m>r.fim.slice(0,7))return;if(k===0&&(+r.dia||1)<=L.hoje.getDate())return;
-   if(lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.descricao))return;if(r.tipo==="entrada")ent+=+r.valor||0;else sai+=+r.valor||0});
-  res.forEach(r=>{if(r.data?.slice(0,7)===m&&!lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.nome))sai+=+r.valor||0});
+   if(lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.descricao))return;if(r.tipo==="entrada")ent+=(+r.valor||0)*multL(r,"entrada",k,"rec",cen);else sai+=(+r.valor||0)*multL(r,"saida",k,"rec",cen)});
+  res.forEach(r=>{if(r.data?.slice(0,7)===m&&!lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.nome))sai+=(+r.valor||0)*multL(r,"saida",k,"res",cen)});
   s+=ent-sai;out.push({m,d,rot:mesRot(d),ent,sai,saldo:s})}return out}
-function linhaCaixa(svg,pts,piso){const [W,H]=tam(svg),Lm=48,R=12,T=16,B=26,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
- const vs=pts.map(p=>p.saldo).concat([piso,0]),mn=Math.min(...vs),mx=Math.max(...vs),pad=(mx-mn)*.12||100,lo=mn-pad,hi=mx+pad;
+function linhaCaixa(svg,pts,piso,pts2){const [W,H]=tam(svg),Lm=48,R=12,T=16,B=26,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+ const vs=pts.map(p=>p.saldo).concat(pts2?pts2.map(p=>p.saldo):[]).concat([piso,0]),mn=Math.min(...vs),mx=Math.max(...vs),pad=(mx-mn)*.12||100,lo=mn-pad,hi=mx+pad;
  const x=i=>Lm+pw*(i+.5)/pts.length,y=v=>T+ph-(v-lo)/(hi-lo)*ph,f=v=>Math.abs(v)>=1000?(v/1000).toFixed(1).replace(".",",")+"k":Math.round(v);let s="";
  for(let k=0;k<=3;k++){const v=lo+(hi-lo)/3*k;s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e6e9e3"/><text x="${Lm-6}" y="${y(v)+4}" font-size="10.5" fill="#a2aca6" text-anchor="end">${f(v)}</text>`}
  if(lo<0)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="#b9c2bc"/>`;
  if(piso>0)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(piso)}" y2="${y(piso)}" stroke="#e2735a" stroke-dasharray="5 5"/><text x="${W-R}" y="${y(piso)-6}" font-size="11" fill="#c0583a" text-anchor="end">mínimo ${brl(piso)}</text>`;
  s+=`<path d="M${pts.map((p,i)=>x(i)+" "+y(p.saldo)).join(" L")} L${x(pts.length-1)} ${T+ph} L${x(0)} ${T+ph}Z" fill="#a9d84e22"/><path d="M${pts.map((p,i)=>x(i)+" "+y(p.saldo)).join(" L")}" fill="none" stroke="#1f8a86" stroke-width="3" stroke-linejoin="round"/>`;
+ if(pts2)s+=`<path d="M${pts2.map((p,i)=>x(i)+" "+y(p.saldo)).join(" L")}" fill="none" stroke="#e2735a" stroke-width="3" stroke-dasharray="7 5" stroke-linejoin="round"/>`+pts2.map((p,i)=>`<circle cx="${x(i)}" cy="${y(p.saldo)}" r="3.5" fill="#e2735a"><title>${p.rot} se der errado: ${brl(p.saldo)}</title></circle>`).join("");
  pts.forEach((p,i)=>{const mal=p.saldo<piso;s+=`<circle cx="${x(i)}" cy="${y(p.saldo)}" r="5" fill="${mal?"#e2735a":"#1f8a86"}" stroke="#fff" stroke-width="2"><title>${p.rot}: ${brl(p.saldo)} (entra ${brl(p.ent)}, sai ${brl(p.sai)})</title></circle>${pw/pts.length<36&&i%2?"":`<text x="${x(i)}" y="${H-6}" font-size="11" fill="${i?"#a2aca6":"#18201c"}" font-weight="${i?400:700}" text-anchor="middle">${p.rot}</text>`}`});
  svg.innerHTML=s}
 const CHECK=["Conferir o extrato e o saldo do banco","Lançar tudo que entrou e saiu no mês","Marcar o que já foi pago ou recebido","Cobrar quem está atrasado","Comparar o orçamento com o gasto","Mandar o relatório do mês à equipe"];
 function areaLeticia(){dono("leticia");const pl=L.obj("planejar")||{piso:0,mesesReserva:3,checklist:{}},pr=projecao(),c=contas();
- linhaCaixa($("lCaixa"),pr,+pl.piso||0);const ap=pr.find(p=>p.saldo<(+pl.piso||0));
- $("lAperto").className="aviso-l"+(ap?" mal":"");$("lAperto").textContent=ap?`Em ${ap.rot} o caixa fica em ${brl(ap.saldo)}, abaixo do mínimo de ${brl(+pl.piso||0)}. Dá tempo de agir antes.`:`O caixa fica acima do mínimo de ${brl(+pl.piso||0)} nos próximos 12 meses. Em ${pr.at(-1).rot}: ${brl(pr.at(-1).saldo)}.`;
+ const pr2=cenL.size?projecao(cenL):null,usa=pr2||pr;linhaCaixa($("lCaixa"),pr,+pl.piso||0,pr2);const ap=usa.find(p=>p.saldo<(+pl.piso||0));
+ $("lCen").innerHTML=CEN_L.map(([k,n])=>`<button class="bt mini" data-cl="${k}" style="background:${cenL.has(k)?"#e2735a":"var(--fundo)"};color:${cenL.has(k)?"#fff":"var(--tinta)"}">${n}</button>`).join("");$("lCen").querySelectorAll("[data-cl]").forEach(b=>b.onclick=()=>{cenL.has(b.dataset.cl)?cenL.delete(b.dataset.cl):cenL.add(b.dataset.cl);areaLeticia()});
+ const vazio=!L.lista("lancamentos").length&&!L.lista("recorrentes").length&&!L.obj("caixa");
+ $("lAperto").className="aviso-l"+(ap&&!vazio?" mal":"");$("lAperto").textContent=vazio?"Para ver a previsão, lance o saldo do banco (botão no alto do Financeiro) e o que se repete todo mês.":(cenL.size?"Se der errado: ":"")+(ap?`em ${ap.rot} o caixa fica em ${brl(ap.saldo)}, abaixo do mínimo de ${brl(+pl.piso||0)}. Dá tempo de agir antes.`:`o caixa fica acima do mínimo de ${brl(+pl.piso||0)} nos próximos 12 meses. Em ${usa.at(-1).rot}: ${brl(usa.at(-1).saldo)}.`).replace(/^./,ch=>cenL.size?ch:ch.toUpperCase());
  const rec=L.lista("recorrentes");$("lRec").innerHTML=rec.map(r=>`<li data-id="${r.id}" style="cursor:pointer"><span class="etq ${r.tipo==="entrada"?"ok":"at"}">${r.tipo==="entrada"?"entra":"sai"}</span><div class="tx"><b>${esc(r.descricao)}</b><span>dia ${+r.dia||1} · ${esc(r.categoria||"")}</span></div><span class="dt num">${brl(+r.valor||0)}</span></li>`).join("")||`<li class="vazio">Nada que se repete ainda.</li>`;editar("recorrentes",$("lRec"));
  const fixo=rec.filter(r=>r.tipo!=="entrada").reduce((a,r)=>a+(+r.valor||0),0),meta=fixo*(+pl.mesesReserva||0),cob=fixo?c.saldo/fixo:0;
  $("lResSub").textContent=`Meta: ${+pl.mesesReserva||0} meses de custo fixo (${brl(fixo)} por mês).`;$("lResN").textContent=fixo?cob.toFixed(1).replace(".",",")+" meses":"—";$("lResP").style.width=pct(c.saldo,meta)+"%";
