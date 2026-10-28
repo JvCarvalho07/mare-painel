@@ -67,6 +67,14 @@ html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
 .ed li button{all:unset;cursor:pointer;flex:none;width:18px;height:18px;border-radius:6px;border:2px solid #b9c2bc;display:grid;place-items:center;font-size:11px;font-weight:800}
 .ed li.f button{background:var(--lima);border-color:var(--lima)}.ed li.f span{color:var(--mut);text-decoration:line-through}
 .area.bloq .ed li button{pointer-events:none}
+.calw{display:grid;grid-template-columns:minmax(0,1fr) 210px;gap:14px}
+.ideias{background:var(--fundo);border-radius:14px;padding:12px;display:flex;flex-direction:column;gap:8px;max-height:520px;overflow:auto}
+.ideias h3{margin:0;font-size:13.5px;display:flex;justify-content:space-between;align-items:center}
+.ideia{background:var(--cartao);border-radius:10px;padding:8px 10px;font-size:12.5px;cursor:pointer;border-left:3px solid #a2aca6}.ideia small{display:block;color:var(--mut);font-size:11.5px}
+@media(max-width:1100px){.calw{grid-template-columns:1fr}.ideias{max-height:none}}
+#pPres .chk{width:30px;height:30px;border-radius:8px;border:0;background:#eceee9}#pPres .chk.feito{background:var(--lima)}#pPres .chk.feito::after{content:""}
+#pPres td:has(small.avisou) .chk:not(.feito){background:#f3d98f}#pPres small.avisou{font-size:9.5px}
+.pbar{display:flex;align-items:center;gap:8px}.pbar .prog{flex:1;min-width:60px;height:7px}
 .tipo{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--fundo);color:var(--mut);white-space:nowrap}
 .passos{list-style:none;counter-reset:p;margin:12px 0 0;padding:0;display:grid;gap:12px}
 .passos li{counter-increment:p;display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:13.5px;line-height:1.4}
@@ -350,7 +358,7 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="mini"><button class="bt lima" data-novo="posts">+ Post</button><button class="bt claro" id="bSeg">Registrar seguidores</button></div></div><div class="canto" id="kCanto"></div></div>
   <div class="g entra" id="kKpi"></div>
   <div class="g">
-   <div class="c s8"><h2>Calendário de posts<span class="acoes"><span class="seg" id="kMes"></span></span></h2><div class="leg" style="margin-bottom:8px"><span><i style="background:#a2aca6"></i>ideia</span><span><i style="background:#d98a1d"></i>produzindo</span><span><i style="background:#1f8a86"></i>agendado</span><span><i style="background:#3f8f4a"></i>publicado</span></div><div class="cal" id="kCal"></div></div>
+   <div class="c s8"><h2>Calendário de posts<span class="acoes"><span class="seg" id="kMes"></span></span></h2><div class="leg" style="margin-bottom:8px"><span><i style="background:#a2aca6"></i>ideia</span><span><i style="background:#d98a1d"></i>produzindo</span><span><i style="background:#1f8a86"></i>agendado</span><span><i style="background:#3f8f4a"></i>publicado</span></div><div class="calw"><div class="cal" id="kCal"></div><div class="ideias"><h3>Ideias <button class="bt mini" data-ideia="1">+ Ideia</button></h3><div class="sub" style="margin:0">Posts ainda em ideia. Clique para planejar.</div><div id="kIdeias"></div></div></div></div>
    <div class="c s4"><h2>Do alcance ao cliente</h2><div class="sub">Este mês. Clique num número para atualizar.</div><div class="barras-h" id="kFunil"></div><h2 style="margin-top:16px">Seguidores</h2><svg class="graf" id="kSeg" style="height:120px"></svg></div>
   </div>
   <div class="g">
@@ -597,7 +605,7 @@ function comercial(){const pr=L.lista("prospectos"),ab=pr.filter(p=>!["Fechado",
 function projetos(){const pj=L.lista("projetos"),tf=L.lista("tarefas"),ab=tf.filter(t=>t.status!=="Feito"),atr=ab.filter(t=>atrasado(t.prazo)),cap=L.lista("membros").reduce((a,m)=>a+(+m.horas||0),0)*4,uso=ab.reduce((a,t)=>a+horasDe(t),0);
  canto($("jCanto"),[[pj.filter(p=>p.estado==="Em andamento").length,"Em andamento"],[cap+" h","Horas no mês"]]);
  kpis($("jKpi"),[["alvo",pj.filter(p=>p.estado==="Em andamento").length,"projetos em andamento"],["check",ab.length,"tarefas abertas"],["relogio",atr.length,"tarefas atrasadas",atr.length?"atenção":"",atr.length>0],["gente",uso+" de "+cap+" h","horas pedidas no mês"]]);
- const E=OPC.etapa_j;$("jProj").innerHTML=`<thead><tr><th>Projeto</th><th>Etapa</th><th>Responsável</th><th>Período</th><th>Tarefas</th><th>Horas</th><th>Situação</th></tr></thead><tbody>`+pj.map(p=>{const i=E.indexOf(p.etapa),t=tf.filter(x=>x.projeto===p.nome);return `<tr data-id="${p.id}"><td><b>${esc(p.nome)}</b><br><span style="color:var(--mut);font-size:12px">${esc(p.tema)}</span></td><td><div style="display:flex;gap:3px">${E.map((e,k)=>`<i title="${e}" style="width:22px;height:8px;border-radius:4px;background:${k<=i&&p.estado!=="Ideia"?"#a9d84e":"#e7eae4"}"></i>`).join("")}</div><span style="font-size:12px;color:var(--mut)">${p.etapa}</span></td><td>${esc(p.resp)}</td><td>${dt(p.inicio)} – ${dt(p.fim)}</td><td>${t.filter(x=>x.status==="Feito").length}/${t.length}</td><td>${p.horas||0} h</td><td><span class="etq ${etqStatus(p.estado)}">${p.estado}</span></td></tr>`}).join("")+`</tbody>`;editar("projetos",$("jProj"));
+ const E=OPC.etapa_j;$("jProj").innerHTML=`<thead><tr><th>Projeto</th><th>Etapa</th><th>Responsável</th><th>Período</th><th>Tarefas</th><th>Horas</th><th>Situação</th></tr></thead><tbody>`+pj.map(p=>{const i=E.indexOf(p.etapa),t=tf.filter(x=>x.projeto===p.nome);return `<tr data-id="${p.id}"><td><b>${esc(p.nome)}</b><br><span style="color:var(--mut);font-size:12px">${esc(p.tema)}</span></td><td><div style="display:flex;gap:3px">${E.map((e,k)=>`<i title="${e}" style="width:22px;height:8px;border-radius:4px;background:${k<=i&&p.estado!=="Ideia"?"#a9d84e":"#e7eae4"}"></i>`).join("")}</div><span style="font-size:12px;color:var(--mut)">${p.etapa}</span></td><td>${esc(p.resp)}</td><td>${dt(p.inicio)} – ${dt(p.fim)}</td><td><div class="pbar"><span>${t.filter(x=>x.status==="Feito").length}/${t.length}</span><div class="prog"><i style="width:${t.length?Math.round(t.filter(x=>x.status==="Feito").length/t.length*100):0}%"></i></div></div></td><td>${p.horas||0} h</td><td><span class="etq ${etqStatus(p.estado)}">${p.estado}</span></td></tr>`}).join("")+`</tbody>`;editar("projetos",$("jProj"));
  const S=OPC.status_t;$("jQuadro").innerHTML=S.map((s,i)=>{const l=tf.filter(t=>t.status===s).sort((a,b)=>(a.prazo||"").localeCompare(b.prazo||""));return `<div class="coluna" data-col="${i}"><b>${s}<span>${l.length}</span></b>`+l.map(t=>`<div class="cartao" data-id="${t.id}"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)}</span><div class="pe"><span>${esc(t.resp)} · <span style="color:${atrasado(t.prazo)&&s!=="Feito"?"#b13b26":"inherit"}">${dt(t.prazo)}</span></span><span class="mv">${i>0?`<button data-mv="${t.id}" data-d="-1" aria-label="Voltar">←</button>`:""}${i<2?`<button data-mv="${t.id}" data-d="1" aria-label="Avançar">→</button>`:""}</span></div></div>`).join("")+`</div>`}).join("");
  $("jQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const t=tf.find(x=>x.id===b.dataset.mv);L.altera("tarefas",t.id,{status:S[S.indexOf(t.status)+ +b.dataset.d]})});editar("tarefas",$("jQuadro"));arrastavel($("jQuadro"),(id,i)=>L.altera("tarefas",id,{status:S[i]}));
  barrasH($("jHoras"),[["Horas da equipe",cap,0,"#a9d84e"],["Pedidas pelas tarefas",uso,0,uso>cap?"#e2735a":"#1f2a24"]],v=>v+" h");
@@ -609,7 +617,10 @@ function projetos(){const pj=L.lista("projetos"),tf=L.lista("tarefas"),ab=tf.fil
 
 // ---------- MARKETING ----------
 let mesK=0;
-function marketing(){const ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publicado"),mes=hojeISO.slice(0,7),pubMes=pub.filter(p=>p.data.slice(0,7)===mes),alc=pubMes.reduce((a,p)=>a+(+p.alcance||0),0);
+document.addEventListener("click",e=>{if(e.target.closest("[data-ideia]")){window.__pre={status:"Ideia",data:""};abre("posts")}});
+function ideiasMk(){const el=$("kIdeias");if(!el)return;const id=L.lista("posts").filter(p=>p.status==="Ideia").sort((a,b)=>(a.data||"9").localeCompare(b.data||"9"));
+ el.innerHTML=id.map(p=>`<div class="ideia" data-id="${p.id}"><b>${esc(p.tema||"Sem tema")}</b><small>${esc(p.canal||"")} · ${esc(p.formato||"")}${p.data?" · "+dt(p.data):" · sem data"}</small></div>`).join("")||`<div class="vazio" style="font-size:12.5px">Nenhuma ideia guardada.</div>`;editar("posts",el)}
+function marketing(){setTimeout(ideiasMk,0);const ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publicado"),mes=hojeISO.slice(0,7),pubMes=pub.filter(p=>p.data.slice(0,7)===mes),alc=pubMes.reduce((a,p)=>a+(+p.alcance||0),0);
  const eng=p=>(+p.alcance?((+p.curtidas||0)+(+p.comentarios||0)+(+p.salvos||0))/p.alcance*100:0),engM=pubMes.length?pubMes.reduce((a,p)=>a+eng(p),0)/pubMes.length:0;
  const sg=L.lista("seguidores").slice().sort((a,b)=>a.data.localeCompare(b.data)),ult=sg.at(-1)?.valor||0,ant=sg.at(-2)?.valor||ult;
  canto($("kCanto"),[[ult,"Seguidores"],[engM.toFixed(1).replace(".",",")+"%","Engajamento"]]);

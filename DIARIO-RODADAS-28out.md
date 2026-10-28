@@ -58,3 +58,9 @@ O João pediu que eu decidisse tudo do painel em rodadas. As referências escolh
   7. enviar e guardar o comprovante.
 
   Cada edital tem uma barra de % pronto e os dias que faltam. Só a Cris marca as etapas.
+
+## Rodada 3: calendário, projetos e presença
+
+- **Marketing (ref 34).** Ao lado do calendário entrou a coluna "Ideias", com os posts ainda em ideia e o botão "+ Ideia". O botão abre um post já marcado como ideia e sem data. Clicar numa ideia abre o post para planejar a data. No celular, a coluna desce para baixo do calendário.
+- **Projetos (refs 38 e 40).** A coluna "Tarefas" mostra feitas/total e uma barra de % feito em cada projeto.
+- **Pessoas (ref 28).** A presença virou um mapa de calor: verde quando a pessoa veio, cinza quando não marcou, amarelo quando avisou que não viria. A agenda da equipe (conversas e ausências) já estava na área da Gabrielly.
