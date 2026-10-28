@@ -6,7 +6,8 @@
   // dia de hoje de verdade (meio-dia, para não virar o dia por fuso)
   const hoje = (() => { const x = new Date(); x.setHours(12, 0, 0, 0); return x })();
   const d = (dia, mes = 10, ano = 2026) => `${ano}-${String(mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
-  let seq = 1; const id = () => "i" + (seq++).toString(36) + Date.now().toString(36).slice(-3);
+  // id aleatório: as cópias de pessoas diferentes não colidem ao juntar
+  const id = () => "i" + Math.random().toString(36).slice(2, 10);
 
   // ponto de partida: equipe real e lançamentos/contatos de EXEMPLO para a apresentação
   const INICIAL = () => ({
@@ -98,14 +99,68 @@
     hoje,
     lista: c => banco[c] || [],
     obj: c => banco[c],
-    adiciona(c, item) { item.id = id(); banco[c].push(item); salva(); return item },
-    altera(c, i, patch) { const it = banco[c].find(x => x.id === i); if (it) Object.assign(it, patch); salva() },
+    // cada campo guarda em _t a hora da última mudança; só carimba o que mudou de verdade
+    adiciona(c, item) { item.id = id(); const t = Date.now(); item._t = {}; for (const k of Object.keys(item)) if (k !== "_t") item._t[k] = t; banco[c].push(item); salva(); return item },
+    altera(c, i, patch) { const it = banco[c].find(x => x.id === i); if (it) { const t = Date.now(); it._t = it._t || {}; for (const k in patch) if (JSON.stringify(it[k]) !== JSON.stringify(patch[k])) { it[k] = patch[k]; it._t[k] = t } } salva() },
     apaga(c, i) { banco[c] = banco[c].filter(x => x.id !== i); salva() },
     poe(c, valor) { banco[c] = valor; salva() },
-    grava(c, patch) { const o = banco[c] || (banco[c] = {}); Object.assign(o, patch); salva() },
+    grava(c, patch) { const o = banco[c] || (banco[c] = {}); const t = Date.now(); o._t = o._t || {}; for (const k in patch) if (JSON.stringify(o[k]) !== JSON.stringify(patch[k])) { o[k] = patch[k]; o._t[k] = t } salva() },
+    marcaPresenca(dia, nome) { banco.presencas = banco.presencas || {}; banco.presencaCel = banco.presencaCel || {}; const l = banco.presencas[dia] || []; banco.presencas[dia] = l.includes(nome) ? l.filter(x => x !== nome) : l.concat(nome); banco.presencaCel[dia + "|" + nome] = Date.now(); salva() },
     aoMudar: f => ouvintes.push(f),
     exporta() { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(banco, null, 1)], { type: "application/json" })); a.download = "painel-mare-" + new Date().toISOString().slice(0, 10) + ".json"; a.click() },
-    async importa(arquivo) { const j = JSON.parse(await arquivo.text()); if (j.versao !== 2) throw new Error("arquivo de outra versão"); banco = j; salva() },
+    // junta a cópia de outra pessoa: só entra o campo com mudança mais nova; sem gravar=true só devolve o plano
+    async importa(arquivo, gravar) {
+      const j = JSON.parse(await arquivo.text());
+      if (j.versao !== 2) throw new Error("arquivo de outra versão");
+      if (banco.exemplo !== false || j.exemplo !== false) throw new Error("antes de importar, os dois painéis precisam estar sem dados de exemplo: no painel que ainda tem exemplos, clique em 'Dados de exemplo' (no alto da tela) e confirme; depois exporte e importe de novo");
+      const chave = { membros: "nome", servicos: "nome", imprensa: "veiculo", orcamento: "categoria" };
+      const nomeDe = it => it.nome || it.titulo || it.veiculo || it.descricao || it.categoria || "";
+      const maisNovos = (it, loc) => Object.keys(it).filter(f => f !== "_t" && f !== "id" && (!loc || JSON.stringify(it[f]) !== JSON.stringify(loc[f])) && ((it._t || {})[f] || 0) > (((loc || {})._t || {})[f] || 0)).map(f => [f, it[f], it._t[f]]);
+      const aplica = (o, campos) => { o._t = o._t || {}; for (const [f, v, t] of campos) { o[f] = v; o._t[f] = t } };
+      const marcas = o => { let m = 0; if (o && typeof o === "object") for (const k of Object.keys(o)) { if (k === "_t") for (const f of Object.keys(o._t || {})) m = Math.max(m, +o._t[f] || 0); else m = Math.max(m, marcas(o[k])) } return m };
+      const futuro = Math.max(marcas(j), 0, ...Object.values(j.presencaCel || {}).map(Number)) - Date.now();
+      const plano = [], lista = [];
+      let novos = 0, trocados = 0;
+      for (const k of Object.keys(j)) {
+        if (k === "presencas" || k === "presencaCel" || k === "_t") continue;
+        if (Array.isArray(j[k])) {
+          const atual = banco[k] || [];
+          for (const it of j[k]) {
+            const campo = chave[k];
+            const ach = atual.findIndex(x => campo ? x[campo] === it[campo] : x.id === it.id);
+            if (ach < 0) { novos++; plano.push([k, -1, it]); lista.push("novo em " + k + ": " + nomeDe(it)) }
+            else { const campos = maisNovos(it, atual[ach]); if (campos.length) { trocados++; plano.push([k, ach, campos]); lista.push(nomeDe(atual[ach]) + " (" + campos.map(c => c[0]).join(", ") + ")") } }
+          }
+        } else if (j[k] && typeof j[k] === "object") {
+          const campos = maisNovos(j[k], banco[k]);
+          if (campos.length) { trocados++; plano.push([k, -2, campos]); lista.push(k + " (" + campos.map(c => c[0]).join(", ") + ")") }
+        }
+      }
+      const cel = j.presencaCel || {}, pres = j.presencas || {};
+      for (const c of Object.keys(cel)) {
+        if (cel[c] > ((banco.presencaCel || {})[c] || 0)) {
+          const [dia, nome] = c.split("|");
+          trocados++; plano.push(["presenca", -3, c]);
+          lista.push("presença " + dia.slice(8) + "/" + dia.slice(5, 7) + " de " + nome + ": " + ((pres[dia] || []).includes(nome) ? "marcada" : "desmarcada"));
+        }
+      }
+      if (gravar) {
+        for (const [k, i, it] of plano) {
+          if (k === "presenca") {
+            const [dia, nome] = it.split("|");
+            banco.presencas = banco.presencas || {}; banco.presencaCel = banco.presencaCel || {};
+            const sem = (banco.presencas[dia] || []).filter(x => x !== nome);
+            banco.presencas[dia] = (pres[dia] || []).includes(nome) ? sem.concat(nome) : sem;
+            banco.presencaCel[it] = cel[it];
+          }
+          else if (i === -1) (banco[k] = banco[k] || []).push(it);
+          else if (i === -2) aplica(banco[k] = banco[k] || {}, it);
+          else aplica(banco[k][i], it);
+        }
+        salva();
+      }
+      return { novos, trocados, lista, futuro };
+    },
     zera() { banco = INICIAL(); salva() },
     // os dados guardados antes desta marcação também eram de exemplo
     exemplo: () => banco.exemplo !== false,
