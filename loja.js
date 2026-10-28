@@ -87,11 +87,48 @@
     funil: { visitas: 610, pedidos: 38, clientes: 2 },
     seguidores: [{ id: id(), data: d(1, 9), valor: 120 }, { id: id(), data: d(1), valor: 310 }, { id: id(), data: d(26), valor: 412 }],
     presencas: {},
+    // ---- áreas de cada diretor (exemplos) ----
+    planejar: { piso: 300, mesesReserva: 3, checklist: {} },
+    metas: { comercialMes: 1500, postsMes: 12, seguidores: 600 },
+    recorrentes: [
+      { id: id(), descricao: "Contribuição dos membros", tipo: "entrada", valor: 600, dia: 5, categoria: "Contribuições", inicio: "", fim: "" },
+      { id: id(), descricao: "Passagens para o campo", tipo: "saida", valor: 60, dia: 20, categoria: "Transporte", inicio: "", fim: "" },
+      { id: id(), descricao: "Material de oficina", tipo: "saida", valor: 50, dia: 15, categoria: "Material", inicio: "", fim: "" },
+    ],
+    reservas: [
+      { id: id(), nome: "Anuidade da federação de EJs", valor: 300, data: d(31, 3, 2027), guardado: 50 },
+      { id: id(), nome: "Renovar o domínio do site", valor: 40, data: d(14, 10, 2027), guardado: 0 },
+      { id: id(), nome: "Renovar o certificado digital", valor: 220, data: d(10, 11, 2027), guardado: 0 },
+    ],
+    captacao: [
+      { id: id(), fonte: "Contribuições dos membros", categoria: "Contribuições", meta: 7200 },
+      { id: id(), fonte: "Rifas e eventos", categoria: "Eventos", meta: 1500 },
+      { id: id(), fonte: "Serviços", categoria: "Serviços", meta: 6000 },
+      { id: id(), fonte: "Editais", categoria: "Editais", meta: 5000 },
+    ],
+    ausencias: [
+      { id: id(), pessoa: "Cris", data: d(7, 11), motivo: "Prova na faculdade" },
+      { id: id(), pessoa: "Elias", data: d(14, 11), motivo: "Viagem" },
+    ],
+    conversas: [
+      { id: id(), pessoa: "Letícia", data: d(3), combinado: "Montar o orçamento de 2027", proxima: d(28, 11) },
+      { id: id(), pessoa: "Anaelson", data: d(10, 9), combinado: "Aprender a medir alcance", proxima: d(10) },
+    ],
+    editais: [
+      { id: id(), nome: "Edital de extensão da universidade (exemplo)", financiador: "Proex", valor: 3000, inscricao: d(20, 11), relatorio: "", status: "Escrevendo" },
+      { id: id(), nome: "Fundo socioambiental para jovens (exemplo)", financiador: "Fundação privada", valor: 10000, inscricao: d(15, 12), relatorio: "", status: "Achado" },
+      { id: id(), nome: "Prêmio de inovação urbana (exemplo)", financiador: "Prefeitura", valor: 5000, inscricao: d(30, 9), relatorio: d(30, 1, 2027), status: "Inscrito" },
+    ],
   });
 
   let banco;
   try { banco = JSON.parse(localStorage.getItem(CHAVE) || "null") } catch (e) { banco = null }
   if (!banco || banco.versao !== 2) banco = INICIAL();
+  // quem já tinha dados salvos ganha as coleções novas: com exemplo se ainda é exemplo, vazias se já é real
+  {
+    const b = INICIAL(), vazio = { planejar: { piso: 0, mesesReserva: 3, checklist: {} }, metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], captacao: b.captacao.map(x => ({ ...x, meta: 0 })), ausencias: [], conversas: [], editais: [] };
+    for (const k of Object.keys(vazio)) if (!(k in banco)) banco[k] = banco.exemplo !== false ? b[k] : vazio[k];
+  }
   const ouvintes = [];
   const salva = () => { try { localStorage.setItem(CHAVE, JSON.stringify(banco)) } catch (e) { } ouvintes.forEach(f => f()) };
 
@@ -113,7 +150,7 @@
       const j = JSON.parse(await arquivo.text());
       if (j.versao !== 2) throw new Error("arquivo de outra versão");
       if (banco.exemplo !== false || j.exemplo !== false) throw new Error("antes de importar, os dois painéis precisam estar sem dados de exemplo: no painel que ainda tem exemplos, clique em 'Dados de exemplo' (no alto da tela) e confirme; depois exporte e importe de novo");
-      const chave = { membros: "nome", servicos: "nome", imprensa: "veiculo", orcamento: "categoria" };
+      const chave = { membros: "nome", servicos: "nome", imprensa: "veiculo", orcamento: "categoria", captacao: "fonte" };
       const nomeDe = it => it.nome || it.titulo || it.veiculo || it.descricao || it.categoria || "";
       const maisNovos = (it, loc) => Object.keys(it).filter(f => f !== "_t" && f !== "id" && (!loc || JSON.stringify(it[f]) !== JSON.stringify(loc[f])) && ((it._t || {})[f] || 0) > (((loc || {})._t || {})[f] || 0)).map(f => [f, it[f], it._t[f]]);
       const aplica = (o, campos) => { o._t = o._t || {}; for (const [f, v, t] of campos) { o[f] = v; o._t[f] = t } };
@@ -169,7 +206,8 @@
       const b = INICIAL();
       banco = { versao: 2, exemplo: false, membros: banco.membros || b.membros, servicos: banco.servicos || b.servicos,
         lancamentos: [], orcamento: (banco.orcamento || b.orcamento).map(o => ({ ...o, planejado: 0 })), prospectos: [], projetos: [], tarefas: [], posts: [],
-        imprensa: (banco.imprensa || b.imprensa).map(i => ({ ...i, status: "Não procurado" })), funil: { visitas: 0, pedidos: 0, clientes: 0 }, seguidores: [], presencas: {} };
+        imprensa: (banco.imprensa || b.imprensa).map(i => ({ ...i, status: "Não procurado" })), funil: { visitas: 0, pedidos: 0, clientes: 0 }, seguidores: [], presencas: {},
+        planejar: { piso: 0, mesesReserva: 3, checklist: {} }, metas: { comercialMes: 0, postsMes: 0, seguidores: 0 }, recorrentes: [], reservas: [], captacao: (banco.captacao || b.captacao).map(x => ({ ...x, meta: 0 })), ausencias: [], conversas: [], editais: [] };
       salva()
     },
   };

@@ -36,6 +36,21 @@ html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
 .topo .migalha b{color:var(--tinta);font-weight:600}
 .pilula{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:var(--mut)}
 .so-cel{display:none}
+.area{margin-top:30px}
+.dono{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 16px;padding:16px 22px;margin-bottom:14px;border-radius:var(--r);background:var(--escuro);color:#e8efe9}
+.dono h2{margin:0;font-size:21px;color:#fff;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.dono h2 small{font-size:12.5px;font-weight:600;color:var(--lima);letter-spacing:.03em}
+.dono .quem{font-size:13px;color:#b9c7bf}
+.lnk{border:0;background:none;color:var(--lima);font:inherit;font-weight:600;text-decoration:underline;cursor:pointer;padding:0}
+.area.bloq .so-dono{display:none!important}
+.prog{height:10px;border-radius:99px;background:#e6e9e3;overflow:hidden}.prog i{display:block;height:100%;background:var(--lima);border-radius:99px;transition:width .6s}
+.c.escuro .prog{background:#ffffff1f}
+.aviso-l{margin-top:10px;font-size:14px;font-weight:600;padding:10px 12px;border-radius:12px;background:#dcefe2;color:#2c6b44}.aviso-l.mal{background:#fae4da;color:#a2401c}
+.chk-l{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}.chk-l li{display:flex;gap:10px;align-items:center;font-size:14px}.chk-l li.feito span{color:var(--mut);text-decoration:line-through}
+.hp{display:grid;gap:12px}.hp .l{display:grid;grid-template-columns:minmax(90px,150px) 1fr auto;gap:10px;align-items:center;font-size:13.5px}
+.hp .tr{position:relative;height:12px;border-radius:99px;background:#eef0ec;overflow:visible}.hp .tr i{position:absolute;top:0;bottom:0;border-radius:99px}.hp .tr b{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--escuro);border-radius:2px}
+.hp .vl{text-align:right;color:var(--mut);font-size:12.5px;white-space:nowrap}
+small.avisou{display:block;font-size:10.5px;font-weight:700;color:#86690e}
 .pilula.exemplo{border:0;font:inherit;font-size:13px;cursor:pointer;background:#f3e3bf;color:#6e5212}.pilula.exemplo:hover{background:#ecd6a6}.pilula.exemplo[hidden]{display:none}
 .pilula b{color:var(--tinta);font-weight:600}
 .eu{width:38px;height:38px;border-radius:50%;background:var(--escuro);color:var(--lima);display:grid;place-items:center;font-weight:700}
@@ -183,6 +198,7 @@ dialog .pe .bt:first-child{margin-right:auto}
  <a href="#projetos" data-p="projetos" title="Projetos"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="7" height="16" rx="2"/><rect x="14" y="4" width="7" height="10" rx="2"/></svg>Projetos</a>
  <a href="#marketing" data-p="marketing" title="Marketing"><svg viewBox="0 0 24 24"><path d="M4 10v4l12 5V5z"/><path d="M16 9a3 3 0 010 6"/></svg>Marketing</a>
  <a href="#pessoas" data-p="pessoas" title="Pessoas"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 2 6 5"/></svg>Pessoas</a>
+ <a href="#editais" data-p="editais" title="Editais"><svg viewBox="0 0 24 24"><path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/></svg>Editais</a>
  <a href="#mapa" data-p="mapa" title="Mapa"><svg viewBox="0 0 24 24"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</a>
  <div class="esp"></div>
  <button class="arq" id="bExp" title="Abrir o resumo da semana para imprimir, salvar em PDF ou mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Resumo</button>
@@ -226,6 +242,23 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="c s8"><h2>Simulação de 24 meses<span class="acoes"><span class="seg" id="fCen"></span></span></h2><div class="sub">Começa do saldo real de hoje. Ligue as situações ruins para testar.</div><svg class="graf" id="fSim" style="height:240px"></svg></div>
    <div class="c s4 escuro"><h2>E se der errado?</h2><div class="sub">Tempestades ligadas mudam a simulação.</div><div id="fTemp" style="display:flex;flex-wrap:wrap;gap:6px"></div><div style="margin-top:14px"><b id="fRes" style="font-size:20px"></b><div class="sub" id="fResF"></div></div></div>
   </div>
+  <div class="area" id="a-leticia">
+   <div class="dono"><h2>Planejar <small>área da Letícia</small></h2><span class="quem"></span></div>
+   <div class="g">
+    <div class="c s8"><h2>Caixa dos próximos 12 meses<span class="acoes so-dono"><button class="bt mini" data-novo="recorrentes">+ Repete todo mês</button><button class="bt mini claro" data-novo="planejar">Mínimo e reserva</button></span></h2><div class="sub">Parte do saldo de hoje e soma o que está pendente, o que se repete todo mês e os gastos do ano na data deles.</div><svg class="graf" id="lCaixa" style="height:230px"></svg><div id="lAperto" class="aviso-l"></div></div>
+    <div class="c s4"><h2>Repete todo mês</h2><div class="sub">Entradas e saídas fixas. Clique para editar.</div><ul class="li" id="lRec"></ul></div>
+   </div>
+   <div class="g">
+    <div class="c s4"><h2>Reserva de emergência</h2><div class="sub" id="lResSub"></div><b class="num" id="lResN" style="font-size:28px"></b><div class="prog" style="margin-top:10px"><i id="lResP"></i></div><div class="sub" id="lResT" style="margin-top:8px"></div></div>
+    <div class="c s4"><h2>Gastos do ano<span class="acoes so-dono"><button class="bt mini" data-novo="reservas">+ Gasto</button></span></h2><div class="sub">Quanto guardar por mês para cada um. Clique para editar.</div><ul class="li" id="lGuardar"></ul></div>
+    <div class="c s4"><h2>Captação por fonte<span class="acoes so-dono"><button class="bt mini" data-novo="captacao">+ Fonte</button></span></h2><div class="sub">Entradas recebidas neste ano × meta do ano.</div><div class="hp" id="lCapt"></div></div>
+   </div>
+   <div class="g">
+    <div class="c s5"><h2>Vencimentos</h2><div class="sub">Contas pendentes e gastos do ano nos próximos 45 dias.</div><ul class="li" id="lVenc"></ul></div>
+    <div class="c s4"><h2>Fechamento do mês</h2><div class="sub" id="lCkSub"></div><ul class="chk-l" id="lCk"></ul></div>
+    <div class="c s3 escuro"><h2>Prestação de contas</h2><div class="sub">Para os membros todo mês e para a Proex todo semestre.</div><div style="display:flex;flex-direction:column;gap:8px;margin-top:14px"><button class="bt lima" data-rel="mes">Relatório do mês</button><button class="bt claro" data-rel="semestre">Relatório do semestre</button></div></div>
+   </div>
+  </div>
  </section>
 
  <!-- COMERCIAL -->
@@ -239,6 +272,13 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="c s6"><h2>Por segmento</h2><div class="sub">Onde estão os contatos e quanto valem.</div><div class="barras-h" id="cSeg"></div></div>
   </div>
   <div class="c"><h2>Serviços e preços<span class="acoes"><button class="bt mini" data-novo="servicos">+ Serviço</button></span></h2><div class="sub">Tabela que o Comercial usa nas propostas. Clique para editar.</div><div class="rolar"><table class="t" id="cServ"></table></div></div>
+  <div class="area" id="a-elias">
+   <div class="dono"><h2>Meta e previsão <small>área do Elias</small></h2><span class="quem"></span></div>
+   <div class="g">
+    <div class="c s5"><h2>Meta do mês<span class="acoes so-dono"><button class="bt mini claro" data-novo="metas">Mudar metas</button></span></h2><div class="sub" id="cMetaSub"></div><b class="num" id="cMetaN" style="font-size:28px"></b><div class="prog" style="margin-top:10px"><i id="cMetaP"></i></div><div class="sub" id="cMetaT" style="margin-top:8px"></div></div>
+    <div class="c s7"><h2>Onde está a meta</h2><div class="sub">Contatos abertos com mais valor × chance. Comece por estes.</div><ul class="li" id="cTop"></ul></div>
+   </div>
+  </div>
  </section>
 
  <!-- PROJETOS -->
@@ -251,6 +291,13 @@ dialog .pe .bt:first-child{margin-right:auto}
   <div class="g">
    <div class="c s6"><h2>Horas do mês</h2><div class="sub">6 pessoas × 4 h por semana. Cada tarefa aberta conta as horas que ela pediu (padrão 2 h, estimativa).</div><div class="barras-h" id="jHoras"></div></div>
    <div class="c s6"><h2>Calendário dos projetos</h2><div class="sub">Do início ao fim previsto.</div><svg class="graf" id="jGantt" style="height:200px"></svg></div>
+  </div>
+  <div class="area" id="a-joao">
+   <div class="dono"><h2>Horas dos projetos <small>área do João</small></h2><span class="quem"></span></div>
+   <div class="g">
+    <div class="c s7"><h2>Previsto × feito</h2><div class="sub">Verde: horas de tarefas feitas. Cinza: horas em aberto. Traço: horas previstas do projeto.</div><div class="hp" id="jhBar"></div></div>
+    <div class="c s5"><h2>Atenção</h2><div class="sub">Projetos que vão passar do previsto ou estão sem responsável.</div><ul class="li" id="jhAlerta"></ul></div>
+   </div>
   </div>
  </section>
 
@@ -268,6 +315,14 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="c s4 escuro"><h2>Bairros-alvo</h2><div class="sub">Alagamento nas notícias, nenhum relato: panfleto e post marcando o bairro.</div><ul class="li" id="kAlvos" style="color:#e8efe9"></ul></div>
   </div>
   <div class="c"><h2>Imprensa<span class="acoes"><button class="bt mini" data-novo="imprensa">+ Veículo</button></span></h2><div class="sub">Quem procurar, com que pauta, e em que pé está.</div><div class="rolar"><table class="t" id="kImp"></table></div></div>
+  <div class="area" id="a-anaelson">
+   <div class="dono"><h2>Metas de divulgação <small>área do Anaelson</small></h2><span class="quem"></span></div>
+   <div class="g">
+    <div class="c s4"><h2>Posts no mês<span class="acoes so-dono"><button class="bt mini claro" data-novo="metas">Mudar metas</button></span></h2><b class="num" id="mkPostsN" style="font-size:28px"></b><div class="prog" style="margin-top:10px"><i id="mkPostsP"></i></div><div class="sub" id="mkPostsT" style="margin-top:8px"></div></div>
+    <div class="c s4"><h2>Seguidores</h2><b class="num" id="mkSegN" style="font-size:28px"></b><div class="prog" style="margin-top:10px"><i id="mkSegP"></i></div><div class="sub" id="mkSegT" style="margin-top:8px"></div></div>
+    <div class="c s4 escuro"><h2>Melhor post do mês</h2><div id="mkMelhor"></div></div>
+   </div>
+  </div>
  </section>
 
  <!-- PESSOAS -->
@@ -280,6 +335,27 @@ dialog .pe .bt:first-child{margin-right:auto}
    <div class="c s5"><h2>Horas abertas por pessoa</h2><div class="sub">Cada tarefa aberta conta as horas que ela pediu. Cada pessoa tem 4 h por semana.</div><div class="barras-h" id="pCarga"></div></div>
   </div>
   <div class="c"><h2>Presença nos expedientes</h2><div class="sub">Marque quem veio em cada sábado.</div><div class="rolar"><table class="t" id="pPres"></table></div></div>
+  <div class="area" id="a-gabrielly">
+   <div class="dono"><h2>Cuidar da equipe <small>área da Gabrielly</small></h2><span class="quem"></span></div>
+   <div class="g">
+    <div class="c s6"><h2>Conversas individuais<span class="acoes so-dono"><button class="bt mini" data-novo="conversas">+ Conversa</button></span></h2><div class="sub">Uma conversa curta com cada pessoa a cada um ou dois meses. Sem dado pessoal. Clique para editar.</div><ul class="li" id="pgConv"></ul></div>
+    <div class="c s6"><h2>Ausências avisadas<span class="acoes so-dono"><button class="bt mini" data-novo="ausencias">+ Ausência</button></span></h2><div class="sub">Quem avisou que não vem. Na presença aparece "avisou".</div><ul class="li" id="pgAus"></ul></div>
+   </div>
+  </div>
+ </section>
+
+ <!-- EDITAIS -->
+ <section class="pagina" id="p-editais">
+  <div class="hero"><div class="arte" aria-hidden="true" style="--cor:#f3e3bf"><svg viewBox="0 0 400 160" preserveAspectRatio="xMidYMid slice"><rect x="70" y="24" width="96" height="120" rx="10" fill="#fbf6ea"/><rect x="86" y="46" width="64" height="8" rx="4" fill="#1f2a24"/><rect x="86" y="64" width="54" height="8" rx="4" fill="#a2aca6"/><rect x="86" y="82" width="60" height="8" rx="4" fill="#a2aca6"/><rect x="190" y="40" width="96" height="104" rx="10" fill="#fbf6ea"/><rect x="206" y="62" width="64" height="8" rx="4" fill="#1f2a24"/><rect x="206" y="80" width="44" height="8" rx="4" fill="#a2aca6"/><circle cx="318" cy="56" r="22" fill="#a9d84e"/><path d="M308 56l7 7 13-14" fill="none" stroke="#1f2a24" stroke-width="5" stroke-linecap="round"/></svg></div><div class="hi"><small>Captação e editais · Cris (sugestão de função)</small><h1>Editais</h1><p>Dinheiro de fora da equipe: editais, prêmios e parcerias, com os prazos de inscrição e de relatório.</p>
+   <div class="mini so-dono-cris"><button class="bt lima" data-novo="editais">+ Edital</button></div></div></div>
+  <div class="area" id="a-cris">
+   <div class="dono"><h2>Editais <small>área da Cris</small></h2><span class="quem"></span></div>
+   <div class="g entra" id="dKpi"></div>
+   <div class="g">
+    <div class="c s7"><h2>Todos os editais<span class="acoes so-dono"><button class="bt mini" data-novo="editais">+ Edital</button></span></h2><div class="sub">Clique numa linha para editar.</div><div class="rolar"><table class="t" id="dTab"></table></div></div>
+    <div class="c s5"><h2>Próximos prazos</h2><div class="sub">Inscrição e relatório nos próximos 60 dias.</div><ul class="li" id="dPraz"></ul></div>
+   </div>
+  </div>
  </section>
 
  <!-- MAPA -->
@@ -338,9 +414,17 @@ const CAMPOS={
  tarefas:[["titulo","Tarefa"],["projeto","Projeto","lista",()=>L.lista("projetos").map(p=>p.nome).concat(["Formalização","Equipe","Marketing"])],["resp","Responsável","sel",pessoas],["prazo","Prazo","date"],["status","Situação","sel",OPC.status_t],["horas","Horas (vazio = 2 h estimadas)","number"]],
  posts:[["data","Data","date"],["canal","Canal","sel",OPC.canal],["formato","Formato","sel",OPC.formato],["tema","Tema"],["status","Situação","sel",OPC.status_p],["alcance","Alcance","number"],["curtidas","Curtidas","number"],["comentarios","Comentários","number"],["salvos","Salvos","number"]],
  imprensa:[["veiculo","Veículo"],["tipo","Tipo"],["contato","Como contatar"],["pauta","Pauta sugerida"],["status","Situação","sel",OPC.status_i]],
- membros:[["nome","Nome"],["diretoria","Diretoria","sel",OPC.diretoria],["cargo","Cargo"],["horas","Horas por semana","number"]]};
-const NOMES={caixa:"saldo do banco",lancamentos:"lançamento",orcamento:"categoria do orçamento",prospectos:"contato",servicos:"serviço",projetos:"projeto",tarefas:"tarefa",posts:"post",imprensa:"veículo",membros:"pessoa"};
-const PADRAO={caixa:()=>({data:hojeISO,saldo:L.obj("caixa")?.saldo||0}),lancamentos:()=>({data:hojeISO,tipo:"saida",status:"pago",valor:0,resp:"Letícia"}),prospectos:()=>({etapa:"Contato",chance:20,valor:0,resp:"Elias",data:hojeISO}),tarefas:()=>({status:"A fazer",resp:quemSou()||"João",prazo:hojeISO,horas:2}),
+ membros:[["nome","Nome"],["diretoria","Diretoria","sel",OPC.diretoria],["cargo","Cargo"],["horas","Horas por semana","number"]],
+ planejar:[["piso","Saldo mínimo do caixa (R$)","number"],["mesesReserva","Reserva de emergência: quantos meses de custo fixo","number"]],
+ metas:[["comercialMes","Meta de vendas por mês (R$)","number"],["postsMes","Meta de posts publicados por mês","number"],["seguidores","Meta de seguidores no Instagram","number"]],
+ recorrentes:[["descricao","Descrição"],["tipo","Tipo","sel",OPC.tipo],["valor","Valor por mês (R$)","number"],["dia","Dia do mês","number"],["categoria","Categoria","lista",()=>[...new Set(L.lista("lancamentos").map(x=>x.categoria).concat(L.lista("orcamento").map(o=>o.categoria)))]],["inicio","Começa em (vazio = já)","date"],["fim","Termina em (vazio = sem fim)","date"]],
+ reservas:[["nome","Gasto"],["valor","Valor (R$)","number"],["data","Quando vence","date"],["guardado","Já guardado (R$)","number"]],
+ captacao:[["fonte","Fonte"],["categoria","Categoria dos lançamentos que contam","lista",()=>[...new Set(L.lista("lancamentos").map(x=>x.categoria))]],["meta","Meta do ano (R$)","number"]],
+ ausencias:[["pessoa","Pessoa","sel",pessoas],["data","Sábado","date"],["motivo","Motivo (curto)"]],
+ conversas:[["pessoa","Pessoa","sel",pessoas],["data","Data da conversa","date"],["combinado","O que ficou combinado (curto, sem dado pessoal)"],["proxima","Próxima conversa","date"]],
+ editais:[["nome","Edital, prêmio ou parceria"],["financiador","Quem financia"],["valor","Valor (R$)","number"],["inscricao","Prazo de inscrição","date"],["relatorio","Prazo do relatório","date"],["status","Situação","sel",["Achado","Escrevendo","Inscrito","Aprovado","Recusado","Prestando contas","Concluído"]]]};
+const NOMES={planejar:"mínimo e reserva",metas:"metas",recorrentes:"item que se repete",reservas:"gasto do ano",captacao:"fonte de captação",ausencias:"ausência",conversas:"conversa",editais:"edital",caixa:"saldo do banco",lancamentos:"lançamento",orcamento:"categoria do orçamento",prospectos:"contato",servicos:"serviço",projetos:"projeto",tarefas:"tarefa",posts:"post",imprensa:"veículo",membros:"pessoa"};
+const PADRAO={planejar:()=>({...L.obj("planejar")}),metas:()=>({...L.obj("metas")}),recorrentes:()=>({tipo:"saida",valor:0,dia:10}),reservas:()=>({valor:0,guardado:0,data:hojeISO}),captacao:()=>({meta:0}),ausencias:()=>({pessoa:quemSou()||"",data:hojeISO}),conversas:()=>({data:hojeISO}),editais:()=>({status:"Achado",valor:0}),caixa:()=>({data:hojeISO,saldo:L.obj("caixa")?.saldo||0}),lancamentos:()=>({data:hojeISO,tipo:"saida",status:"pago",valor:0,resp:"Letícia"}),prospectos:()=>({etapa:"Contato",chance:20,valor:0,resp:"Elias",data:hojeISO}),tarefas:()=>({status:"A fazer",resp:quemSou()||"João",prazo:hojeISO,horas:2}),
  posts:()=>({data:hojeISO,canal:"Instagram",formato:"Carrossel",status:"Ideia",alcance:0,curtidas:0,comentarios:0,salvos:0}),projetos:()=>({etapa:"Pedido",estado:"Próximo",resp:"a definir",horas:20}),imprensa:()=>({status:"Não procurado"}),membros:()=>({diretoria:"A definir",horas:4}),orcamento:()=>({planejado:0}),servicos:()=>({horas:10})};
 let formAtual=null;
 function abre(col,item){const novo=!item;const v=item?{...item}:PADRAO[col]?.()||{};formAtual={col,id:item?.id};
@@ -348,7 +432,7 @@ function abre(col,item){const novo=!item;const v=item?{...item}:PADRAO[col]?.()|
  $("formC").innerHTML=CAMPOS[col].map(([k,r,t,o])=>{const val=esc(v[k]??"");if(t==="sel"){const ops=typeof o==="function"?o():o;return `<label>${r}</label><select name="${k}">${ops.map(x=>`<option value="${esc(x)}" ${String(x)===String(v[k])?"selected":""}>${esc(({entrada:"Entrada",saida:"Saída",pago:"Pago",pendente:"Pendente"})[x]||x)}</option>`).join("")}</select>`}
   if(t==="lista"){const ops=(typeof o==="function"?o():o).filter(Boolean);return `<label>${r}</label><input name="${k}" value="${val}" list="dl-${k}"><datalist id="dl-${k}">${ops.map(x=>`<option value="${esc(x)}">`).join("")}</datalist>`}
   return `<label>${r}</label><input name="${k}" type="${t||"text"}" value="${val}" ${t==="number"?'step="any"':""}>`}).join("");$("form").showModal()}
-$("formF").addEventListener("submit",e=>{const f=new FormData($("formF")),o={};CAMPOS[formAtual.col].forEach(([k,,t])=>{const v=f.get(k);o[k]=t==="number"?(v===""&&k==="horas"&&formAtual.col==="tarefas"?undefined:+(v||0)):v});if(formAtual.col==="caixa"){L.grava("caixa",o);return}if(formAtual.col==="prospectos"){const p=formAtual.id?L.lista("prospectos").find(x=>x.id===formAtual.id):L.adiciona("prospectos",o);if(p&&mudaEtapa(p,o.etapa,o)===false)e.preventDefault();return}formAtual.id?L.altera(formAtual.col,formAtual.id,o):L.adiciona(formAtual.col,o)});
+$("formF").addEventListener("submit",e=>{const f=new FormData($("formF")),o={};CAMPOS[formAtual.col].forEach(([k,,t])=>{const v=f.get(k);o[k]=t==="number"?(v===""&&k==="horas"&&formAtual.col==="tarefas"?undefined:+(v||0)):v});if(["caixa","planejar","metas"].includes(formAtual.col)){L.grava(formAtual.col,o);return}if(formAtual.col==="prospectos"){const p=formAtual.id?L.lista("prospectos").find(x=>x.id===formAtual.id):L.adiciona("prospectos",o);if(p&&mudaEtapa(p,o.etapa,o)===false)e.preventDefault();return}formAtual.id?L.altera(formAtual.col,formAtual.id,o):L.adiciona(formAtual.col,o)});
 $("formCancela").onclick=()=>$("form").close();$("formApaga").onclick=()=>{if(confirm("Apagar este item?")){L.apaga(formAtual.col,formAtual.id);$("form").close()}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-novo]");if(b)abre(b.dataset.novo)});
 const editar=(col,cont)=>cont.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("click",e=>{if(e.target.closest("button,input"))return;abre(col,L.lista(col).find(x=>x.id===el.dataset.id))}));
@@ -492,7 +576,7 @@ function pessoasPg(){const mb=L.lista("membros"),tf=L.lista("tarefas").filter(t=
  const nomeCargo=c=>String(c||"").replace(/\s+e\s+diretor(a)? geral/i,"");
  $("pOrg").innerHTML=`<div style="display:flex;justify-content:center;margin-bottom:10px">${geral.map(m=>`<div class="cartao" data-id="${m.id}" style="background:var(--escuro);color:#fff;min-width:200px;text-align:center"><b>${esc(m.nome)}</b><span style="color:#a7b8ad">Diretor geral</span></div>`).join("")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">`+OPC.diretoria.map(d=>{const l=mb.filter(m=>m.diretoria===d);return `<div class="coluna" style="min-height:0"><b>${d}</b>${l.map(m=>`<div class="cartao" data-id="${m.id}"><b>${esc(m.nome)}</b><span>${esc(nomeCargo(m.cargo))}</span></div>`).join("")||`<span class="vazio" style="padding:4px">ninguém</span>`}</div>`}).join("")+`</div>`;editar("membros",$("pOrg"));
  barrasH($("pCarga"),mb.map(m=>[m.nome,tf.filter(t=>t.resp===m.nome).reduce((a,t)=>a+horasDe(t),0),0,"#1f8a86"]),v=>v+" h");
- $("pPres").innerHTML=`<thead><tr><th>Pessoa</th>${sabs.map(s=>`<th style="text-align:center">${dt(s)}</th>`).join("")}<th class="dir">Presença</th></tr></thead><tbody>`+mb.map(m=>{const n=sabs.filter(s=>(pres[s]||[]).includes(m.nome)).length;return `<tr><td><b>${esc(m.nome)}</b></td>${sabs.map(s=>`<td style="text-align:center"><button class="chk ${(pres[s]||[]).includes(m.nome)?"feito":""}" data-pres="${s}|${m.nome}" aria-label="Presença de ${esc(m.nome)} em ${dt(s)}"></button></td>`).join("")}<td class="dir num">${Math.round(n/sabs.length*100)}%</td></tr>`}).join("")+`</tbody>`;
+ $("pPres").innerHTML=`<thead><tr><th>Pessoa</th>${sabs.map(s=>`<th style="text-align:center">${dt(s)}</th>`).join("")}<th class="dir">Presença</th></tr></thead><tbody>`+mb.map(m=>{const n=sabs.filter(s=>(pres[s]||[]).includes(m.nome)).length;return `<tr><td><b>${esc(m.nome)}</b></td>${sabs.map(s=>`<td style="text-align:center"><button class="chk ${(pres[s]||[]).includes(m.nome)?"feito":""}" data-pres="${s}|${m.nome}" aria-label="Presença de ${esc(m.nome)} em ${dt(s)}"></button>${L.lista("ausencias").some(a=>a.data===s&&a.pessoa===m.nome)?`<small class="avisou">avisou</small>`:""}</td>`).join("")}<td class="dir num">${Math.round(n/sabs.length*100)}%</td></tr>`}).join("")+`</tbody>`;
  $("pPres").querySelectorAll("[data-pres]").forEach(b=>b.onclick=()=>{const [s,i]=b.dataset.pres.split("|");L.marcaPresenca(s,i)})}
 
 // ---------- MAPA (estilo do mapa de jogo: terra escura, bairros com borda que brilha, nomes com contorno) ----------
@@ -556,8 +640,97 @@ function intro(pag){const f=INTRO[pag];if(!f)return;let visto={};try{visto=JSON.
  const [t,fr,svg,foto]=f(),el=$("intro");el.style.setProperty("--foto",`url(img/${foto})`);el.innerHTML=`<div class="ib"><div><div class="pal">${t}</div><div class="fr">${fr}</div></div>${svg}</div><small>toque para pular</small>`;
  el.hidden=false;el.classList.remove("sai");const fecha=()=>{el.classList.add("sai");setTimeout(()=>{el.hidden=true},700);document.querySelector(".pagina.on .g.entra")?.classList.remove("entra");void document.body.offsetWidth;document.querySelectorAll(".pagina.on .g").forEach(g=>{g.classList.add("entra")})};el.onclick=fecha;setTimeout(fecha,1900)}
 
+
+// ---------- ÁREAS DE CADA DIRETOR: todo mundo vê, o dono edita ----------
+const DONOS={leticia:"Letícia",elias:"Elias",anaelson:"Anaelson",gabrielly:"Gabrielly",joao:"João",cris:"Cris"};
+function dono(id){const nome=DONOS[id],eu=quemSou()===nome,el=$("a-"+id);if(!el)return eu;el.classList.toggle("bloq",!eu);
+ el.querySelector(".dono .quem").innerHTML=eu?"É a sua área. Você edita aqui.":`Todo mundo vê. Quem edita é ${esc(nome)}. <button class="lnk" data-sou="${esc(nome)}">Sou ${esc(nome)}</button>`;return eu}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-sou]");if(b){try{localStorage.setItem("mare_quem",b.dataset.sou)}catch(x){}montaQuem();render()}});
+const pct=(a,b)=>b>0?Math.max(0,Math.min(100,a/b*100)):0;
+const mesRot=d=>MES[d.getMonth()]+(d.getMonth()===0?"/"+String(d.getFullYear()).slice(2):"");
+const diasAte=s=>Math.round((dObj(s)-dObj(hojeISO))/864e5);
+
+// caixa projetado: saldo de hoje + pendentes + o que se repete + gastos do ano
+function projecao(){const c=contas(),lc=L.lista("lancamentos"),rec=L.lista("recorrentes"),res=L.lista("reservas"),out=[];let s=c.saldo;const m0=hojeISO.slice(0,7);
+ for(let k=0;k<12;k++){const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+k,1),m=d.toISOString().slice(0,7);
+  const pend=lc.filter(x=>x.status==="pendente"&&(k===0?(x.data||m0).slice(0,7)<=m:x.data?.slice(0,7)===m));
+  let ent=pend.filter(x=>x.tipo==="entrada").reduce((a,x)=>a+(+x.valor||0),0),sai=pend.filter(x=>x.tipo==="saida").reduce((a,x)=>a+(+x.valor||0),0);
+  rec.forEach(r=>{if(r.inicio&&m<r.inicio.slice(0,7))return;if(r.fim&&m>r.fim.slice(0,7))return;if(k===0&&(+r.dia||1)<=L.hoje.getDate())return;
+   if(lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.descricao))return;if(r.tipo==="entrada")ent+=+r.valor||0;else sai+=+r.valor||0});
+  res.forEach(r=>{if(r.data?.slice(0,7)===m&&!lc.some(x=>x.data?.slice(0,7)===m&&x.descricao===r.nome))sai+=+r.valor||0});
+  s+=ent-sai;out.push({m,d,rot:mesRot(d),ent,sai,saldo:s})}return out}
+function linhaCaixa(svg,pts,piso){const [W,H]=tam(svg),Lm=48,R=12,T=16,B=26,pw=W-Lm-R,ph=H-T-B;svg.setAttribute("viewBox",`0 0 ${W} ${H}`);
+ const vs=pts.map(p=>p.saldo).concat([piso,0]),mn=Math.min(...vs),mx=Math.max(...vs),pad=(mx-mn)*.12||100,lo=mn-pad,hi=mx+pad;
+ const x=i=>Lm+pw*(i+.5)/pts.length,y=v=>T+ph-(v-lo)/(hi-lo)*ph,f=v=>Math.abs(v)>=1000?(v/1000).toFixed(1).replace(".",",")+"k":Math.round(v);let s="";
+ for(let k=0;k<=3;k++){const v=lo+(hi-lo)/3*k;s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}" stroke="#e6e9e3"/><text x="${Lm-6}" y="${y(v)+4}" font-size="10.5" fill="#a2aca6" text-anchor="end">${f(v)}</text>`}
+ if(lo<0)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(0)}" y2="${y(0)}" stroke="#b9c2bc"/>`;
+ if(piso>0)s+=`<line x1="${Lm}" x2="${W-R}" y1="${y(piso)}" y2="${y(piso)}" stroke="#e2735a" stroke-dasharray="5 5"/><text x="${W-R}" y="${y(piso)-6}" font-size="11" fill="#c0583a" text-anchor="end">mínimo ${brl(piso)}</text>`;
+ s+=`<path d="M${pts.map((p,i)=>x(i)+" "+y(p.saldo)).join(" L")} L${x(pts.length-1)} ${T+ph} L${x(0)} ${T+ph}Z" fill="#a9d84e22"/><path d="M${pts.map((p,i)=>x(i)+" "+y(p.saldo)).join(" L")}" fill="none" stroke="#1f8a86" stroke-width="3" stroke-linejoin="round"/>`;
+ pts.forEach((p,i)=>{const mal=p.saldo<piso;s+=`<circle cx="${x(i)}" cy="${y(p.saldo)}" r="5" fill="${mal?"#e2735a":"#1f8a86"}" stroke="#fff" stroke-width="2"><title>${p.rot}: ${brl(p.saldo)} (entra ${brl(p.ent)}, sai ${brl(p.sai)})</title></circle>${pw/pts.length<36&&i%2?"":`<text x="${x(i)}" y="${H-6}" font-size="11" fill="${i?"#a2aca6":"#18201c"}" font-weight="${i?400:700}" text-anchor="middle">${p.rot}</text>`}`});
+ svg.innerHTML=s}
+const CHECK=["Conferir o extrato e o saldo do banco","Lançar tudo que entrou e saiu no mês","Marcar o que já foi pago ou recebido","Cobrar quem está atrasado","Comparar o orçamento com o gasto","Mandar o relatório do mês à equipe"];
+function areaLeticia(){dono("leticia");const pl=L.obj("planejar")||{piso:0,mesesReserva:3,checklist:{}},pr=projecao(),c=contas();
+ linhaCaixa($("lCaixa"),pr,+pl.piso||0);const ap=pr.find(p=>p.saldo<(+pl.piso||0));
+ $("lAperto").className="aviso-l"+(ap?" mal":"");$("lAperto").textContent=ap?`Em ${ap.rot} o caixa fica em ${brl(ap.saldo)}, abaixo do mínimo de ${brl(+pl.piso||0)}. Dá tempo de agir antes.`:`O caixa fica acima do mínimo de ${brl(+pl.piso||0)} nos próximos 12 meses. Em ${pr.at(-1).rot}: ${brl(pr.at(-1).saldo)}.`;
+ const rec=L.lista("recorrentes");$("lRec").innerHTML=rec.map(r=>`<li data-id="${r.id}" style="cursor:pointer"><span class="etq ${r.tipo==="entrada"?"ok":"at"}">${r.tipo==="entrada"?"entra":"sai"}</span><div class="tx"><b>${esc(r.descricao)}</b><span>dia ${+r.dia||1} · ${esc(r.categoria||"")}</span></div><span class="dt num">${brl(+r.valor||0)}</span></li>`).join("")||`<li class="vazio">Nada que se repete ainda.</li>`;editar("recorrentes",$("lRec"));
+ const fixo=rec.filter(r=>r.tipo!=="entrada").reduce((a,r)=>a+(+r.valor||0),0),meta=fixo*(+pl.mesesReserva||0),cob=fixo?c.saldo/fixo:0;
+ $("lResSub").textContent=`Meta: ${+pl.mesesReserva||0} meses de custo fixo (${brl(fixo)} por mês).`;$("lResN").textContent=fixo?cob.toFixed(1).replace(".",",")+" meses":"—";$("lResP").style.width=pct(c.saldo,meta)+"%";
+ $("lResT").textContent=!fixo?"Cadastre as saídas que se repetem para calcular.":c.saldo>=meta?"Reserva completa.":`Faltam ${brl(meta-c.saldo)} para a meta.`;
+ const res=L.lista("reservas").slice().sort((a,b)=>(a.data||"").localeCompare(b.data||""));$("lGuardar").innerHTML=res.map(r=>{const meses=Math.max(1,Math.ceil(diasAte(r.data)/30.4)),falta=Math.max(0,(+r.valor||0)-(+r.guardado||0));
+  return `<li data-id="${r.id}" style="cursor:pointer;flex-wrap:wrap"><div class="tx"><b>${esc(r.nome)}</b><span>${brl(+r.valor||0)} até ${dt(r.data)} · guardado ${brl(+r.guardado||0)}</span></div><span class="dt num">${falta?brl(falta/meses)+"/mês":"pronto"}</span><div class="prog" style="flex-basis:100%;height:6px"><i style="width:${pct(+r.guardado||0,+r.valor||0)}%"></i></div></li>`}).join("")||`<li class="vazio">Nenhum gasto do ano cadastrado.</li>`;editar("reservas",$("lGuardar"));
+ const ano=String(L.hoje.getFullYear()),lc=L.lista("lancamentos");$("lCapt").innerHTML=L.lista("captacao").map(f=>{const real=lc.filter(x=>x.tipo==="entrada"&&x.status==="pago"&&x.categoria===f.categoria&&x.data?.slice(0,4)===ano).reduce((a,x)=>a+(+x.valor||0),0);
+  return `<div class="l" data-id="${f.id}" style="cursor:pointer"><span>${esc(f.fonte)}</span><div class="tr"><i style="left:0;width:${pct(real,+f.meta||0)}%;background:var(--lima)"></i></div><span class="vl num">${brl(real)} de ${brl(+f.meta||0)}</span></div>`}).join("")||`<div class="vazio">Nenhuma fonte.</div>`;editar("captacao",$("lCapt"));
+ const v45=lc.filter(x=>x.status==="pendente"&&x.tipo==="saida"&&x.data&&diasAte(x.data)<=45).map(x=>[x.data,x.descricao,brl(+x.valor||0),diasAte(x.data)<0]).concat(res.filter(r=>r.data&&diasAte(r.data)>=0&&diasAte(r.data)<=45).map(r=>[r.data,r.nome+" (gasto do ano)",brl(+r.valor||0),false])).sort((a,b)=>a[0].localeCompare(b[0]));
+ $("lVenc").innerHTML=v45.map(([d,n,v,atr])=>`<li><span class="etq ${atr?"mal":"at"}">${atr?"atrasado":dt(d)}</span><div class="tx"><b>${esc(n)}</b></div><span class="dt num">${v}</span></li>`).join("")||`<li class="vazio">Nada vence nos próximos 45 dias.</li>`;
+ const mk=hojeISO.slice(0,7),feitos=(pl.checklist||{})[mk]||[];$("lCkSub").textContent=`${MES[L.hoje.getMonth()]}: ${feitos.length} de ${CHECK.length} feitos.`;
+ $("lCk").innerHTML=CHECK.map((x,i)=>`<li class="${feitos.includes(i)?"feito":""}"><button class="chk ${feitos.includes(i)?"feito":""} so-dono" data-ck="${i}" aria-label="${esc(x)}"></button><span>${esc(x)}</span></li>`).join("");
+ $("lCk").querySelectorAll("[data-ck]").forEach(b=>b.onclick=()=>{const i=+b.dataset.ck,ck={...(L.obj("planejar")?.checklist||{})},l=ck[mk]||[];ck[mk]=l.includes(i)?l.filter(x=>x!==i):l.concat(i);L.grava("planejar",{checklist:ck})})}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-rel]");if(b)relatorio(b.dataset.rel)});
+function relatorio(tipo){const h=L.hoje,lc=L.lista("lancamentos"),c=contas();let ini,fim,tit;
+ if(tipo==="mes"){ini=new Date(h.getFullYear(),h.getMonth(),1);fim=new Date(h.getFullYear(),h.getMonth()+1,0);tit=`Prestação de contas de ${MES[h.getMonth()]}/${h.getFullYear()}`}
+ else{const s=h.getMonth()<6?0:6;ini=new Date(h.getFullYear(),s,1);fim=new Date(h.getFullYear(),s+6,0);tit=`Prestação de contas do ${s?"2º":"1º"} semestre de ${h.getFullYear()}`}
+ const iso=d=>new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10),a=iso(ini),b=iso(fim),p=lc.filter(x=>x.data>=a&&x.data<=b);
+ const porCat=(tp,st)=>{const o={};p.filter(x=>x.tipo===tp&&x.status===st).forEach(x=>o[x.categoria||"Sem categoria"]=(o[x.categoria||"Sem categoria"]||0)+(+x.valor||0));return o};
+ const tab=(o)=>Object.entries(o).map(([k,v])=>`<tr><td>${esc(k)}</td><td class="r">${brl(v)}</td></tr>`).join("")||`<tr><td colspan="2">Nada no período.</td></tr>`,tot=o=>Object.values(o).reduce((x,y)=>x+y,0);
+ const ent=porCat("entrada","pago"),sai=porCat("saida","pago"),gAno={};lc.filter(x=>x.tipo==="saida"&&x.data?.slice(0,4)===String(h.getFullYear())).forEach(x=>gAno[x.categoria]=(gAno[x.categoria]||0)+(+x.valor||0));
+ const orc=L.lista("orcamento").map(o=>`<tr><td>${esc(o.categoria)}</td><td class="r">${brl(+o.planejado||0)}</td><td class="r">${brl(gAno[o.categoria]||0)}</td></tr>`).join("");
+ const pend=lc.filter(x=>x.status==="pendente").map(x=>`<tr><td>${dt(x.data)}</td><td>${esc(x.descricao)}</td><td>${x.tipo==="entrada"?"a receber":"a pagar"}</td><td class="r">${brl(+x.valor||0)}</td></tr>`).join("")||`<tr><td colspan="4">Nada pendente.</td></tr>`;
+ const w=open("","_blank");if(!w){alert("O navegador bloqueou a janela do relatório. Libere pop-ups para este endereço.");return}
+ w.document.write(`<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><title>${tit}</title><style>body{font:15px/1.5 system-ui,sans-serif;color:#18201c;max-width:820px;margin:32px auto;padding:0 20px}h1{font-size:24px;margin:0}h2{font-size:17px;margin:26px 0 8px}table{width:100%;border-collapse:collapse}td,th{padding:6px 8px;border-bottom:1px solid #dde3de;text-align:left}.r{text-align:right}.k{display:flex;gap:28px;flex-wrap:wrap;margin-top:14px}.k b{display:block;font-size:22px}small{color:#66736c}@media print{button{display:none}}</style></head><body>
+ <small>MARÉ · empresa júnior socioambiental · ${L.exemplo()?"DADOS DE EXEMPLO · ":""}feito em ${dt(hojeISO)}/${h.getFullYear()}</small><h1>${tit}</h1><p>Período: ${dt(a)}/${a.slice(0,4)} a ${dt(b)}/${b.slice(0,4)}.</p>
+ <div class="k"><div><small>Entrou</small><b>${brl(tot(ent))}</b></div><div><small>Saiu</small><b>${brl(tot(sai))}</b></div><div><small>Saldo em caixa hoje</small><b>${brl(c.saldo)}</b></div></div>
+ <h2>Entradas por categoria</h2><table>${tab(ent)}</table><h2>Saídas por categoria</h2><table>${tab(sai)}</table>
+ <h2>Orçamento do ano: planejado × gasto</h2><table><tr><th>Categoria</th><th class="r">Planejado</th><th class="r">Gasto no ano</th></tr>${orc}</table>
+ <h2>Pendências</h2><table>${pend}</table><p style="margin-top:28px"><button onclick="print()">Imprimir ou salvar em PDF</button></p><p><small>Assinatura da diretoria financeira: ______________________</small></p></body></html>`);w.document.close()}
+
+function areaElias(){dono("elias");const mt=L.obj("metas")||{},meta=+mt.comercialMes||0,mk=hojeISO.slice(0,7),lc=L.lista("lancamentos"),pr=L.lista("prospectos");
+ const vend=lc.filter(x=>x.tipo==="entrada"&&x.categoria==="Serviços"&&x.data?.slice(0,7)===mk).reduce((a,x)=>a+(+x.valor||0),0),ab=pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)),pond=ab.reduce((a,p)=>a+(+p.valor||0)*(+p.chance||0)/100,0);
+ $("cMetaSub").textContent=`${MES[L.hoje.getMonth()]}: vendido (serviços fechados no mês) × meta.`;$("cMetaN").textContent=`${brl(vend)} de ${brl(meta)}`;$("cMetaP").style.width=pct(vend,meta)+"%";
+ $("cMetaT").textContent=!meta?"Defina a meta do mês.":vend>=meta?"Meta batida.":`Faltam ${brl(meta-vend)}. Os contatos abertos valem ${brl(pond)} na previsão (valor × chance).`;
+ $("cTop").innerHTML=ab.slice().sort((a,b)=>(+b.valor||0)*(+b.chance||0)-(+a.valor||0)*(+a.chance||0)).slice(0,5).map(p=>`<li data-id="${p.id}" style="cursor:pointer"><span class="etq ${etqStatus(p.etapa)}">${esc(p.etapa)}</span><div class="tx"><b>${esc(p.nome)}</b><span>${esc(p.proximo||"")} · ${+p.chance||0}% de ${brl(+p.valor||0)}</span></div><span class="dt num">${brl((+p.valor||0)*(+p.chance||0)/100)}</span></li>`).join("")||`<li class="vazio">Nenhum contato aberto.</li>`;editar("prospectos",$("cTop"))}
+function areaAnaelson(){dono("anaelson");const mt=L.obj("metas")||{},mk=hojeISO.slice(0,7),ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publicado"&&p.data?.slice(0,7)===mk),meta=+mt.postsMes||0;
+ $("mkPostsN").textContent=`${pub.length} de ${meta}`;$("mkPostsP").style.width=pct(pub.length,meta)+"%";const sab=Math.max(0,Math.ceil((new Date(L.hoje.getFullYear(),L.hoje.getMonth()+1,0).getDate()-L.hoje.getDate())/7));
+ const ult=ps.filter(p=>p.status==="Publicado").map(p=>p.data).sort().at(-1);$("mkPostsT").textContent=(!meta?"Defina a meta de posts. ":pub.length>=meta?"Meta batida. ":`Faltam ${meta-pub.length}, cerca de ${Math.ceil((meta-pub.length)/Math.max(1,sab))} por semana. `)+(ult?`Último post há ${-diasAte(ult)} dias.`:"");
+ const sg=L.lista("seguidores").slice().sort((a,b)=>a.data.localeCompare(b.data)),u=sg.at(-1)?.valor||0,ms=+mt.seguidores||0;$("mkSegN").textContent=`${u} de ${ms}`;$("mkSegP").style.width=pct(u,ms)+"%";$("mkSegT").textContent=!ms?"Defina a meta de seguidores.":u>=ms?"Meta batida.":`Faltam ${ms-u}.`;
+ const eng=p=>p.alcance?((+p.curtidas||0)+(+p.comentarios||0)+(+p.salvos||0))/p.alcance*100:0,best=pub.slice().sort((a,b)=>eng(b)-eng(a))[0];
+ $("mkMelhor").innerHTML=best?`<b style="font-size:19px;display:block;margin-top:8px">${esc(best.tema)}</b><div class="sub" style="color:#b9c7bf">${esc(best.canal)} · ${esc(best.formato)} · ${dt(best.data)}</div><div style="margin-top:12px;font-size:28px;font-weight:800;color:var(--lima)">${eng(best).toFixed(1).replace(".",",")}%</div><div class="sub" style="color:#b9c7bf">de engajamento: (curtidas + comentários + salvos) ÷ alcance. Faça mais desse jeito.</div>`:`<div class="sub" style="color:#b9c7bf;margin-top:8px">Nenhum post publicado neste mês.</div>`}
+function areaGabrielly(){dono("gabrielly");const cv=L.lista("conversas");$("pgConv").innerHTML=L.lista("membros").map(m=>{const l=cv.filter(c=>c.pessoa===m.nome).sort((a,b)=>(b.data||"").localeCompare(a.data||"")),u=l[0],dias=u?-diasAte(u.data):null,mal=dias===null||dias>60;
+  return `<li ${u?`data-id="${u.id}" style="cursor:pointer"`:""}><span class="etq ${mal?"at":"ok"}">${u?(dias===0?"hoje":`há ${dias} d`):"nunca"}</span><div class="tx"><b>${esc(m.nome)}</b><span>${u?esc(u.combinado||"sem anotação"):"Ainda não houve conversa."}</span></div><span class="dt">${u?.proxima?"próxima "+dt(u.proxima):""}</span></li>`}).join("");editar("conversas",$("pgConv"));
+ const au=L.lista("ausencias").filter(a=>a.data&&diasAte(a.data)>=-30).sort((a,b)=>a.data.localeCompare(b.data));$("pgAus").innerHTML=au.map(a=>`<li data-id="${a.id}" style="cursor:pointer"><span class="etq ${diasAte(a.data)<0?"cz":"az"}">${dt(a.data)}</span><div class="tx"><b>${esc(a.pessoa)}</b><span>${esc(a.motivo||"")}</span></div></li>`).join("")||`<li class="vazio">Ninguém avisou ausência.</li>`;editar("ausencias",$("pgAus"))}
+function areaJoao(){dono("joao");const pj=L.lista("projetos"),tf=L.lista("tarefas"),alertas=[];
+ $("jhBar").innerHTML=pj.map(p=>{const t=tf.filter(x=>x.projeto===p.nome),fe=t.filter(x=>x.status==="Feito").reduce((a,x)=>a+horasDe(x),0),ab=t.filter(x=>x.status!=="Feito").reduce((a,x)=>a+horasDe(x),0),pv=+p.horas||0,mx=Math.max(1,pv,fe+ab);
+  if(pv&&fe+ab>pv)alertas.push([p,`Vai passar do previsto: ${fe+ab} h de ${pv} h.`,"mal"]);if(!p.resp||p.resp==="a definir")alertas.push([p,"Sem responsável.","at"]);
+  return `<div class="l"><span>${esc(p.nome)}</span><div class="tr"><i style="left:0;width:${fe/mx*100}%;background:var(--lima)"></i><i style="left:${fe/mx*100}%;width:${ab/mx*100}%;background:#cfd6cf"></i>${pv?`<b style="left:${pv/mx*100}%"></b>`:""}</div><span class="vl num">${fe+ab} h de ${pv} h</span></div>`}).join("")||`<div class="vazio">Nenhum projeto.</div>`;
+ $("jhAlerta").innerHTML=alertas.map(([p,m,c])=>`<li><span class="etq ${c}">${c==="mal"?"estouro":"atenção"}</span><div class="tx"><b>${esc(p.nome)}</b><span>${esc(m)}</span></div></li>`).join("")||`<li class="vazio">Tudo dentro do previsto.</li>`}
+function editaisPg(){dono("cris");const ed=L.lista("editais"),ab=ed.filter(e=>!["Recusado","Concluído"].includes(e.status)),disp=ed.filter(e=>e.status==="Inscrito").reduce((a,e)=>a+(+e.valor||0),0),apr=ed.filter(e=>["Aprovado","Prestando contas"].includes(e.status)).reduce((a,e)=>a+(+e.valor||0),0);
+ const prox=ed.flatMap(e=>[[e.inscricao,"Inscrição",e],[e.relatorio,"Relatório",e]]).filter(([d])=>d&&diasAte(d)>=0&&diasAte(d)<=60).sort((a,b)=>a[0].localeCompare(b[0]));
+ kpis($("dKpi"),[["alvo",ab.length,"editais em andamento"],["relogio",prox.length,"prazos nos próximos 60 dias"],["seta",brl(disp),"em disputa (inscritos)"],["dinheiro",brl(apr),"aprovado"]]);
+ $("dTab").innerHTML=`<thead><tr><th>Edital</th><th>Quem financia</th><th>Inscrição</th><th>Relatório</th><th>Situação</th><th class="dir">Valor</th></tr></thead><tbody>`+ed.slice().sort((a,b)=>(a.inscricao||"9").localeCompare(b.inscricao||"9")).map(e=>`<tr data-id="${e.id}"><td>${esc(e.nome)}</td><td>${esc(e.financiador||"")}</td><td>${dt(e.inscricao)}</td><td>${dt(e.relatorio)}</td><td><span class="etq ${({Aprovado:"ok","Prestando contas":"az",Inscrito:"az",Escrevendo:"at",Recusado:"mal",Concluído:"ok"})[e.status]||"cz"}">${esc(e.status)}</span></td><td class="dir num">${brl(+e.valor||0)}</td></tr>`).join("")+`</tbody>`;editar("editais",$("dTab"));
+ $("dPraz").innerHTML=prox.map(([d,k,e])=>`<li data-id="${e.id}" style="cursor:pointer"><span class="etq ${diasAte(d)<=7?"mal":"at"}">${dt(d)}</span><div class="tx"><b>${esc(e.nome)}</b><span>${k} · faltam ${diasAte(d)} dias</span></div></li>`).join("")||`<li class="vazio">Nenhum prazo nos próximos 60 dias.</li>`;editar("editais",$("dPraz"));
+ document.querySelectorAll(".so-dono-cris").forEach(x=>x.hidden=quemSou()!=="Cris")}
+
 // ---------- navegação ----------
-const PAGS={inicio:["Início",inicio],financeiro:["Financeiro",financeiro],comercial:["Comercial",comercial],projetos:["Projetos",projetos],marketing:["Marketing",marketing],pessoas:["Pessoas",pessoasPg],mapa:["Mapa",mapa]};let pag="inicio";
+const PAGS={inicio:["Início",inicio],financeiro:["Financeiro",()=>{financeiro();areaLeticia()}],comercial:["Comercial",()=>{comercial();areaElias()}],projetos:["Projetos",()=>{projetos();areaJoao()}],marketing:["Marketing",()=>{marketing();areaAnaelson()}],pessoas:["Pessoas",()=>{pessoasPg();areaGabrielly()}],editais:["Editais",editaisPg],mapa:["Mapa",mapa]};let pag="inicio";
 function render(){try{PAGS[pag][1]()}catch(e){console.error(e)}}
 function ir(){pag=location.hash.slice(1)||"inicio";if(!PAGS[pag])pag="inicio";$("titulo").textContent=PAGS[pag][0];document.querySelectorAll(".pagina").forEach(p=>p.classList.toggle("on",p.id==="p-"+pag));document.querySelectorAll(".barra a[data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===pag));scrollTo(0,0);setTimeout(render,0)}
 L.aoMudar(render);addEventListener("hashchange",ir);addEventListener("resize",()=>{clearTimeout(window.__r);window.__r=setTimeout(render,150)});
