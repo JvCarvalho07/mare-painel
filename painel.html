@@ -35,6 +35,7 @@ html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
 .topo .migalha{font-size:13px;color:var(--mut);margin-right:auto}
 .topo .migalha b{color:var(--tinta);font-weight:600}
 .pilula{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:var(--mut)}
+.so-cel{display:none}
 .pilula.exemplo{border:0;font:inherit;font-size:13px;cursor:pointer;background:#f3e3bf;color:#6e5212}.pilula.exemplo:hover{background:#ecd6a6}.pilula.exemplo[hidden]{display:none}
 .pilula b{color:var(--tinta);font-weight:600}
 .eu{width:38px;height:38px;border-radius:50%;background:var(--escuro);color:var(--lima);display:grid;place-items:center;font-weight:700}
@@ -167,9 +168,9 @@ dialog .pe .bt:first-child{margin-right:auto}
 
 .pagina{display:none}.pagina.on{display:block}
 @media(max-width:1180px){.s3{grid-column:span 6}.s4,.s5{grid-column:span 6}.s7,.s8{grid-column:span 12}}
-@media(max-width:820px){.s2,.s3,.s4,.s5,.s6{grid-column:span 12}.hero .canto{position:static;margin:0 20px 20px}.hero{flex-direction:column}.intro .ib{grid-template-columns:1fr}.intro svg{max-height:46vh}}
+@media(max-width:820px){.s2,.s3,.s4,.s5,.s6{grid-column:span 12}.hero .canto{position:static;margin:0 20px 20px}.hero{flex-direction:column}.intro .ib{grid-template-columns:1fr}.intro svg{max-height:46vh}#mMapa{height:360px;min-height:360px}.mapaC{min-height:0}.mapaC .flut{position:static;flex-direction:row;flex-wrap:wrap;padding:10px 10px 0}.g>.kpi{grid-column:span 6}}
 @media(max-width:640px){.barra{left:0;right:0;top:auto;bottom:0;width:auto;height:64px;border-radius:18px 18px 0 0;flex-direction:row;justify-content:space-around;padding:0 4px;overflow-x:auto}.barra img,.barra .esp{display:none}.barra .arq{display:flex;width:auto;min-width:52px;flex:1}.barra a{width:auto;min-width:52px;flex:1}
- .conteudo{margin-left:0;padding:10px 10px 90px}.cal .d{min-height:64px}.quadro{grid-template-columns:1fr}.barras-h .linha{grid-template-columns:100px 1fr 60px}.hero::before{background:#eef2eae6}}
+ .conteudo{margin-left:0;padding:10px 10px 90px}.cal .d{min-height:64px}.quadro{grid-template-columns:1fr}.barras-h .linha{grid-template-columns:100px 1fr 60px}.hero::before{background:#eef2eae6}.g>.kpi{padding:12px;gap:8px}.kpi .ic{width:34px;height:34px}.kpi b{font-size:17px}.kpi span{font-size:11.5px}.chk{width:28px;height:28px}.cartao .mv button{width:34px;height:30px}.so-cel{display:flex;gap:6px;flex-wrap:wrap}.barra .arq{display:none!important}}
 </style>
 </head>
 <body>
@@ -183,26 +184,26 @@ dialog .pe .bt:first-child{margin-right:auto}
  <a href="#pessoas" data-p="pessoas" title="Pessoas"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20c0-4 3-6 6-6s6 2 6 6M15 14c3 0 6 2 6 5"/></svg>Pessoas</a>
  <a href="#mapa" data-p="mapa" title="Mapa"><svg viewBox="0 0 24 24"><path d="M9 4l-6 2v14l6-2 6 2 6-2V4l-6 2z"/><path d="M9 4v14M15 6v14"/></svg>Mapa</a>
  <div class="esp"></div>
- <button class="arq" id="bExp" title="Abrir o resumo da semana para imprimir, salvar em PDF ou mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Exportar</button>
- <button class="arq" id="bImp" title="Abrir arquivo de dados"><svg viewBox="0 0 24 24"><path d="M12 20V9M7 14l5-5 5 5M5 4h14"/></svg>Importar</button>
+ <button class="arq" id="bExp" title="Abrir o resumo da semana para imprimir, salvar em PDF ou mandar à equipe"><svg viewBox="0 0 24 24"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>Resumo</button>
+ <button class="arq" id="bImp" title="Abrir arquivo de dados"><svg viewBox="0 0 24 24"><path d="M12 20V9M7 14l5-5 5 5M5 4h14"/></svg>Abrir cópia</button>
  <input type="file" id="fImp" accept="application/json" hidden>
 </nav>
 
 <div class="conteudo">
- <div class="topo"><div class="migalha">Painel / <b id="titulo">Início</b></div><div class="pilula">Expediente: <b>sábado, 4 h</b></div><div class="pilula" id="pHoje"></div><button class="pilula exemplo" id="pExemplo" hidden title="Os números são de exemplo. Clique para apagar e começar com os dados reais.">Dados de exemplo</button><div class="eu" title="João">J</div></div>
+ <div class="topo"><div class="migalha">Painel / <b id="titulo">Início</b></div><div class="so-cel"><button class="bt claro mini" data-acao="resumo">Resumo da semana</button> <button class="bt claro mini" data-acao="abrir">Abrir cópia</button></div><div class="pilula" id="pHoje"></div><button class="pilula exemplo" id="pExemplo" hidden title="Os números são de exemplo. Clique para apagar e começar com os dados reais.">Dados de exemplo</button><select id="quem" class="pilula" title="Quem está usando o painel"></select></div>
 
  <!-- INÍCIO -->
  <section class="pagina" id="p-inicio">
-  <div class="hero" style="--foto:linear-gradient(115deg,#dcebd6 0%,#b4dccd 55%,#78bdb2 100%)"><div class="hi"><small>Visão geral</small><h1>Bom dia, equipe</h1><p>O que precisa de atenção neste expediente, juntando o que cada diretoria preencheu.</p>
+  <div class="hero" style="--foto:linear-gradient(115deg,#dcebd6 0%,#b4dccd 55%,#78bdb2 100%)"><div class="hi"><small>Visão geral</small><h1 id="saud">Bom dia, equipe</h1><p>O que precisa de atenção neste expediente, juntando o que cada diretoria preencheu.</p>
    </div></div>
   <div class="g entra" id="iKpi"></div>
   <div class="g">
-   <div class="c s5"><h2>Tarefas da semana<span class="acoes"><button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">Marque quando terminar.</div><ul class="li" id="iTarefas"></ul></div>
+   <div class="c s5"><h2>Tarefas da semana<span class="acoes"><label class="pilula" style="font-size:12.5px"><input type="checkbox" id="iMinhas"> Só as minhas</label> <button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">Marque quando terminar.</div><ul class="li" id="iTarefas"></ul></div>
    <div class="c s4"><h2>Agenda</h2><div class="sub">Prazos, posts e retornos a clientes.</div><ul class="li" id="iAgenda"></ul></div>
    <div class="c s3 escuro"><h2>Atenção</h2><div class="sub">O que está atrasado ou vence logo.</div><ul class="li" id="iAlertas" style="color:#e8efe9"></ul></div>
   </div>
   <div class="g">
-   <div class="c s8"><h2>Dinheiro: entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span></div><svg class="graf" id="iGraf"></svg></div>
+   <div class="c s8"><h2>Dinheiro: entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span><span><i style="background:#cfd6cf"></i>entradas previstas</span><span><i style="background:#9aa59e"></i>saídas previstas</span></div><svg class="graf" id="iGraf"></svg></div>
    <div class="c s4"><h2>Onde divulgar primeiro</h2><div class="sub">Alagamento nas notícias e nenhum relato.</div><ul class="li" id="iAlvos"></ul></div>
   </div>
  </section>
@@ -210,15 +211,15 @@ dialog .pe .bt:first-child{margin-right:auto}
  <!-- FINANCEIRO -->
  <section class="pagina" id="p-financeiro">
   <div class="hero" style="--foto:url(img/u-rio-aereo.webp)"><div class="hi"><small>Diretoria Financeira · Letícia</small><h1>Caixa da empresa</h1><p>Lance cada entrada e saída. O saldo, o fôlego e o orçamento se atualizam sozinhos.</p>
-   <div class="mini"><button class="bt lima" data-novo="lancamentos">+ Lançamento</button></div></div><div class="canto" id="fCanto"></div></div>
+   <div class="mini"><button class="bt lima" data-novo="lancamentos">+ Lançamento</button> <button class="bt claro" data-novo="caixa">Saldo do banco</button></div></div><div class="canto" id="fCanto"></div></div>
   <div class="g entra" id="fKpi"></div>
   <div class="g">
-   <div class="c s8"><h2>Entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span><span><i style="background:#cfd6cf"></i>previsto (pendente)</span></div><svg class="graf" id="fGraf"></svg></div>
+   <div class="c s8"><h2>Entradas e saídas por mês</h2><div class="leg"><span><i style="background:var(--lima)"></i>entradas</span><span><i style="background:var(--escuro)"></i>saídas</span><span><i style="background:#cfd6cf"></i>entradas previstas</span><span><i style="background:#9aa59e"></i>saídas previstas</span></div><svg class="graf" id="fGraf"></svg></div>
    <div class="c s4"><h2>Gastos por categoria</h2><div class="sub">Pagos e pendentes.</div><div class="barras-h" id="fCat"></div></div>
   </div>
   <div class="g">
    <div class="c s8"><h2>Lançamentos<span class="acoes"><span class="seg" id="fFiltro"><button data-v="todos" aria-pressed="true">Todos</button><button data-v="entrada" aria-pressed="false">Entradas</button><button data-v="saida" aria-pressed="false">Saídas</button><button data-v="pendente" aria-pressed="false">Pendentes</button></span><button class="bt mini" data-novo="lancamentos">+ Novo</button></span></h2><div class="sub">Clique numa linha para editar.</div><div class="rolar"><table class="t" id="fTab"></table></div></div>
-   <div class="c s4"><h2>Orçamento do ano<span class="acoes"><button class="bt mini claro" data-novo="orcamento">+ Categoria</button></span></h2><div class="sub">Planejado × gasto. Clique para mudar o planejado.</div><div id="fOrc"></div></div>
+   <div class="c s4"><h2>Orçamento do ano<span class="acoes"><button class="bt mini claro" data-novo="orcamento">+ Categoria</button></span></h2><div class="sub">Planejado × gasto (pagos e pendentes). Clique para mudar o planejado.</div><div id="fOrc"></div></div>
   </div>
   <div class="g">
    <div class="c s8"><h2>Simulação de 24 meses<span class="acoes"><span class="seg" id="fCen"></span></span></h2><div class="sub">Começa do saldo real de hoje. Ligue as situações ruins para testar.</div><svg class="graf" id="fSim" style="height:240px"></svg></div>
@@ -247,7 +248,7 @@ dialog .pe .bt:first-child{margin-right:auto}
   <div class="c" style="margin-bottom:14px"><h2>Projetos</h2><div class="sub">Clique para mudar a etapa, o responsável ou as datas.</div><div class="rolar"><table class="t" id="jProj"></table></div></div>
   <div class="c" style="margin-bottom:14px"><h2>Quadro de tarefas<span class="acoes"><button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">A fazer → Fazendo → Feito. Segure e arraste o cartão para mudar.</div><div class="quadro" id="jQuadro" style="--n:3"></div></div>
   <div class="g">
-   <div class="c s6"><h2>Horas do mês</h2><div class="sub">6 pessoas × 4 h por semana. Cada tarefa aberta conta 2 h (estimativa).</div><div class="barras-h" id="jHoras"></div></div>
+   <div class="c s6"><h2>Horas do mês</h2><div class="sub">6 pessoas × 4 h por semana. Cada tarefa aberta conta as horas que ela pediu (padrão 2 h, estimativa).</div><div class="barras-h" id="jHoras"></div></div>
    <div class="c s6"><h2>Calendário dos projetos</h2><div class="sub">Do início ao fim previsto.</div><svg class="graf" id="jGantt" style="height:200px"></svg></div>
   </div>
  </section>
@@ -275,7 +276,7 @@ dialog .pe .bt:first-child{margin-right:auto}
   <div class="g entra" id="pKpi"></div>
   <div class="g">
    <div class="c s7"><h2>Organização</h2><div class="sub">Clique numa pessoa para editar.</div><div id="pOrg"></div></div>
-   <div class="c s5"><h2>Tarefas abertas por pessoa</h2><div class="sub">Do quadro de Projetos.</div><div class="barras-h" id="pCarga"></div></div>
+   <div class="c s5"><h2>Horas abertas por pessoa</h2><div class="sub">Cada tarefa aberta conta as horas que ela pediu. Cada pessoa tem 4 h por semana.</div><div class="barras-h" id="pCarga"></div></div>
   </div>
   <div class="c"><h2>Presença nos expedientes</h2><div class="sub">Marque quem veio em cada sábado.</div><div class="rolar"><table class="t" id="pPres"></table></div></div>
  </section>
@@ -304,6 +305,11 @@ dialog .pe .bt:first-child{margin-right:auto}
 <script>
 const {CENARIOS,TEMPESTADES,simular,brl}=MARE,L=LOJA;
 const $=id=>document.getElementById(id),dica=$("dica");
+const quemSou=()=>{try{return localStorage.getItem("mare_quem")||""}catch(e){return""}};
+const horasDe=t=>t.horas==null?2:+t.horas;
+function montaQuem(){const s=$("quem");s.innerHTML=`<option value="">Quem é você?</option>`+L.lista("membros").map(m=>`<option value="${esc(m.nome)}" ${m.nome===quemSou()?"selected":""}>${esc(m.nome)}</option>`).join("")}
+$("quem").onchange=()=>{try{localStorage.setItem("mare_quem",$("quem").value)}catch(e){}render()};
+document.addEventListener("change",e=>{if(e.target.id==="iMinhas")render()});
 const mostra=(h,e)=>{dica.innerHTML=h;dica.style.opacity=1;let x=e.clientX+14;if(x>innerWidth-270)x=e.clientX-264;dica.style.left=x+"px";dica.style.top=(e.clientY+14)+"px"},esconde=()=>dica.style.opacity=0;
 const esc=t=>String(t??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const MES=["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
@@ -324,23 +330,24 @@ const pessoas=()=>L.lista("membros").map(m=>m.nome);
 const CAMPOS={
  lancamentos:[["data","Data","date"],["descricao","Descrição"],["tipo","Tipo","sel",OPC.tipo],["categoria","Categoria","lista",()=>[...new Set(L.lista("lancamentos").map(x=>x.categoria).concat(L.lista("orcamento").map(o=>o.categoria)))]],["valor","Valor (R$)","number"],["status","Situação","sel",OPC.status_l],["resp","Responsável","sel",pessoas]],
  orcamento:[["categoria","Categoria"],["planejado","Planejado no ano (R$)","number"]],
+ caixa:[["data","Data do saldo (entram só lançamentos com data depois dela)","date"],["saldo","Saldo no banco nessa data (R$)","number"]],
  prospectos:[["nome","Nome do cliente"],["segmento","Segmento"],["servico","Serviço","lista",()=>L.lista("servicos").map(s=>s.nome)],["valor","Valor da proposta (R$)","number"],["etapa","Etapa","sel",OPC.etapa],["chance","Chance de fechar (%)","number"],["proximo","Próximo passo"],["data","Data do próximo passo","date"],["resp","Responsável","sel",pessoas]],
  servicos:[["nome","Serviço"],["para","Para quem"],["minimo","Preço mínimo (R$)","number"],["maximo","Preço máximo (R$)","number"],["horas","Horas da equipe","number"]],
  projetos:[["nome","Nome"],["tema","Tema"],["etapa","Etapa","sel",OPC.etapa_j],["estado","Situação","sel",OPC.estado_j],["resp","Responsável","sel",()=>pessoas().concat(["a definir"])],["inicio","Início","date"],["fim","Fim previsto","date"],["horas","Horas previstas","number"]],
- tarefas:[["titulo","Tarefa"],["projeto","Projeto","lista",()=>L.lista("projetos").map(p=>p.nome).concat(["Formalização","Equipe","Marketing"])],["resp","Responsável","sel",pessoas],["prazo","Prazo","date"],["status","Situação","sel",OPC.status_t]],
+ tarefas:[["titulo","Tarefa"],["projeto","Projeto","lista",()=>L.lista("projetos").map(p=>p.nome).concat(["Formalização","Equipe","Marketing"])],["resp","Responsável","sel",pessoas],["prazo","Prazo","date"],["status","Situação","sel",OPC.status_t],["horas","Horas (vazio = 2 h estimadas)","number"]],
  posts:[["data","Data","date"],["canal","Canal","sel",OPC.canal],["formato","Formato","sel",OPC.formato],["tema","Tema"],["status","Situação","sel",OPC.status_p],["alcance","Alcance","number"],["curtidas","Curtidas","number"],["comentarios","Comentários","number"],["salvos","Salvos","number"]],
  imprensa:[["veiculo","Veículo"],["tipo","Tipo"],["contato","Como contatar"],["pauta","Pauta sugerida"],["status","Situação","sel",OPC.status_i]],
  membros:[["nome","Nome"],["diretoria","Diretoria","sel",OPC.diretoria],["cargo","Cargo"],["horas","Horas por semana","number"]]};
-const NOMES={lancamentos:"lançamento",orcamento:"categoria do orçamento",prospectos:"contato",servicos:"serviço",projetos:"projeto",tarefas:"tarefa",posts:"post",imprensa:"veículo",membros:"pessoa"};
-const PADRAO={lancamentos:()=>({data:hojeISO,tipo:"saida",status:"pago",valor:0,resp:"Letícia"}),prospectos:()=>({etapa:"Contato",chance:20,valor:0,resp:"Elias",data:hojeISO}),tarefas:()=>({status:"A fazer",resp:"João",prazo:hojeISO}),
+const NOMES={caixa:"saldo do banco",lancamentos:"lançamento",orcamento:"categoria do orçamento",prospectos:"contato",servicos:"serviço",projetos:"projeto",tarefas:"tarefa",posts:"post",imprensa:"veículo",membros:"pessoa"};
+const PADRAO={caixa:()=>({data:hojeISO,saldo:L.obj("caixa")?.saldo||0}),lancamentos:()=>({data:hojeISO,tipo:"saida",status:"pago",valor:0,resp:"Letícia"}),prospectos:()=>({etapa:"Contato",chance:20,valor:0,resp:"Elias",data:hojeISO}),tarefas:()=>({status:"A fazer",resp:quemSou()||"João",prazo:hojeISO,horas:2}),
  posts:()=>({data:hojeISO,canal:"Instagram",formato:"Carrossel",status:"Ideia",alcance:0,curtidas:0,comentarios:0,salvos:0}),projetos:()=>({etapa:"Pedido",estado:"Próximo",resp:"a definir",horas:20}),imprensa:()=>({status:"Não procurado"}),membros:()=>({diretoria:"A definir",horas:4}),orcamento:()=>({planejado:0}),servicos:()=>({horas:10})};
 let formAtual=null;
 function abre(col,item){const novo=!item;const v=item?{...item}:PADRAO[col]?.()||{};formAtual={col,id:item?.id};
  $("formT").textContent=(novo?"Novo ":"Editar ")+NOMES[col];$("formApaga").hidden=novo;
- $("formC").innerHTML=CAMPOS[col].map(([k,r,t,o])=>{const val=esc(v[k]??"");if(t==="sel"){const ops=typeof o==="function"?o():o;return `<label>${r}</label><select name="${k}">${ops.map(x=>`<option ${String(x)===String(v[k])?"selected":""}>${esc(x)}</option>`).join("")}</select>`}
+ $("formC").innerHTML=CAMPOS[col].map(([k,r,t,o])=>{const val=esc(v[k]??"");if(t==="sel"){const ops=typeof o==="function"?o():o;return `<label>${r}</label><select name="${k}">${ops.map(x=>`<option value="${esc(x)}" ${String(x)===String(v[k])?"selected":""}>${esc(({entrada:"Entrada",saida:"Saída",pago:"Pago",pendente:"Pendente"})[x]||x)}</option>`).join("")}</select>`}
   if(t==="lista"){const ops=(typeof o==="function"?o():o).filter(Boolean);return `<label>${r}</label><input name="${k}" value="${val}" list="dl-${k}"><datalist id="dl-${k}">${ops.map(x=>`<option value="${esc(x)}">`).join("")}</datalist>`}
   return `<label>${r}</label><input name="${k}" type="${t||"text"}" value="${val}" ${t==="number"?'step="any"':""}>`}).join("");$("form").showModal()}
-$("formF").addEventListener("submit",e=>{const f=new FormData($("formF")),o={};CAMPOS[formAtual.col].forEach(([k,,t])=>{o[k]=t==="number"?+(f.get(k)||0):f.get(k)});formAtual.id?L.altera(formAtual.col,formAtual.id,o):L.adiciona(formAtual.col,o)});
+$("formF").addEventListener("submit",e=>{const f=new FormData($("formF")),o={};CAMPOS[formAtual.col].forEach(([k,,t])=>{const v=f.get(k);o[k]=t==="number"?(v===""&&k==="horas"&&formAtual.col==="tarefas"?undefined:+(v||0)):v});if(formAtual.col==="caixa"){L.grava("caixa",o);return}if(formAtual.col==="prospectos"){const p=formAtual.id?L.lista("prospectos").find(x=>x.id===formAtual.id):L.adiciona("prospectos",o);if(p&&mudaEtapa(p,o.etapa,o)===false)e.preventDefault();return}formAtual.id?L.altera(formAtual.col,formAtual.id,o):L.adiciona(formAtual.col,o)});
 $("formCancela").onclick=()=>$("form").close();$("formApaga").onclick=()=>{if(confirm("Apagar este item?")){L.apaga(formAtual.col,formAtual.id);$("form").close()}};
 document.addEventListener("click",e=>{const b=e.target.closest("[data-novo]");if(b)abre(b.dataset.novo)});
 const editar=(col,cont)=>cont.querySelectorAll("[data-id]").forEach(el=>el.addEventListener("click",e=>{if(e.target.closest("button,input"))return;abre(col,L.lista(col).find(x=>x.id===el.dataset.id))}));
@@ -373,39 +380,39 @@ function hastes(svg,meses,series,cores){const [W,H]=tam(svg),Lm=40,R=10,T=14,B=2
 
 // ---------- contas do financeiro a partir dos lançamentos ----------
 function contas(){const lc=L.lista("lancamentos"),pago=lc.filter(x=>x.status==="pago"),soma=(a,t)=>a.filter(x=>x.tipo===t).reduce((s,x)=>s+(+x.valor||0),0);
- const saldo=soma(pago,"entrada")-soma(pago,"saida"),pend=lc.filter(x=>x.status==="pendente"),mesAtual=hojeISO.slice(0,7);
+ const cx=L.obj("caixa")||{saldo:0,data:""},dep=x=>!cx.data||x.data>cx.data,saldo=(+cx.saldo||0)+soma(pago.filter(dep),"entrada")-soma(pago.filter(dep),"saida"),pend=lc.filter(x=>x.status==="pendente"),mesAtual=hojeISO.slice(0,7);
  const doMes=lc.filter(x=>x.data?.slice(0,7)===mesAtual&&x.status==="pago");const gastoMes=soma(doMes,"saida")||1;
- const saidas3=[0,1,2].map(k=>{const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()-k,1).toISOString().slice(0,7);return soma(pago.filter(x=>x.data?.slice(0,7)===d),"saida")});const medio=Math.max(1,saidas3.reduce((a,b)=>a+b,0)/3);
- return {saldo,receber:soma(pend,"entrada"),pagar:soma(pend,"saida"),entMes:soma(doMes,"entrada"),saiMes:soma(doMes,"saida"),medio,folego:saldo/medio}}
+ const ms=[0,1,2].map(k=>{const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()-k,1).toISOString().slice(0,7);return soma(pago.filter(x=>x.data?.slice(0,7)===d),"saida")}).filter(v=>v>0);const medio=ms.length>=2?ms.reduce((a,b)=>a+b,0)/ms.length:0;
+ return {saldo,receber:soma(pend,"entrada"),pagar:soma(pend,"saida"),entMes:soma(doMes,"entrada"),saiMes:soma(doMes,"saida"),medio,folego:medio?(saldo-soma(pend,"saida"))/medio:null}}
 function porMes(ini=-5,n=8){const out=[];for(let k=ini;k<ini+n;k++){const d=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+k,1),c=d.toISOString().slice(0,7),lc=L.lista("lancamentos").filter(x=>x.data?.slice(0,7)===c);
  const s=(t,st)=>lc.filter(x=>x.tipo===t&&(!st||x.status===st)).reduce((a,x)=>a+(+x.valor||0),0);out.push({rot:MES[d.getMonth()],atual:k===0,ent:s("entrada","pago"),sai:s("saida","pago"),entP:s("entrada","pendente"),saiP:s("saida","pendente")})}return out}
 
 // ---------- INÍCIO ----------
-function inicio(){const c=contas(),tf=L.lista("tarefas"),abertas=tf.filter(t=>t.status!=="Feito"),atr=abertas.filter(t=>atrasado(t.prazo)),pr=L.lista("prospectos");
+function inicio(){{const h=new Date().getHours();$("saud").textContent=(h<12?"Bom dia":h<18?"Boa tarde":"Boa noite")+", equipe"}montaQuem();const c=contas(),tf=L.lista("tarefas"),abertas=tf.filter(t=>t.status!=="Feito"),atr=abertas.filter(t=>atrasado(t.prazo)),pr=L.lista("prospectos");
  if($("iMini"))$("iMini").innerHTML=`<div><span>Saldo em caixa</span><b class="num">${brl(c.saldo)}</b></div><div><span>Propostas abertas</span><b class="num">${pr.filter(p=>p.etapa==="Proposta").length}</b></div><div><span>Tarefas atrasadas</span><b class="num">${atr.length}</b></div>`;
- kpis($("iKpi"),[["dinheiro",brl(c.saldo),"saldo em caixa"],["seta",brl(c.receber),"a receber"],["baixo",brl(c.pagar),"a pagar",c.pagar>c.saldo?"maior que o saldo":"",c.pagar>c.saldo],["relogio",c.folego.toFixed(1).replace(".",",")+" meses","de fôlego no ritmo de gastos"]]);
- const sem=abertas.slice().sort((a,b)=>(a.prazo||"9").localeCompare(b.prazo||"9")).slice(0,6);
- $("iTarefas").innerHTML=sem.map(t=>`<li data-id="${t.id}"><button class="chk" data-feito="${t.id}" aria-label="Concluir"></button><div class="tx"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)} · ${esc(t.resp)}</span></div><span class="dt ${atrasado(t.prazo)?"atr":""}">${dt(t.prazo)}</span></li>`).join("")||`<li class="vazio">Nenhuma tarefa aberta.</li>`;
+ kpis($("iKpi"),[["dinheiro",brl(c.saldo),"saldo em caixa"],["seta",brl(c.receber),"a receber"],["baixo",brl(c.pagar),"a pagar",c.pagar>c.saldo?"maior que o saldo":"",c.pagar>c.saldo],["relogio",(c.folego==null?"sem histórico":c.folego.toFixed(1).replace(".",",")+" meses"),"de fôlego no ritmo de gastos"]]);
+ const sem=abertas.filter(t=>!$("iMinhas").checked||t.resp===quemSou()).slice().sort((a,b)=>(a.prazo||"9").localeCompare(b.prazo||"9")).slice(0,6);
+ $("iTarefas").innerHTML=sem.map(t=>`<li data-id="${t.id}"><button class="chk" data-feito="${t.id}" aria-label="Concluir"></button><div class="tx"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)} · ${esc(t.resp)}</span></div><span class="dt ${atrasado(t.prazo)?"atr":""}">${dt(t.prazo)}</span></li>`).join("")||`<li class="vazio">${$("iMinhas").checked&&!quemSou()?"Escolha quem é você, no alto da tela, para ver só as suas.":"Nenhuma tarefa aberta."}</li>`;
  $("iTarefas").querySelectorAll("[data-feito]").forEach(b=>b.onclick=()=>L.altera("tarefas",b.dataset.feito,{status:"Feito"}));editar("tarefas",$("iTarefas"));
  const ag=[...abertas.map(t=>[t.prazo,t.titulo,"Tarefa · "+t.resp]),...L.lista("posts").filter(p=>p.status!=="Publicado").map(p=>[p.data,p.tema,p.canal+" · "+p.status]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)).map(p=>[p.data,p.proximo,p.nome])].filter(a=>a[0]&&a[0]>=hojeISO).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,6);
  $("iAgenda").innerHTML=ag.map(a=>`<li><div class="tx"><b>${esc(a[1])}</b><span>${esc(a[2])}</span></div><span class="dt">${dt(a[0])}</span></li>`).join("")||`<li class="vazio">Nada marcado.</li>`;
  const al=[...atr.map(t=>["Tarefa atrasada",t.titulo,t.prazo]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)&&atrasado(p.data)).map(p=>["Retorno atrasado",p.nome,p.data]),...L.lista("lancamentos").filter(l=>l.status==="pendente"&&l.tipo==="saida"&&dias(l.data)<=15).map(l=>["Conta a pagar",l.descricao+" · "+brl(l.valor),l.data])];
  $("iAlertas").innerHTML=al.map(a=>`<li><div class="tx"><b>${esc(a[0])}</b><span style="color:#a7b8ad">${esc(a[1])}</span></div><span class="dt" style="color:#f2b4a6">${dt(a[2])}</span></li>`).join("")||`<li><div class="tx"><b>Tudo em dia</b></div></li>`;
- const pm=porMes();hastes($("iGraf"),pm,[pm.map(m=>m.ent+m.entP),pm.map(m=>m.sai+m.saiP)],[i=>pm[i].entP&&!pm[i].ent?"#cfd6cf":"#a9d84e",i=>pm[i].saiP&&!pm[i].sai?"#cfd6cf":"#1f2a24"]);
- $("iAlvos").innerHTML=(window.__alvos||[]).slice(0,5).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span>${a.municipio}</span></div></li>`).join("")||`<li class="vazio">Carregando o mapa…</li>`}
+ const pm=porMes();hastes($("iGraf"),pm,[pm.map(m=>m.ent),pm.map(m=>m.sai),pm.map(m=>m.entP),pm.map(m=>m.saiP)],[()=>"#a9d84e",()=>"#1f2a24",()=>"#cfd6cf",()=>"#9aa59e"]);
+ $("iAlvos").innerHTML=(window.__alvos||[]).slice(0,5).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span>${a.municipio}</span></div></li>`).join("")||`<li class="vazio">${ALVO_VAZIO()}</li>`}
 
 // ---------- FINANCEIRO ----------
 let filtroF="todos",cen="prov";const lig=new Set();
 function financeiro(){const c=contas();
- canto($("fCanto"),[[brl(c.saldo),"Saldo"],[c.folego.toFixed(1).replace(".",",")+" m","Fôlego"]]);
- kpis($("fKpi"),[["seta",brl(c.entMes),"entradas em outubro"],["baixo",brl(c.saiMes),"saídas em outubro"],["relogio",brl(c.receber),"a receber (pendente)"],["dinheiro",brl(c.pagar),"a pagar (pendente)",c.pagar>c.saldo?"falta "+brl(c.pagar-c.saldo):"",c.pagar>c.saldo]]);
- const pm=porMes();hastes($("fGraf"),pm,[pm.map(m=>m.ent+m.entP),pm.map(m=>m.sai+m.saiP)],[i=>pm[i].entP&&!pm[i].ent?"#cfd6cf":"#a9d84e",i=>pm[i].saiP&&!pm[i].sai?"#cfd6cf":"#1f2a24"]);
+
+ kpis($("fKpi"),[["dinheiro",brl(c.saldo),"saldo em caixa (banco na data + pagos depois)"],["relogio",c.folego==null?"sem histórico":c.folego.toFixed(1).replace(".",",")+" meses","de fôlego no ritmo de gastos"],["seta",brl(c.receber),"a receber (pendente)"],["baixo",brl(c.pagar),"a pagar (pendente)",c.pagar>c.saldo?"falta "+brl(c.pagar-c.saldo):"",c.pagar>c.saldo]]);
+ const pm=porMes();hastes($("fGraf"),pm,[pm.map(m=>m.ent),pm.map(m=>m.sai),pm.map(m=>m.entP),pm.map(m=>m.saiP)],[()=>"#a9d84e",()=>"#1f2a24",()=>"#cfd6cf",()=>"#9aa59e"]);
  const cat={};L.lista("lancamentos").filter(l=>l.tipo==="saida").forEach(l=>{cat[l.categoria]=cat[l.categoria]||[0,0];cat[l.categoria][l.status==="pago"?0:1]+=+l.valor||0});
  barrasH($("fCat"),Object.entries(cat).sort((a,b)=>b[1][0]+b[1][1]-a[1][0]-a[1][1]).map(([n,[p,q]])=>[n,p,q,"#1f2a24","#cfd6cf"]),brl);
  const lc=L.lista("lancamentos").filter(l=>filtroF==="todos"||l.tipo===filtroF||l.status===filtroF).slice().sort((a,b)=>b.data.localeCompare(a.data));
- $("fTab").innerHTML=`<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Responsável</th><th>Situação</th><th class="dir">Valor</th></tr></thead><tbody>`+lc.map(l=>`<tr data-id="${l.id}"><td>${dt(l.data)}</td><td>${esc(l.descricao)}</td><td>${esc(l.categoria)}</td><td>${esc(l.resp)}</td><td><span class="etq ${etqStatus(l.status)}">${l.status}</span>${l.status==="pendente"?` <button class="bt mini claro" data-paga="${l.id}">${l.tipo==="entrada"?"recebido":"pago"}</button>`:""}</td><td class="dir num" style="color:${l.tipo==="entrada"?"#3d7a1f":"#b13b26"}">${l.tipo==="entrada"?"+":"−"} ${brl(l.valor)}</td></tr>`).join("")+`</tbody>`;
+ $("fTab").innerHTML=`<thead><tr><th>Data</th><th>Descrição</th><th>Categoria</th><th>Responsável</th><th>Situação</th><th class="dir">Valor</th></tr></thead><tbody>`+lc.map(l=>`<tr data-id="${l.id}"><td>${dt(l.data)}</td><td>${esc(l.descricao)}</td><td>${esc(l.categoria)}</td><td>${esc(l.resp)}</td><td><span class="etq ${etqStatus(l.status)}">${({pago:"Pago",pendente:"Pendente"})[l.status]||l.status}</span>${l.status==="pendente"?` <button class="bt mini claro" data-paga="${l.id}">${l.tipo==="entrada"?"recebido":"pago"}</button>`:""}</td><td class="dir num" style="color:${l.tipo==="entrada"?"#3d7a1f":"#b13b26"}">${l.tipo==="entrada"?"+":"−"} ${brl(l.valor)}</td></tr>`).join("")+`</tbody>`;
  $("fTab").querySelectorAll("[data-paga]").forEach(b=>b.onclick=()=>L.altera("lancamentos",b.dataset.paga,{status:"pago"}));editar("lancamentos",$("fTab"));
- const gasto={};L.lista("lancamentos").filter(l=>l.tipo==="saida"&&l.status==="pago").forEach(l=>gasto[l.categoria]=(gasto[l.categoria]||0)+(+l.valor||0));
+ const gasto={};L.lista("lancamentos").filter(l=>l.tipo==="saida").forEach(l=>gasto[l.categoria]=(gasto[l.categoria]||0)+(+l.valor||0));
  $("fOrc").innerHTML=L.lista("orcamento").map(o=>{const g=gasto[o.categoria]||0,p=+o.planejado||1,blocos=10,ch=Math.min(blocos,Math.round(g/p*blocos));return `<div data-id="${o.id}" style="cursor:pointer;margin:9px 0"><div style="display:flex;justify-content:space-between;font-size:13px"><span>${esc(o.categoria)}</span><span class="num"><b>${brl(g)}</b> <span style="color:var(--mut)">de ${brl(o.planejado)}</span></span></div><div style="display:grid;grid-template-columns:repeat(${blocos},1fr);gap:3px;margin-top:5px">${Array.from({length:blocos},(_,i)=>`<i style="height:12px;border-radius:3px;background:${i<ch?(g>p?"#e2735a":"#a9d84e"):"#e7eae4"}"></i>`).join("")}</div></div>`}).join("");editar("orcamento",$("fOrc"));
  // simulação a partir do saldo real
  $("fCen").innerHTML=["pess","prov","otim"].map(k=>`<button data-c="${k}" aria-pressed="${k===cen}">${CENARIOS[k].nome}</button>`).join("");$("fCen").querySelectorAll("button").forEach(b=>b.onclick=()=>{cen=b.dataset.c;financeiro()});
@@ -420,21 +427,30 @@ function financeiro(){const c=contas();
  svg.innerHTML=s;const zera=v.findIndex(q=>q<0);$("fRes").textContent=zera<0?"Aguenta os 24 meses":"Falta dinheiro em "+MARE.rotulo(zera);$("fResF").textContent=lig.size?"Cortar primeiro: contador por parceria, depois transporte.":"Nenhuma tempestade ligada."}
 $("fFiltro").querySelectorAll("button").forEach(b=>b.onclick=()=>{filtroF=b.dataset.v;$("fFiltro").querySelectorAll("button").forEach(x=>x.setAttribute("aria-pressed",x===b));financeiro()});
 
+function mudaEtapa(p,n,extra={}){
+  const lc=p.lancamentoId&&L.lista("lancamentos").find(x=>x.id===p.lancamentoId),v=+(extra.valor??p.valor)||0;
+  const ch={...extra,etapa:n,chance:n==="Fechado"?100:n==="Perdido"?0:(extra.chance??p.chance)};
+  if(p.etapa==="Fechado"&&n!=="Fechado"&&lc&&lc.status==="pendente"){
+    if(!confirm("Este contato tem "+brl(lc.valor)+" a receber no Financeiro, ainda não recebido.\n\nApagar essa receita pendente?"))return false;
+    L.apaga("lancamentos",lc.id);ch.lancamentoId=null}
+  else if(n==="Fechado"&&lc&&lc.status==="pendente"&&lc.valor!==v)L.altera("lancamentos",lc.id,{valor:v});
+  if(n==="Fechado"&&!lc){const novo=L.adiciona("lancamentos",{data:hojeISO,descricao:p.nome+" · "+p.servico,categoria:"Serviços",tipo:"entrada",valor:v,status:"pendente",resp:p.resp});ch.lancamentoId=novo.id}
+  L.altera("prospectos",p.id,ch)}
 // ---------- COMERCIAL ----------
 function comercial(){const pr=L.lista("prospectos"),ab=pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)),fech=pr.filter(p=>p.etapa==="Fechado"),prev=ab.reduce((a,p)=>a+(+p.valor||0)*(+p.chance||0)/100,0);
  canto($("cCanto"),[[brl(prev),"Receita prevista"],[pr.length?Math.round(fech.length/pr.length*100)+"%":"—","Conversão"]]);
  kpis($("cKpi"),[["gente",ab.length,"contatos ativos"],["alvo",pr.filter(p=>p.etapa==="Proposta").length,"propostas abertas"],["check",brl(prev),"receita prevista"],["dinheiro",brl(fech.reduce((a,p)=>a+(+p.valor||0),0)),"vendido"]]);
  const E=OPC.etapa;$("cQuadro").innerHTML=E.map((e,i)=>{const l=pr.filter(p=>p.etapa===e);return `<div class="coluna" data-col="${i}"><b>${e}<span>${l.length} · ${brl(l.reduce((a,p)=>a+(+p.valor||0),0))}</span></b>`+l.map(p=>`<div class="cartao" data-id="${p.id}"><b>${esc(p.nome)}</b><span>${esc(p.servico)}</span><div class="pe"><span class="num">${brl(p.valor)} · ${p.chance}%</span><span class="mv">${i>0?`<button data-mv="${p.id}" data-d="-1" aria-label="Voltar etapa">←</button>`:""}${i<E.length-1?`<button data-mv="${p.id}" data-d="1" aria-label="Avançar etapa">→</button>`:""}</span></div></div>`).join("")+`</div>`}).join("");
- $("cQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const p=pr.find(x=>x.id===b.dataset.mv),n=E[E.indexOf(p.etapa)+ +b.dataset.d];L.altera("prospectos",p.id,{etapa:n,chance:n==="Fechado"?100:n==="Perdido"?0:p.chance})});editar("prospectos",$("cQuadro"));arrastavel($("cQuadro"),(id,i)=>{const p=pr.find(x=>x.id===id),n=E[i];L.altera("prospectos",id,{etapa:n,chance:n==="Fechado"?100:n==="Perdido"?0:p.chance})});
+ $("cQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const p=pr.find(x=>x.id===b.dataset.mv);mudaEtapa(p,E[E.indexOf(p.etapa)+ +b.dataset.d])});editar("prospectos",$("cQuadro"));arrastavel($("cQuadro"),(id,i)=>mudaEtapa(pr.find(x=>x.id===id),E[i]));
  $("cPassos").innerHTML=ab.slice().sort((a,b)=>(a.data||"9").localeCompare(b.data||"9")).map(p=>`<li data-id="${p.id}" style="cursor:pointer"><span class="etq ${etqStatus(p.etapa)}">${p.etapa}</span><div class="tx"><b>${esc(p.proximo)}</b><span>${esc(p.nome)} · ${esc(p.resp)}</span></div><span class="dt ${atrasado(p.data)?"atr":""}">${dt(p.data)}</span></li>`).join("")||`<li class="vazio">Nenhum contato ativo.</li>`;editar("prospectos",$("cPassos"));
  const sg={};pr.forEach(p=>{sg[p.segmento]=sg[p.segmento]||[0,0];sg[p.segmento][p.etapa==="Fechado"?0:1]+=+p.valor||0});barrasH($("cSeg"),Object.entries(sg).sort((a,b)=>b[1][0]+b[1][1]-a[1][0]-a[1][1]).map(([n,[f,o]])=>[n,f,o,"#a9d84e","#1f8a86"]),brl);
  $("cServ").innerHTML=`<thead><tr><th>Serviço</th><th>Para quem</th><th>Horas</th><th class="dir">Preço</th></tr></thead><tbody>`+L.lista("servicos").map(s=>`<tr data-id="${s.id}"><td><b>${esc(s.nome)}</b></td><td>${esc(s.para)}</td><td>${s.horas} h</td><td class="dir num">${brl(s.minimo)} a ${brl(s.maximo)}</td></tr>`).join("")+`</tbody>`;editar("servicos",$("cServ"))}
 
 // ---------- PROJETOS ----------
-function projetos(){const pj=L.lista("projetos"),tf=L.lista("tarefas"),ab=tf.filter(t=>t.status!=="Feito"),atr=ab.filter(t=>atrasado(t.prazo)),cap=L.lista("membros").reduce((a,m)=>a+(+m.horas||0),0)*4,uso=ab.length*2;
+function projetos(){const pj=L.lista("projetos"),tf=L.lista("tarefas"),ab=tf.filter(t=>t.status!=="Feito"),atr=ab.filter(t=>atrasado(t.prazo)),cap=L.lista("membros").reduce((a,m)=>a+(+m.horas||0),0)*4,uso=ab.reduce((a,t)=>a+horasDe(t),0);
  canto($("jCanto"),[[pj.filter(p=>p.estado==="Em andamento").length,"Em andamento"],[cap+" h","Horas no mês"]]);
  kpis($("jKpi"),[["alvo",pj.filter(p=>p.estado==="Em andamento").length,"projetos em andamento"],["check",ab.length,"tarefas abertas"],["relogio",atr.length,"tarefas atrasadas",atr.length?"atenção":"",atr.length>0],["gente",uso+" de "+cap+" h","horas pedidas no mês"]]);
- const E=OPC.etapa_j;$("jProj").innerHTML=`<thead><tr><th>Projeto</th><th>Etapa</th><th>Responsável</th><th>Período</th><th>Tarefas</th><th>Situação</th></tr></thead><tbody>`+pj.map(p=>{const i=E.indexOf(p.etapa),t=tf.filter(x=>x.projeto===p.nome);return `<tr data-id="${p.id}"><td><b>${esc(p.nome)}</b><br><span style="color:var(--mut);font-size:12px">${esc(p.tema)}</span></td><td><div style="display:flex;gap:3px">${E.map((e,k)=>`<i title="${e}" style="width:22px;height:8px;border-radius:4px;background:${k<=i&&p.estado!=="Ideia"?"#a9d84e":"#e7eae4"}"></i>`).join("")}</div><span style="font-size:12px;color:var(--mut)">${p.etapa}</span></td><td>${esc(p.resp)}</td><td>${dt(p.inicio)} – ${dt(p.fim)}</td><td>${t.filter(x=>x.status==="Feito").length}/${t.length}</td><td><span class="etq ${etqStatus(p.estado)}">${p.estado}</span></td></tr>`}).join("")+`</tbody>`;editar("projetos",$("jProj"));
+ const E=OPC.etapa_j;$("jProj").innerHTML=`<thead><tr><th>Projeto</th><th>Etapa</th><th>Responsável</th><th>Período</th><th>Tarefas</th><th>Horas</th><th>Situação</th></tr></thead><tbody>`+pj.map(p=>{const i=E.indexOf(p.etapa),t=tf.filter(x=>x.projeto===p.nome);return `<tr data-id="${p.id}"><td><b>${esc(p.nome)}</b><br><span style="color:var(--mut);font-size:12px">${esc(p.tema)}</span></td><td><div style="display:flex;gap:3px">${E.map((e,k)=>`<i title="${e}" style="width:22px;height:8px;border-radius:4px;background:${k<=i&&p.estado!=="Ideia"?"#a9d84e":"#e7eae4"}"></i>`).join("")}</div><span style="font-size:12px;color:var(--mut)">${p.etapa}</span></td><td>${esc(p.resp)}</td><td>${dt(p.inicio)} – ${dt(p.fim)}</td><td>${t.filter(x=>x.status==="Feito").length}/${t.length}</td><td>${p.horas||0} h</td><td><span class="etq ${etqStatus(p.estado)}">${p.estado}</span></td></tr>`}).join("")+`</tbody>`;editar("projetos",$("jProj"));
  const S=OPC.status_t;$("jQuadro").innerHTML=S.map((s,i)=>{const l=tf.filter(t=>t.status===s).sort((a,b)=>(a.prazo||"").localeCompare(b.prazo||""));return `<div class="coluna" data-col="${i}"><b>${s}<span>${l.length}</span></b>`+l.map(t=>`<div class="cartao" data-id="${t.id}"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)}</span><div class="pe"><span>${esc(t.resp)} · <span style="color:${atrasado(t.prazo)&&s!=="Feito"?"#b13b26":"inherit"}">${dt(t.prazo)}</span></span><span class="mv">${i>0?`<button data-mv="${t.id}" data-d="-1" aria-label="Voltar">←</button>`:""}${i<2?`<button data-mv="${t.id}" data-d="1" aria-label="Avançar">→</button>`:""}</span></div></div>`).join("")+`</div>`}).join("");
  $("jQuadro").querySelectorAll("[data-mv]").forEach(b=>b.onclick=()=>{const t=tf.find(x=>x.id===b.dataset.mv);L.altera("tarefas",t.id,{status:S[S.indexOf(t.status)+ +b.dataset.d]})});editar("tarefas",$("jQuadro"));arrastavel($("jQuadro"),(id,i)=>L.altera("tarefas",id,{status:S[i]}));
  barrasH($("jHoras"),[["Horas da equipe",cap,0,"#a9d84e"],["Pedidas pelas tarefas",uso,0,uso>cap?"#e2735a":"#1f2a24"]],v=>v+" h");
@@ -450,7 +466,7 @@ function marketing(){const ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publ
  const eng=p=>(+p.alcance?((+p.curtidas||0)+(+p.comentarios||0)+(+p.salvos||0))/p.alcance*100:0),engM=pubMes.length?pubMes.reduce((a,p)=>a+eng(p),0)/pubMes.length:0;
  const sg=L.lista("seguidores").slice().sort((a,b)=>a.data.localeCompare(b.data)),ult=sg.at(-1)?.valor||0,ant=sg.at(-2)?.valor||ult;
  canto($("kCanto"),[[ult,"Seguidores"],[engM.toFixed(1).replace(".",",")+"%","Engajamento"]]);
- kpis($("kKpi"),[["gente",ult,"seguidores no Instagram",ult>=ant?"+"+(ult-ant):String(ult-ant),ult<ant],["olho",alc.toLocaleString("pt-BR"),"alcance em outubro"],["cora",engM.toFixed(1).replace(".",",")+"%","engajamento médio"],["check",pubMes.length+" de "+ps.filter(p=>p.data.slice(0,7)===mes).length,"posts publicados no mês"]]);
+ kpis($("kKpi"),[["gente",ult,"seguidores no Instagram",ult>=ant?"+"+(ult-ant):String(ult-ant),ult<ant],["olho",alc.toLocaleString("pt-BR"),"alcance no mês"],["cora",engM.toFixed(1).replace(".",",")+"%","engajamento médio"],["check",pubMes.length+" de "+ps.filter(p=>p.data.slice(0,7)===mes).length,"posts publicados no mês"]]);
  const base=new Date(L.hoje.getFullYear(),L.hoje.getMonth()+mesK,1);$("kMes").innerHTML=`<button data-k="-1" aria-pressed="false">←</button><button aria-pressed="true">${MES[base.getMonth()]} ${base.getFullYear()}</button><button data-k="1" aria-pressed="false">→</button>`;
  $("kMes").querySelectorAll("[data-k]").forEach(b=>b.onclick=()=>{mesK+= +b.dataset.k;marketing()});
  const pri=new Date(base);pri.setDate(1-((base.getDay()+6)%7));const cor={"Ideia":"#a2aca6","Produzindo":"#d98a1d","Agendado":"#1f8a86","Publicado":"#3f8f4a"};let h=["seg","ter","qua","qui","sex","sáb","dom"].map(d=>`<div class="hd">${d}</div>`).join("");
@@ -462,7 +478,7 @@ function marketing(){const ps=L.lista("posts"),pub=ps.filter(p=>p.status==="Publ
  const svg=$("kSeg"),[W,H]=tam(svg);svg.setAttribute("viewBox",`0 0 ${W} ${H}`);if(sg.length>1){const t0=dObj(sg[0].data),t1=dObj(sg.at(-1).data),mx=Math.max(...sg.map(s=>s.valor))*1.15,x=d=>12+(dObj(d)-t0)/Math.max(1,t1-t0)*(W-24),y=v=>H-18-v/mx*(H-30);
   svg.innerHTML=`<path d="${sg.map((s,i)=>(i?"L":"M")+x(s.data)+","+y(s.valor)).join(" ")}" fill="none" stroke="#1f8a86" stroke-width="2.5"/>`+sg.map(s=>`<circle cx="${x(s.data)}" cy="${y(s.valor)}" r="4.5" fill="#1f8a86" stroke="#fff" stroke-width="2"><title>${dt(s.data)}: ${s.valor}</title></circle><text x="${x(s.data)}" y="${H-4}" font-size="10.5" fill="#a2aca6" text-anchor="middle">${dt(s.data)}</text>`).join("")}
  $("kRes").innerHTML=`<thead><tr><th>Data</th><th>Tema</th><th>Formato</th><th class="dir">Alcance</th><th class="dir">Curtidas</th><th class="dir">Coment.</th><th class="dir">Salvos</th><th class="dir">Engaj.</th></tr></thead><tbody>`+pub.slice().sort((a,b)=>eng(b)-eng(a)).map(p=>`<tr data-id="${p.id}"><td>${dt(p.data)}</td><td><b>${esc(p.tema)}</b></td><td>${esc(p.formato)}</td><td class="dir num">${(+p.alcance||0).toLocaleString("pt-BR")}</td><td class="dir num">${p.curtidas}</td><td class="dir num">${p.comentarios}</td><td class="dir num">${p.salvos}</td><td class="dir num"><b>${eng(p).toFixed(1).replace(".",",")}%</b></td></tr>`).join("")+`</tbody>`;editar("posts",$("kRes"));
- $("kAlvos").innerHTML=(window.__alvos||[]).slice(0,6).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span style="color:#a7b8ad">${a.noticias} alagamento${a.noticias>1?"s":""} nas notícias</span></div></li>`).join("")||`<li class="vazio">Carregando o mapa…</li>`;
+ $("kAlvos").innerHTML=(window.__alvos||[]).slice(0,6).map(a=>`<li><span class="etq mal">${a.noticias}</span><div class="tx"><b>${a.nome}</b><span style="color:#a7b8ad">${a.noticias} alagamento${a.noticias>1?"s":""} nas notícias</span></div></li>`).join("")||`<li class="vazio">${ALVO_VAZIO()}</li>`;
  $("kImp").innerHTML=`<thead><tr><th>Veículo</th><th>Tipo</th><th>Como contatar</th><th>Pauta</th><th>Situação</th></tr></thead><tbody>`+L.lista("imprensa").map(i=>`<tr data-id="${i.id}"><td><b>${esc(i.veiculo)}</b></td><td>${esc(i.tipo)}</td><td>${esc(i.contato)}</td><td>${esc(i.pauta)}</td><td><span class="etq ${etqStatus(i.status)}">${i.status}</span></td></tr>`).join("")+`</tbody>`;editar("imprensa",$("kImp"))}
 $("bSeg").onclick=()=>{const v=prompt("Quantos seguidores hoje?");if(v&&!isNaN(+v))L.adiciona("seguidores",{data:hojeISO,valor:+v})};
 
@@ -474,7 +490,7 @@ function pessoasPg(){const mb=L.lista("membros"),tf=L.lista("tarefas").filter(t=
  const geral=[]; // ninguém em destaque: todos no mesmo nível
  const nomeCargo=c=>String(c||"").replace(/\s+e\s+diretor(a)? geral/i,"");
  $("pOrg").innerHTML=`<div style="display:flex;justify-content:center;margin-bottom:10px">${geral.map(m=>`<div class="cartao" data-id="${m.id}" style="background:var(--escuro);color:#fff;min-width:200px;text-align:center"><b>${esc(m.nome)}</b><span style="color:#a7b8ad">Diretor geral</span></div>`).join("")}</div><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:8px">`+OPC.diretoria.map(d=>{const l=mb.filter(m=>m.diretoria===d);return `<div class="coluna" style="min-height:0"><b>${d}</b>${l.map(m=>`<div class="cartao" data-id="${m.id}"><b>${esc(m.nome)}</b><span>${esc(nomeCargo(m.cargo))}</span></div>`).join("")||`<span class="vazio" style="padding:4px">ninguém</span>`}</div>`}).join("")+`</div>`;editar("membros",$("pOrg"));
- barrasH($("pCarga"),mb.map(m=>[m.nome,tf.filter(t=>t.resp===m.nome).length,0,"#1f8a86"]),v=>v+(v===1?" tarefa":" tarefas"));
+ barrasH($("pCarga"),mb.map(m=>[m.nome,tf.filter(t=>t.resp===m.nome).reduce((a,t)=>a+horasDe(t),0),0,"#1f8a86"]),v=>v+" h");
  $("pPres").innerHTML=`<thead><tr><th>Pessoa</th>${sabs.map(s=>`<th style="text-align:center">${dt(s)}</th>`).join("")}<th class="dir">Presença</th></tr></thead><tbody>`+mb.map(m=>{const n=sabs.filter(s=>(pres[s]||[]).includes(m.id)).length;return `<tr><td><b>${esc(m.nome)}</b></td>${sabs.map(s=>`<td style="text-align:center"><button class="chk ${(pres[s]||[]).includes(m.id)?"feito":""}" data-pres="${s}|${m.id}" aria-label="Presença de ${esc(m.nome)} em ${dt(s)}"></button></td>`).join("")}<td class="dir num">${Math.round(n/sabs.length*100)}%</td></tr>`}).join("")+`</tbody>`;
  $("pPres").querySelectorAll("[data-pres]").forEach(b=>b.onclick=()=>{const [s,i]=b.dataset.pres.split("|"),p=L.obj("presencas");p[s]=p[s]||[];p[s]=p[s].includes(i)?p[s].filter(x=>x!==i):p[s].concat(i);L.poe("presencas",p)})}
 
@@ -484,7 +500,8 @@ let bairros=null,agua=null,modo="relatos",geo=null,cam=null,arr=null;
 const dentro=(p,a)=>{let c=false;for(let i=0,j=a.length-1;i<a.length;j=i++){const [xi,yi]=a[i],[xj,yj]=a[j];if((yi>p[1])!==(yj>p[1])&&p[0]<(xj-xi)*(p[1]-yi)/(yj-yi)+xi)c=!c}return c};
 const polis=f=>f.geometry.type==="Polygon"?[f.geometry.coordinates]:f.geometry.coordinates;
 const areaA=r=>Math.abs(r.reduce((s,p,i)=>{const q=r[(i+1)%r.length];return s+p[0]*q[1]-q[0]*p[1]},0)/2);
-async function carregaMapa(){const [g,pts,ag]=await Promise.all([fetch("dados/bairros.json").then(r=>r.json()),fetch("dados/pontos.json").then(r=>r.json()),fetch("dados/agua.json").then(r=>r.json()).catch(()=>null)]);
+const ALVO_VAZIO=()=>window.__mapaErro?"Mapa indisponível: este arquivo foi aberto direto do computador. Abra o painel pelo endereço online da equipe.":"Carregando o mapa…";
+async function carregaMapa(){let g,pts,ag;try{[g,pts,ag]=await Promise.all([fetch("dados/bairros.json").then(r=>r.json()),fetch("dados/pontos.json").then(r=>r.json()),fetch("dados/agua.json").then(r=>r.json()).catch(()=>null)])}catch(e){window.__mapaErro=true;render();return}
  bairros=g.features.filter(f=>{const a=polis(f)[0][0],cy=a.reduce((s,p)=>s+p[1],0)/a.length,cx=a.reduce((s,p)=>s+p[0],0)/a.length;return !(cy>-1.235&&cx>-48.45)});
  // só a água grande e perto (baía do Guajará, rio Guamá, rio Maguari): tira lagos e igarapés soltos longe
  // a água vem em quadrados: os 4×4 em volta de Belém e a fileira de cima; tira lagos e igarapés pequenos e o que fica longe à direita
@@ -496,7 +513,7 @@ function projeta(){let bb=[180,90,-180,-90];bairros.forEach(f=>polis(f).forEach(
 const camIni=()=>{const a=geo.px([-48.515,-1.395]),b=geo.px([-48.425,-1.497]);return {x:a[0],y:a[1],w:b[0]-a[0],h:b[1]-a[1]}};
 function aplicaCam(){const svg=$("mMapa"),[W,H]=tam(svg),r=W/H;let {x,y,w,h}=cam;if(Math.abs(w/h-r)>.001){if(w/h>r){const nh=w/r;y-=(nh-h)/2;h=nh}else{const nw=h*r;x-=(nw-w)/2;w=nw}cam={x,y,w,h}}
  svg.setAttribute("viewBox",`${x} ${y} ${w} ${h}`);const ppu=W/w;svg.querySelectorAll(".rt").forEach(t=>{t.setAttribute("font-size",(t.dataset.f/ppu).toFixed(2));t.setAttribute("stroke-width",(3/ppu).toFixed(2))});svg.querySelectorAll(".nb").forEach(t=>t.style.display=geo.W/w>1.4?"":"none")}
-function mapa(){if(!bairros)return;if(!geo)projeta();if(!cam)cam=camIni();const svg=$("mMapa"),px=geo.px,maxR=Math.max(...bairros.map(f=>f.properties.relatos));
+function mapa(){if(!bairros){$("mSem").textContent="—";$("mAlvos").innerHTML="";$("mTop").innerHTML="";$("mLeg").innerHTML=`<span>${ALVO_VAZIO()}</span>`;return}if(!geo)projeta();if(!cam)cam=camIni();const svg=$("mMapa"),px=geo.px,maxR=Math.max(...bairros.map(f=>f.properties.relatos));
  const corR=v=>v===0?"#1d3135":["#2f5b3c","#3f7a43","#5f9a40","#86b43c","#a9d84e"][Math.min(4,Math.floor(v/maxR*4.99))],corN=v=>v===0?"#1d3135":["#17525a","#1a6d74","#1f8a86","#3fb3ad","#7fd9d3"][Math.min(4,v-1)];
  let s=`<defs><filter id="brilho" x="-20%" y="-20%" width="140%" height="140%"><feGaussianBlur stdDeviation="2.2"/></filter><pattern id="hach" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><rect width="7" height="7" fill="#4a2a24"/><line x1="0" y1="0" x2="0" y2="7" stroke="#e2735a" stroke-width="2.6"/></pattern></defs><rect x="-3000" y="-3000" width="8000" height="8000" fill="#16211f"/>`;
  if(agua)s+=agua.map(f=>`<path d="${f.geometry.coordinates.map(r=>"M"+r.map(px).join("L")+"Z").join("")}" fill="#0e3a4a" fill-rule="evenodd"/>`).join("");
@@ -544,8 +561,9 @@ function render(){try{PAGS[pag][1]()}catch(e){console.error(e)}}
 function ir(){pag=location.hash.slice(1)||"inicio";if(!PAGS[pag])pag="inicio";$("titulo").textContent=PAGS[pag][0];document.querySelectorAll(".pagina").forEach(p=>p.classList.toggle("on",p.id==="p-"+pag));document.querySelectorAll(".barra a[data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===pag));scrollTo(0,0);setTimeout(render,0)}
 L.aoMudar(render);addEventListener("hashchange",ir);addEventListener("resize",()=>{clearTimeout(window.__r);window.__r=setTimeout(render,150)});
 // Exportar abre o resumo (uma página com o que importa de cada diretoria, para imprimir ou salvar em PDF); a cópia .json fica lá
-$("bExp").onclick=()=>open("resumo.html","_blank");$("bImp").onclick=()=>$("fImp").click();$("fImp").onchange=async()=>{try{await L.importa($("fImp").files[0]);alert("Dados importados.")}catch(e){alert("Não deu para abrir esse arquivo: "+e.message)}};
-ir();carregaMapa();
+$("bExp").onclick=()=>open("resumo.html","_blank");$("bImp").onclick=()=>$("fImp").click();$("fImp").onchange=async()=>{try{await L.importa($("fImp").files[0]);alert("Dados importados.")}catch(e){alert("Não deu para abrir esse arquivo: "+e.message)}};document.querySelectorAll("[data-acao=resumo]").forEach(b=>b.onclick=()=>open("resumo.html","_blank"));document.querySelectorAll("[data-acao=abrir]").forEach(b=>b.onclick=()=>$("fImp").click());
+L.lista("prospectos").forEach(p=>{if(p.etapa==="Fechado"&&!p.lancamentoId){const l=L.lista("lancamentos").find(x=>x.tipo==="entrada"&&x.status==="pendente"&&x.valor===+p.valor&&x.resp===p.resp);if(l)L.altera("prospectos",p.id,{lancamentoId:l.id})}});
+montaQuem();ir();carregaMapa();
 </script>
 </body>
 </html>

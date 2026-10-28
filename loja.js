@@ -102,6 +102,7 @@
     altera(c, i, patch) { const it = banco[c].find(x => x.id === i); if (it) Object.assign(it, patch); salva() },
     apaga(c, i) { banco[c] = banco[c].filter(x => x.id !== i); salva() },
     poe(c, valor) { banco[c] = valor; salva() },
+    grava(c, patch) { const o = banco[c] || (banco[c] = {}); Object.assign(o, patch); salva() },
     aoMudar: f => ouvintes.push(f),
     exporta() { const a = document.createElement("a"); a.href = URL.createObjectURL(new Blob([JSON.stringify(banco, null, 1)], { type: "application/json" })); a.download = "painel-mare-" + new Date().toISOString().slice(0, 10) + ".json"; a.click() },
     async importa(arquivo) { const j = JSON.parse(await arquivo.text()); if (j.versao !== 2) throw new Error("arquivo de outra versão"); banco = j; salva() },
