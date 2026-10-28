@@ -64,3 +64,15 @@ O João pediu que eu decidisse tudo do painel em rodadas. As referências escolh
 - **Marketing (ref 34).** Ao lado do calendário entrou a coluna "Ideias", com os posts ainda em ideia e o botão "+ Ideia". O botão abre um post já marcado como ideia e sem data. Clicar numa ideia abre o post para planejar a data. No celular, a coluna desce para baixo do calendário.
 - **Projetos (refs 38 e 40).** A coluna "Tarefas" mostra feitas/total e uma barra de % feito em cada projeto.
 - **Pessoas (ref 28).** A presença virou um mapa de calor: verde quando a pessoa veio, cinza quando não marcou, amarelo quando avisou que não viria. A agenda da equipe (conversas e ausências) já estava na área da Gabrielly.
+
+## Rodada 4: revisão geral
+
+- Conferi Início, Financeiro, Comercial, Projetos, Marketing, Pessoas e Editais no computador (1366x768) e no celular (390x844).
+  - Nenhum erro no console.
+  - Nenhuma rolagem lateral, fora a tabela de presença, que rola de propósito.
+- Testei a abertura de formulários pelos atalhos e pelos passos: "Lançar saldo", "+ Ideia" já marcando ideia, "Oferecer" já com o serviço.
+- Testei a marcação de etapas dos editais, a presença com "avisou" e a junção de cópias.
+- Fica para o João decidir com a equipe:
+  - a função da Cris (Editais é só sugestão);
+  - os preços dos serviços;
+  - o nome da categoria "Obra piloto" no orçamento, porque o site diz que a MARÉ não faz obras.
