@@ -36,6 +36,30 @@ html{scrollbar-width:thin;scrollbar-color:#b9c2bc transparent}
 .topo .migalha b{color:var(--tinta);font-weight:600}
 .pilula{display:flex;align-items:center;gap:8px;background:#fff;border-radius:999px;padding:7px 14px;font-size:13px;color:var(--mut)}
 .so-cel{display:none}
+/* topo: texto à esquerda, atalhos redondos à direita (refs 25 e 1) */
+.hero{align-items:center;justify-content:space-between;gap:16px;padding-right:18px}
+.hero .atalhos{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.atalhos .bt,.atalhos .bt.lima,.atalhos .bt.claro{flex-direction:column;gap:6px;background:none!important;color:var(--tinta)!important;align-self:center;height:auto;padding:6px 8px;border-radius:14px;font-size:12px;font-weight:600;min-width:84px}
+.atalhos .bt:hover{background:var(--fundo)}
+.atalhos .bt i{width:44px;height:44px;border-radius:50%;display:grid;place-items:center;background:var(--fundo)}
+.atalhos .bt.lima i{background:var(--lima)}.atalhos .bt i svg{width:20px;height:20px;fill:none;stroke:var(--tinta);stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+@media(max-width:820px){.hero{flex-direction:column;align-items:stretch;padding:0 0 12px}.hero .atalhos{justify-content:flex-start;padding:0 14px}}
+/* primeiros passos (refs 29, 32, 30) */
+.pp{background:var(--cartao);border-radius:var(--r);padding:16px 20px;margin-bottom:14px}
+.pp:empty{display:none}
+.pp .cab{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.pp .cab h2{margin:0;font-size:16px}.pp .cab span{font-size:13px;color:var(--mut)}
+.pp .barra-p{height:8px;border-radius:99px;background:#e6e9e3;margin:10px 0 4px;overflow:hidden}.pp .barra-p i{display:block;height:100%;background:var(--lima);border-radius:99px}
+.pp ol{list-style:none;margin:10px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.pp li{display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:14px;background:var(--fundo);font-size:13px;line-height:1.35}
+.pp li .nn{flex:none;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;font-weight:700;font-size:12px;background:#fff}
+.pp li.ok{opacity:.55}.pp li.ok .nn{background:var(--lima)}.pp li.ok b{text-decoration:line-through}
+.pp li.agora{background:var(--escuro);color:#e8efe9;opacity:1}.pp li.agora .nn{background:var(--lima);color:var(--escuro)}.pp li.agora span{color:#b9c7bf}
+.pp li b{display:block;font-weight:600}.pp li span{color:var(--mut);font-size:12.5px}
+.pp li .bt{margin-top:8px}
+.pp.pronto{padding:10px 20px;font-size:13.5px;color:var(--mut)}.pp.pronto b{color:var(--tinta)}
+@media(max-width:640px){.pp li.ok,.pp li.depois{display:none}.pp ol{grid-template-columns:1fr}}
+.tipo{font-size:10.5px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;padding:2px 7px;border-radius:99px;background:var(--fundo);color:var(--mut);white-space:nowrap}
 .passos{list-style:none;counter-reset:p;margin:12px 0 0;padding:0;display:grid;gap:12px}
 .passos li{counter-increment:p;display:grid;grid-template-columns:28px 1fr;gap:10px;font-size:13.5px;line-height:1.4}
 .passos li::before{content:counter(p);width:26px;height:26px;border-radius:50%;background:var(--fundo);display:grid;place-items:center;font-weight:700;font-size:12.5px;color:var(--tinta)}
@@ -228,7 +252,7 @@ dialog .pe .bt:first-child{margin-right:auto}
   <div class="g entra" id="iKpi"></div>
   <div class="g">
    <div class="c s5"><h2>Tarefas da semana<span class="acoes"><label class="pilula" style="font-size:12.5px"><input type="checkbox" id="iMinhas"> Só as minhas</label> <button class="bt mini" data-novo="tarefas">+ Tarefa</button></span></h2><div class="sub">Marque quando terminar.</div><ul class="li" id="iTarefas"></ul></div>
-   <div class="c s4"><h2>Agenda</h2><div class="sub">Prazos, posts e retornos a clientes.</div><ul class="li" id="iAgenda"></ul></div>
+   <div class="c s4"><h2>Próximos 14 dias</h2><div class="sub">Tudo que tem data, de todas as áreas.</div><ul class="li" id="iAgenda"></ul></div>
    <div class="c s3 escuro"><h2>Atenção</h2><div class="sub">O que está atrasado ou vence logo.</div><ul class="li" id="iAlertas" style="color:#e8efe9"></ul></div>
   </div>
   <div class="g">
@@ -505,14 +529,17 @@ function porMes(ini=-5,n=8){const out=[];for(let k=ini;k<ini+n;k++){const d=new 
  const s=(t,st)=>lc.filter(x=>x.tipo===t&&(!st||x.status===st)).reduce((a,x)=>a+(+x.valor||0),0);out.push({rot:MES[d.getMonth()],atual:k===0,ent:s("entrada","pago"),sai:s("saida","pago"),entP:s("entrada","pendente"),saiP:s("saida","pendente")})}return out}
 
 // ---------- INÍCIO ----------
-function inicio(){{const h=new Date().getHours();$("saud").textContent=(h<12?"Bom dia":h<18?"Boa tarde":"Boa noite")+", equipe"}montaQuem();const c=contas(),tf=L.lista("tarefas"),abertas=tf.filter(t=>t.status!=="Feito"),atr=abertas.filter(t=>atrasado(t.prazo)),pr=L.lista("prospectos");
+function inicio(){{const h=new Date().getHours();$("saud").textContent=(h<12?"Bom dia":h<18?"Boa tarde":"Boa noite")+", "+(quemSou()||"equipe")}montaQuem();const c=contas(),tf=L.lista("tarefas"),abertas=tf.filter(t=>t.status!=="Feito"),atr=abertas.filter(t=>atrasado(t.prazo)),pr=L.lista("prospectos");
  if($("iMini"))$("iMini").innerHTML=`<div><span>Saldo em caixa</span><b class="num">${brl(c.saldo)}</b></div><div><span>Propostas abertas</span><b class="num">${pr.filter(p=>p.etapa==="Proposta").length}</b></div><div><span>Tarefas atrasadas</span><b class="num">${atr.length}</b></div>`;
  kpis($("iKpi"),[["dinheiro",brl(c.saldo),"saldo em caixa"],["seta",brl(c.receber),"a receber"],["baixo",brl(c.pagar),"a pagar",c.pagar>c.saldo?"maior que o saldo":"",c.pagar>c.saldo],["relogio",(c.folego==null?"sem histórico":c.folego.toFixed(1).replace(".",",")+" meses"),"de fôlego no ritmo de gastos"]]);
  const sem=abertas.filter(t=>!$("iMinhas").checked||t.resp===quemSou()).slice().sort((a,b)=>(a.prazo||"9").localeCompare(b.prazo||"9")).slice(0,6);
  $("iTarefas").innerHTML=sem.map(t=>`<li data-id="${t.id}"><button class="chk" data-feito="${t.id}" aria-label="Concluir"></button><div class="tx"><b>${esc(t.titulo)}</b><span>${esc(t.projeto)} · ${esc(t.resp)}</span></div><span class="dt ${atrasado(t.prazo)?"atr":""}">${dt(t.prazo)}</span></li>`).join("")||`<li class="vazio">${$("iMinhas").checked&&!quemSou()?"Escolha quem é você, no alto da tela, para ver só as suas.":"Nenhuma tarefa aberta."}</li>`;
  $("iTarefas").querySelectorAll("[data-feito]").forEach(b=>b.onclick=()=>L.altera("tarefas",b.dataset.feito,{status:"Feito"}));editar("tarefas",$("iTarefas"));
- const ag=[...abertas.map(t=>[t.prazo,t.titulo,"Tarefa · "+t.resp]),...L.lista("posts").filter(p=>p.status!=="Publicado").map(p=>[p.data,p.tema,p.canal+" · "+p.status]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)).map(p=>[p.data,p.proximo,p.nome])].filter(a=>a[0]&&a[0]>=hojeISO).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,6);
- $("iAgenda").innerHTML=ag.map(a=>`<li><div class="tx"><b>${esc(a[1])}</b><span>${esc(a[2])}</span></div><span class="dt">${dt(a[0])}</span></li>`).join("")||`<li class="vazio">Nada marcado.</li>`;
+ const ate=(()=>{const d=dObj(hojeISO);d.setDate(d.getDate()+14);return new Date(d.getTime()-d.getTimezoneOffset()*6e4).toISOString().slice(0,10)})();
+ const ag=[...abertas.map(t=>[t.prazo,"tarefa",t.titulo,t.resp]),...L.lista("posts").filter(p=>p.status!=="Publicado").map(p=>[p.data,"post",p.tema,p.canal+" · "+p.status]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)).map(p=>[p.data,"cliente",p.proximo||p.nome,p.nome]),
+  ...L.lista("lancamentos").filter(l=>l.status==="pendente").map(l=>[l.data,l.tipo==="entrada"?"receber":"pagar",l.descricao,brl(+l.valor||0)]),...L.lista("editais").flatMap(e=>[[e.inscricao,"edital",e.nome,"inscrição"],[e.relatorio,"edital",e.nome,"relatório"]]),
+  ...L.lista("conversas").map(c=>[c.proxima,"conversa","Conversa com "+c.pessoa,"Gabrielly"]),...L.lista("ausencias").map(a=>[a.data,"ausência",a.pessoa+" não vem",a.motivo||""]),...L.lista("reservas").map(r=>[r.data,"pagar",r.nome,brl(+r.valor||0)])].filter(a=>a[0]&&a[0]>=hojeISO&&a[0]<=ate).sort((a,b)=>a[0].localeCompare(b[0])).slice(0,9);
+ $("iAgenda").innerHTML=ag.map(a=>`<li><span class="tipo">${esc(a[1])}</span><div class="tx"><b>${esc(a[2])}</b><span>${esc(a[3]||"")}</span></div><span class="dt">${a[0]===hojeISO?"hoje":dt(a[0])}</span></li>`).join("")||`<li class="vazio">Nada com data nos próximos 14 dias.</li>`;
  const al=[...atr.map(t=>["Tarefa atrasada",t.titulo,t.prazo]),...pr.filter(p=>!["Fechado","Perdido"].includes(p.etapa)&&atrasado(p.data)).map(p=>["Retorno atrasado",p.nome,p.data]),...L.lista("lancamentos").filter(l=>l.status==="pendente"&&l.tipo==="saida"&&dias(l.data)<=15).map(l=>["Conta a pagar",l.descricao+" · "+brl(l.valor),l.data])];
  $("iAlertas").innerHTML=al.map(a=>`<li><div class="tx"><b>${esc(a[0])}</b><span style="color:#a7b8ad">${esc(a[1])}</span></div><span class="dt" style="color:#f2b4a6">${dt(a[2])}</span></li>`).join("")||`<li><div class="tx"><b>Tudo em dia</b></div></li>`;
  const pm=porMes();hastes($("iGraf"),pm,[pm.map(m=>m.ent),pm.map(m=>m.sai),pm.map(m=>m.entP),pm.map(m=>m.saiP)],[()=>"#a9d84e",()=>"#1f2a24",()=>"#cfd6cf",()=>"#9aa59e"]);
@@ -784,9 +811,35 @@ function editaisPg(){dono("cris");const ed=L.lista("editais"),ab=ed.filter(e=>![
  $("dPraz").innerHTML=prox.map(([d,k,e])=>`<li data-id="${e.id}" style="cursor:pointer"><span class="etq ${diasAte(d)<=7?"mal":"at"}">${dt(d)}</span><div class="tx"><b>${esc(e.nome)}</b><span>${k} · faltam ${diasAte(d)} dias</span></div></li>`).join("")||`<li class="vazio">Nenhum prazo nos próximos 60 dias.</li>`;editar("editais",$("dPraz"));
  document.querySelectorAll(".so-dono-cris").forEach(x=>x.hidden=quemSou()!=="Cris")}
 
+
+// ---------- PRIMEIROS PASSOS de cada área: se marcam sozinhos pelos dados ----------
+const AREA_DE={"Letícia":"financeiro","Elias":"comercial","João":"projetos","Anaelson":"marketing","Gabrielly":"pessoas","Cris":"editais"};
+function passosDe(a){const lc=L.lista("lancamentos"),mk=hojeISO.slice(0,7),mt=L.obj("metas")||{},pl=L.obj("planejar")||{},pj=L.lista("projetos"),tf=L.lista("tarefas"),ps=L.lista("posts"),pr=L.lista("prospectos"),ed=L.lista("editais"),mb=L.lista("membros");
+ if(a==="financeiro")return ["Letícia",[[!!L.obj("caixa"),"Lançar o saldo do banco","É o ponto de partida do caixa e da previsão.",'data-novo="caixa"',"Lançar saldo"],[L.lista("recorrentes").length>0,"Cadastrar o que se repete todo mês","Contribuições, passagens, material.",'data-novo="recorrentes"',"Cadastrar"],[L.lista("orcamento").some(o=>+o.planejado>0),"Planejar o orçamento do ano","Quanto cada categoria pode gastar.",'data-novo="orcamento"',"Nova categoria"],[+pl.piso>0,"Definir o saldo mínimo e a reserva","O painel avisa antes de o caixa apertar.",'data-novo="planejar"',"Definir"],[lc.some(l=>l.data?.slice(0,7)===mk),"Lançar as entradas e saídas do mês","Cada gasto e cada entrada, com a data.",'data-novo="lancamentos"',"Lançar"],[(((pl.checklist||{})[mk])||[]).length>=6,"Fechar o mês","Checklist de fechamento, no fim da página.","",""]]];
+ if(a==="comercial")return ["Elias",[[L.lista("servicos").length&&L.lista("servicos").every(s=>+s.minimo>0),"Definir o preço de cada serviço","Clique no cartão do serviço para editar.","",""],[+mt.comercialMes>0,"Definir a meta de vendas do mês","Um número realista para começar.",'data-novo="metas"',"Definir meta"],[pr.length>=10,`Listar 10 possíveis clientes (${Math.min(pr.length,10)} de 10)`,"Comece pelos bairros do mapa e por conhecidos.",'data-novo="prospectos"',"Novo contato"],[pr.some(p=>p.etapa!=="Contato"),"Marcar a primeira reunião","Mande a mensagem pronta do serviço.","",""],[pr.some(p=>["Proposta","Fechado"].includes(p.etapa)),"Mandar a primeira proposta","Em até 3 dias depois da reunião.","",""],[pr.some(p=>p.etapa==="Fechado"),"Fechar o primeiro cliente","A receita vai sozinha para o Financeiro.","",""]]];
+ if(a==="projetos")return ["João",[[pj.length&&pj.every(p=>p.resp&&p.resp!=="a definir"),"Dar um responsável a cada projeto","Clique no projeto para editar.","",""],[pj.filter(p=>p.estado==="Em andamento").every(p=>p.fim&&+p.horas>0)&&pj.some(p=>p.estado==="Em andamento"),"Pôr prazo e horas no que está em andamento","Fim previsto e horas totais.","",""],[pj.filter(p=>p.estado==="Em andamento").every(p=>tf.filter(x=>x.projeto===p.nome).length>=3)&&pj.some(p=>p.estado==="Em andamento"),"Quebrar cada projeto em tarefas","Pelo menos 3 tarefas por projeto em andamento.",'data-novo="tarefas"',"Nova tarefa"],[tf.length>0&&tf.filter(x=>x.status!=="Feito").every(x=>x.resp&&x.prazo),"Toda tarefa com dono e prazo","Tarefa sem dono não anda.","",""],[tf.length>0&&!tf.some(x=>x.status!=="Feito"&&atrasado(x.prazo)),"Nenhuma tarefa atrasada","Reveja o quadro todo sábado.","",""]]];
+ if(a==="marketing")return ["Anaelson",[[+mt.postsMes>0&&+mt.seguidores>0,"Definir as metas de posts e seguidores","Na área do Anaelson, no fim da página.",'data-novo="metas"',"Definir metas"],[L.lista("seguidores").length>0,"Registrar os seguidores de hoje","Para acompanhar o crescimento.",'data-acao-seg="1"',"Registrar"],[ps.filter(p=>p.data?.slice(0,7)===mk).length>=Math.max(4,+mt.postsMes||0),"Planejar os posts do mês","Pelo menos um por semana no calendário.",'data-novo="posts"',"Novo post"],[L.lista("imprensa").some(i=>i.status!=="Não procurado"),"Mandar a primeira pauta à imprensa","O texto pronto está na parte de imprensa.","",""],[ps.some(p=>p.status==="Publicado"&&+p.alcance>0),"Medir os posts publicados","Alcance, curtidas, comentários e salvos.","",""]]];
+ if(a==="pessoas")return ["Gabrielly",[[!mb.some(m=>/definir/i.test(m.diretoria||"")),"Toda pessoa com diretoria e função","Hoje sem diretoria: "+(mb.filter(m=>/definir/i.test(m.diretoria||"")).map(m=>m.nome).join(", ")||"ninguém")+".","",""],[Object.values(L.obj("presencas")||{}).some(l=>l.length),"Marcar a presença do expediente","Na tabela de presença, todo sábado.","",""],[mb.length&&mb.every(m=>L.lista("conversas").some(c=>c.pessoa===m.nome)),"Uma conversa individual com cada pessoa","Use o roteiro na área da Gabrielly.",'data-novo="conversas"',"Nova conversa"],[L.lista("ausencias").length>0||mb.length===0,"Combinar como avisar ausência","Quem não puder vir avisa até sexta; registre aqui.",'data-novo="ausencias"',"Registrar"]]];
+ if(a==="editais")return ["Cris",[[ed.length>=3,`Achar 3 editais possíveis (${Math.min(ed.length,3)} de 3)`,"Proex, fundações, prêmios, prefeitura.",'data-novo="editais"',"Novo edital"],[ed.length>0&&ed.every(e=>e.inscricao),"Pôr o prazo de inscrição de cada um","O painel avisa quando o prazo chega.","",""],[ed.some(e=>e.status!=="Achado"),"Começar a escrever um","Comece pelo de prazo mais curto.","",""],[ed.some(e=>["Inscrito","Aprovado","Prestando contas","Concluído"].includes(e.status)),"Enviar a primeira inscrição","Confira os documentos com a Letícia.","",""],[L.lista("captacao").some(c=>c.categoria==="Editais"&&+c.meta>0),"Combinar com a Letícia a meta de editais do ano","Fica na captação por fonte, no Financeiro.","",""]]];
+ return null}
+function renderPP(a){const el=$("pp-"+a);if(!el)return;const p=passosDe(a);if(!p){el.innerHTML="";return}const [dono,it]=p,ok=it.filter(x=>x[0]).length,pc=Math.round(ok/it.length*100),eu=quemSou()===dono;
+ if(ok===it.length){el.className="pp pronto";el.innerHTML=`<b>Tudo pronto nesta área.</b> Os primeiros passos de ${esc(dono)} estão feitos.`;return}
+ const ag=it.findIndex(x=>!x[0]);el.className="pp";
+ el.innerHTML=`<div class="cab"><h2>Primeiros passos · ${esc(dono)}</h2><span>${ok} de ${it.length} feitos · ${pc}%</span></div><div class="barra-p"><i style="width:${pc}%"></i></div><ol>${it.map(([o,b,s,at,rot],i)=>`<li class="${o?"ok":i===ag?"agora":i>ag+2?"depois":""}"><span class="nn">${o?"✓":i+1}</span><div><b>${esc(b)}</b><span>${esc(s)}</span>${i===ag&&at&&eu?`<div><button class="bt mini lima" ${at}>${esc(rot)}</button></div>`:""}</div></li>`).join("")}</ol>${eu?"":`<div class="sub" style="margin-top:8px">Quem marca esses passos é ${esc(dono)}, preenchendo a área. <button class="lnk" data-sou="${esc(dono)}">Sou ${esc(dono)}</button></div>`}`;
+ el.querySelectorAll("[data-acao-seg]").forEach(b=>b.onclick=()=>$("bSeg").click())}
+// seus próximos passos no Início
+function meusPassos(){const el=$("pp-inicio");if(!el)return;const eu=quemSou(),a=AREA_DE[eu];
+ if(!eu){el.className="pp";el.innerHTML=`<div class="cab"><h2>Quem é você?</h2><span>Escolha seu nome no alto da tela para ver seus próximos passos e suas tarefas.</span></div>`;return}
+ const p=a&&passosDe(a),prox=p&&p[1].find(x=>!x[0]),minhas=L.lista("tarefas").filter(x=>x.status!=="Feito"&&x.resp===eu).length;
+ el.className="pp";el.innerHTML=`<div class="cab"><h2>Seus próximos passos</h2><span>${minhas} tarefa(s) sua(s) em aberto</span></div><ol><li class="agora"><span class="nn">1</span><div><b>${esc(prox?prox[1]:"Sua área está com os primeiros passos feitos")}</b><span>${esc(prox?prox[2]:"Mantenha os dados em dia.")}</span>${a?`<div><a class="bt mini lima" href="#${a}" style="text-decoration:none">Ir para a sua área</a></div>`:""}</div></li>${minhas?`<li><span class="nn">2</span><div><b>Concluir suas tarefas</b><span>Marque "Só as minhas" na lista de tarefas abaixo.</span></div></li>`:""}</ol>`}
+// monta os atalhos do topo e o lugar dos primeiros passos em cada página
+{const ICA={lancamentos:"dinheiro",caixa:"dinheiro",prospectos:"gente",projetos:"alvo",tarefas:"check",posts:"olho",membros:"gente",editais:"alvo",bSeg:"cora"};
+ document.querySelectorAll(".pagina").forEach(s=>{const h=s.querySelector(".hero");if(!h)return;const m=h.querySelector(".hi .mini");if(m){m.classList.add("atalhos");m.classList.remove("mini");h.appendChild(m);m.querySelectorAll(".bt").forEach(b=>{const k=b.dataset.novo||b.id;b.insertAdjacentHTML("afterbegin",`<i><svg viewBox="0 0 24 24">${IC[ICA[k]]||'<path d="M12 5v14M5 12h14"/>'}</svg></i>`)})}
+  if(!s.querySelector(".pp")){const d=document.createElement("div");d.className="pp";d.id="pp-"+s.id.slice(2);h.after(d)}})}
+
 // ---------- navegação ----------
 const PAGS={inicio:["Início",inicio],financeiro:["Financeiro",()=>{financeiro();areaLeticia()}],comercial:["Comercial",()=>{comercial();areaElias()}],projetos:["Projetos",()=>{projetos();areaJoao()}],marketing:["Marketing",()=>{marketing();areaAnaelson()}],pessoas:["Pessoas",()=>{pessoasPg();areaGabrielly()}],editais:["Editais",editaisPg],mapa:["Mapa",mapa]};let pag="inicio";
-function render(){try{PAGS[pag][1]()}catch(e){console.error(e)}}
+function render(){try{PAGS[pag][1]();if(pag==="inicio")meusPassos();else renderPP(pag)}catch(e){console.error(e)}}
 function ir(){pag=location.hash.slice(1)||"inicio";if(!PAGS[pag])pag="inicio";$("titulo").textContent=PAGS[pag][0];document.querySelectorAll(".pagina").forEach(p=>p.classList.toggle("on",p.id==="p-"+pag));document.querySelectorAll(".barra a[data-p]").forEach(a=>a.classList.toggle("on",a.dataset.p===pag));scrollTo(0,0);setTimeout(render,0)}
 L.aoMudar(render);addEventListener("hashchange",ir);addEventListener("resize",()=>{clearTimeout(window.__r);window.__r=setTimeout(render,150)});
 // Exportar abre o resumo (uma página com o que importa de cada diretoria, para imprimir ou salvar em PDF); a cópia .json fica lá
