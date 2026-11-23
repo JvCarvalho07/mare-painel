@@ -15,7 +15,7 @@
     exemplo: true, // dados de mentira para apresentar; some quando a equipe começa de verdade
     membros: [
       { id: id(), nome: "João", diretoria: "Projetos", cargo: "Diretor de Projetos", horas: 4 },
-      { id: id(), nome: "Elias", diretoria: "Comercial", cargo: "Diretor Comercial", horas: 4 },
+      { id: id(), nome: "Gabriel", diretoria: "Comercial", cargo: "Diretor Comercial", horas: 4 },
       { id: id(), nome: "Letícia", diretoria: "Financeiro", cargo: "Diretora Financeira", horas: 4 },
       { id: id(), nome: "Anaelson", diretoria: "Marketing", cargo: "Diretor de Marketing", horas: 4 },
       { id: id(), nome: "Gabrielly", diretoria: "Pessoas e Cultura", cargo: "Diretora de Pessoas e Cultura", horas: 4 },
@@ -30,7 +30,7 @@
       { id: id(), data: d(5, 11), descricao: "Contribuição dos membros", categoria: "Contribuições", tipo: "entrada", valor: 600, status: "pendente", resp: "Letícia" },
       { id: id(), data: d(10, 11), descricao: "Registro do estatuto no cartório", categoria: "Formalização", tipo: "saida", valor: 500, status: "pendente", resp: "Letícia" },
       { id: id(), data: d(10, 11), descricao: "Certificado digital e-CNPJ", categoria: "Formalização", tipo: "saida", valor: 220, status: "pendente", resp: "Letícia" },
-      { id: id(), data: d(20, 11), descricao: "Oficina no Colégio do Marco", categoria: "Serviços", tipo: "entrada", valor: 600, status: "pendente", resp: "Elias" },
+      { id: id(), data: d(20, 11), descricao: "Oficina no Colégio do Marco", categoria: "Serviços", tipo: "entrada", valor: 600, status: "pendente", resp: "Gabriel" },
     ],
     orcamento: [
       { id: id(), categoria: "Formalização", planejado: 1100 }, { id: id(), categoria: "Transporte", planejado: 600 },
@@ -38,13 +38,13 @@
       { id: id(), categoria: "Obra piloto", planejado: 1800 }, { id: id(), categoria: "Eventos", planejado: 200 },
     ],
     prospectos: [
-      { id: id(), nome: "Clínica no Umarizal", segmento: "Clínica", servico: "Diagnóstico de acessibilidade", valor: 1200, etapa: "Proposta", chance: 50, proximo: "Ligar para confirmar", data: d(30), resp: "Elias" },
-      { id: id(), nome: "Colégio no Marco", segmento: "Escola particular", servico: "Oficina Bueiro Livre", valor: 600, etapa: "Fechado", chance: 100, proximo: "Marcar a data da oficina", data: d(4, 11), resp: "Elias" },
-      { id: id(), nome: "Condomínio na Doca", segmento: "Condomínio", servico: "Mapa de risco de alagamento", valor: 1800, etapa: "Proposta", chance: 40, proximo: "Proposta vence", data: d(31), resp: "Elias" },
-      { id: id(), nome: "Farmácia em Nazaré", segmento: "Comércio", servico: "Diagnóstico de acessibilidade", valor: 800, etapa: "Reunião", chance: 30, proximo: "Reunião com o gerente", data: d(3, 11), resp: "Elias" },
-      { id: id(), nome: "Escola em Batista Campos", segmento: "Escola particular", servico: "Oficina Bueiro Livre", valor: 500, etapa: "Reunião", chance: 35, proximo: "Levar o material da oficina", data: d(5, 11), resp: "Elias" },
-      { id: id(), nome: "Shopping de Belém", segmento: "Shopping", servico: "Diagnóstico e campanha", valor: 3500, etapa: "Contato", chance: 15, proximo: "Achar o responsável", data: d(7, 11), resp: "Elias" },
-      { id: id(), nome: "Construtora", segmento: "Construtora", servico: "Relatório socioambiental", valor: 3000, etapa: "Contato", chance: 10, proximo: "Mandar apresentação", data: d(10, 11), resp: "Elias" },
+      { id: id(), nome: "Clínica no Umarizal", segmento: "Clínica", servico: "Diagnóstico de acessibilidade", valor: 1200, etapa: "Proposta", chance: 50, proximo: "Ligar para confirmar", data: d(30), resp: "Gabriel" },
+      { id: id(), nome: "Colégio no Marco", segmento: "Escola particular", servico: "Oficina Bueiro Livre", valor: 600, etapa: "Fechado", chance: 100, proximo: "Marcar a data da oficina", data: d(4, 11), resp: "Gabriel" },
+      { id: id(), nome: "Condomínio na Doca", segmento: "Condomínio", servico: "Mapa de risco de alagamento", valor: 1800, etapa: "Proposta", chance: 40, proximo: "Proposta vence", data: d(31), resp: "Gabriel" },
+      { id: id(), nome: "Farmácia em Nazaré", segmento: "Comércio", servico: "Diagnóstico de acessibilidade", valor: 800, etapa: "Reunião", chance: 30, proximo: "Reunião com o gerente", data: d(3, 11), resp: "Gabriel" },
+      { id: id(), nome: "Escola em Batista Campos", segmento: "Escola particular", servico: "Oficina Bueiro Livre", valor: 500, etapa: "Reunião", chance: 35, proximo: "Levar o material da oficina", data: d(5, 11), resp: "Gabriel" },
+      { id: id(), nome: "Shopping de Belém", segmento: "Shopping", servico: "Diagnóstico e campanha", valor: 3500, etapa: "Contato", chance: 15, proximo: "Achar o responsável", data: d(7, 11), resp: "Gabriel" },
+      { id: id(), nome: "Construtora", segmento: "Construtora", servico: "Relatório socioambiental", valor: 3000, etapa: "Contato", chance: 10, proximo: "Mandar apresentação", data: d(10, 11), resp: "Gabriel" },
     ],
     servicos: [
       { id: id(), nome: "Diagnóstico de acessibilidade", pitch: "Mostramos o que impede um cadeirante, um idoso ou uma mãe com carrinho de entrar e usar o seu espaço, com soluções baratas em ordem de prioridade.", para: "Comércio, clínica, escola", minimo: 600, maximo: 1500, horas: 12 },
@@ -61,7 +61,7 @@
     ],
     tarefas: [
       { id: id(), titulo: "Fechar relatório do Reduto", projeto: "Maré Cheia", resp: "João", prazo: d(14, 11), status: "Fazendo" },
-      { id: id(), titulo: "Visitar 5 pontos no Guamá", projeto: "Maré Cheia", resp: "Elias", prazo: d(7, 11), status: "A fazer" },
+      { id: id(), titulo: "Visitar 5 pontos no Guamá", projeto: "Maré Cheia", resp: "Gabriel", prazo: d(7, 11), status: "A fazer" },
       { id: id(), titulo: "Conferir as fotos sem rosto", projeto: "Maré Cheia", resp: "Anaelson", prazo: d(31), status: "A fazer" },
       { id: id(), titulo: "Orçamento do cartório", projeto: "Formalização", resp: "Letícia", prazo: d(30), status: "Fazendo" },
       { id: id(), titulo: "Planejar o processo seletivo", projeto: "Equipe", resp: "Gabrielly", prazo: d(20, 11), status: "A fazer" },
@@ -108,7 +108,7 @@
     ],
     ausencias: [
       { id: id(), pessoa: "Cris", data: d(7, 11), motivo: "Prova na faculdade" },
-      { id: id(), pessoa: "Elias", data: d(14, 11), motivo: "Viagem" },
+      { id: id(), pessoa: "Gabriel", data: d(14, 11), motivo: "Viagem" },
     ],
     conversas: [
       { id: id(), pessoa: "Letícia", data: d(3), combinado: "Montar o orçamento de 2027", proxima: d(28, 11) },
