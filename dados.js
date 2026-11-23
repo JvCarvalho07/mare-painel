@@ -26,7 +26,7 @@
   // equipe real (6 pessoas). Diretoria de cada um: A CONFIRMAR (só a do João é certa); horas por semana são exemplo.
   const DIRETORIAS = { PR: "Projetos", CO: "Comercial", FI: "Financeiro", MK: "Marketing", PC: "Pessoas e Cultura" };
   const EQUIPE = [
-    ["João", "PR", 4, "mai/26", "ok", "Diretor de Projetos"], ["Elias", "CO", 4, "mai/26", "ok", ""], ["Letícia", "FI", 4, "mai/26", "ok", ""],
+    ["João", "PR", 4, "mai/26", "ok", "Diretor de Projetos"], ["Gabriel", "CO", 4, "mai/26", "ok", ""], ["Letícia", "FI", 4, "mai/26", "ok", ""],
     ["Anaelson", "MK", 4, "mai/26", "ok", ""], ["Gabrielly", "PC", 4, "mai/26", "ok", ""], ["Cris", "PR", 4, "mai/26", "ok", "Função a definir"],
   ].map(([nome, dir, horas, entrou, estado, cargo]) => ({ nome, dir, diretoria: DIRETORIAS[dir], horas, entrou, estado, cargo: cargo || "Diretoria de " + DIRETORIAS[dir] }));
 
